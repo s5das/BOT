@@ -1,4 +1,4 @@
-# dot
+# Bot
 
 ## Project setup
 ```
