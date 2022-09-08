@@ -8,7 +8,7 @@
     <div class="text1">
       {{item.text1}}
     </div>
-    <van-button color="#EA0C0C" plain round size="mini">{{item.text2}}</van-button>
+    <van-button color="#EA0C0C" plain round size="mini" @click="jump(index)">{{item.text2}}</van-button>
   </div>
   </div>
   </div>
@@ -21,13 +21,21 @@ export default {
     return {
       pagedata:[{text1:'我是客户',text2:'去下单',src:require('@/assets/customer.png')},{text1:'我是派送员',text2:'去抢单',src:require('@/assets/worker.png')}]
     }
+  },
+  methods: {
+    jump(index) {
+      if (index === 0) {
+        this.$router.push({
+            path:'/placeorder'
+          })
+      }
+    }
   }
 }
 </script >
 
 <style scoped lang="less">
 .box1{
-  margin-top: 16px;
   display: flex;
   justify-content: space-around;
 }

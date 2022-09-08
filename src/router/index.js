@@ -7,6 +7,10 @@ export default new VueRouter({
         component: () => import("@/pages/homepage.vue")
         },
         {
+            path: '/placeorder',
+            component:() => import('@/pages/placeorder.vue')
+        },
+        {
             path: '/order',
             component: () => import("@/pages/order.vue")
         },

@@ -8,13 +8,17 @@ Vue.use(VueRouter)
 
 import router from './router/index.js'
   
-import { Button , Tabbar, TabbarItem , Uploader} from 'vant';
+import { Button , Tabbar, TabbarItem , Uploader,Field ,Form ,Popup,Picker,DatetimePicker} from 'vant';
 
 Vue.use(Button);
 Vue.use(Tabbar);
 Vue.use(TabbarItem);
 Vue.use(Uploader);
-
+Vue.use(Form);
+Vue.use(Field);
+Vue.use(Popup);
+Vue.use(Picker);
+Vue.use(DatetimePicker);
 
 new Vue({
   render: h => h(App),
