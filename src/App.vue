@@ -11,7 +11,7 @@ import tabbar from '@/components/tabbar.vue'
 
 
 export default {
-  components: { tabbar },
+  components: { tabbar},
   name: 'App',
 
 }
