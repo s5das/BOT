@@ -25,7 +25,7 @@ export default {
 }
 </script >
 
-<style scoped>
+<style scoped lang="less">
 .box1{
   margin-top: 16px;
   display: flex;
