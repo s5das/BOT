@@ -6,9 +6,10 @@ html {
     /*让 html 和浏览器窗口高度一致*/
     height: 100%;
     /*少数浏览器默认背景色为浅灰色，所以设置默认背景颜色为纯白*/
-    background-color: #fff;
+    /* background-color: #fff; */
   }
   
+
   html,
   body {
     /*body 宽度大 html 度时，某些浏览器会出现内部滚动条；所以设置「html、body」宽度相同且「overflow-x: hidden」*/

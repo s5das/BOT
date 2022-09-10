@@ -9,7 +9,7 @@
         <div class="text1">
           {{item.text1}}
         </div>
-        <van-button color="#EA0C0C" plain round size="mini" @click="handle(item.text1)">{{item.text2}}</van-button>
+        <van-button color="#EA0C0C" plain round size="mini" @click="handle(item.text2)">{{item.text2}}</van-button>
       </div>
     </div>
 
@@ -33,15 +33,23 @@ export default {
             ],
 
             // 是否弹出 派送员入驻申请
-            isCouierSignupPopupShow: false
+            isCouierSignupPopupShow: false,
+
+            // 用户身份
+            isCouier: true
         };
     },
     methods: {
         handle(type) {
             // Toast(type)
-            if (type === "我是派送员") {
-                // Toast("我是派送员~");
-                this.isCouierSignupPopupShow = true
+            if (type === "去抢单") {
+                if(!this.isCouier) {
+                  // 未入驻 去申请入驻
+                  this.isCouierSignupPopupShow = true
+                } else {
+                  // 已入驻 去抢单界面
+                  this.$router.push({name: 'grabOrder'})
+                }
             }
         },
         changeShow(val) {
