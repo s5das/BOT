@@ -7,13 +7,15 @@ import VueRouter from 'vue-router'
 Vue.use(VueRouter)
 
 import router from './router/index.js'
+import './assets/css/base.css'
   
-import { Button , Tabbar, TabbarItem , Uploader} from 'vant';
+import { Button , Tabbar, TabbarItem , Uploader, Popup} from 'vant';
 
 Vue.use(Button);
 Vue.use(Tabbar);
 Vue.use(TabbarItem);
 Vue.use(Uploader);
+Vue.use(Popup);
 
 
 new Vue({
