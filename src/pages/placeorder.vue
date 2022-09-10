@@ -109,7 +109,6 @@
 
 <van-field
   v-model="message"
-
   name="备注"
   rows="2"
   autosize

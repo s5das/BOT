@@ -17,7 +17,11 @@ export default new VueRouter({
         {
             path: '/personalcenter',
             component: () => import("@/pages/personalcenter.vue")
-            },
+        },
+        {
+            path: '/payfinish',
+            component: () => import("@/pages/payfinish.vue")
+        }
     ]
 
 })
