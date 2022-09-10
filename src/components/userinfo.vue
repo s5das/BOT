@@ -35,7 +35,7 @@ export default {
       userinfo: {
         name: '朱猪猪',
         phone: 18612345678,
-        pic:'https://s1.ax1x.com/2022/09/10/vLqYjJ.png'
+        pic:require('@/assets/customer.png')
       }
     }
   }

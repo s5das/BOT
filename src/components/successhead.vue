@@ -22,6 +22,7 @@ name:'success-head'
 
 <style scoped lang="less">
 .box{
+    padding-top:20px ;
     display: flex;
     height: 100px;
     flex-direction: column;
@@ -29,6 +30,7 @@ name:'success-head'
     justify-content: space-around;
     background-color: #fff;
     border-radius: 10px;
+    margin-bottom: 10px;
     .top{
     display: flex;
     justify-content: center;
