@@ -7,8 +7,10 @@ import VueRouter from 'vue-router'
 Vue.use(VueRouter)
 
 import router from './router/index.js'
+import './assets/css/base.css'
   
 import { Button , Tabbar, TabbarItem , Uploader,Field ,Form ,Popup,Picker,DatetimePicker} from 'vant';
+
 
 Vue.use(Button);
 Vue.use(Tabbar);
