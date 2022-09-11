@@ -102,7 +102,7 @@ export default {
 }
 .size_num{
 display: flex;
-justify-content: start;
+justify-content: flex-start;
 .size{
     margin-right: 80px;
 }

@@ -9,7 +9,7 @@ Vue.use(VueRouter)
 import router from './router/index.js'
 import './assets/css/base.css'
   
-import { Button , Tabbar, TabbarItem , Uploader,Field ,Form ,Popup,Picker,DatetimePicker} from 'vant';
+import { Button , Tabbar, TabbarItem , Uploader,Field ,Form ,Popup,Picker,DatetimePicker, Calendar, Icon} from 'vant';
 
 
 Vue.use(Button);
@@ -21,6 +21,8 @@ Vue.use(Field);
 Vue.use(Popup);
 Vue.use(Picker);
 Vue.use(DatetimePicker);
+Vue.use(Calendar)
+Vue.use(Icon)
 
 new Vue({
   render: h => h(App),

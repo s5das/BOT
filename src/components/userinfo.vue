@@ -67,7 +67,7 @@ margin-left: 20px;
 .name_phone{
 
 display: flex;
-justify-content: start;
+justify-content: flex-start;
 .name,
 .phone
 {
