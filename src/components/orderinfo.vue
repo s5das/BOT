@@ -59,11 +59,13 @@ export default {
 
 <style scoped lang="less">
 .box{
+    
     background-color: #fff;
     border-radius: 10px 10px 0 0;
     border-bottom: dashed 2px #BBB;
     padding: 42px 0 0 34px;
     position: relative;
+    margin: 5px 5px 0 5px;
 .location,
 .kuaididian,
 .size,

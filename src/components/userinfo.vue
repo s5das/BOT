@@ -44,6 +44,7 @@ export default {
 
 <style scoped lang="less">
 .box{
+  margin:0 5px 5px 5px;
   background-color: #fff;
   padding: 20px 0 70px 15px;
   display: flex;
