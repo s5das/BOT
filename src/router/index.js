@@ -12,7 +12,7 @@ export default new VueRouter({
         },
         {
             path: '/order',
-            component: () => import("@/pages/order.vue")
+            component: () => import("@/pages/order.vue"),
         },
         {
             path: '/personalcenter',
@@ -32,6 +32,11 @@ export default new VueRouter({
             name: 'grabOrder',
             path: '/courier/grabOrder',
             component: () => import("@/pages/courier/grabOrder.vue")
+        },
+        {
+            name: 'orderDetail',
+            path: '/courier/orderDetail/:id',
+            component: () => import("@/pages/courier/orderDetail.vue")
         }
     ]
 
