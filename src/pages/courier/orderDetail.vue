@@ -19,7 +19,7 @@
             <Orderinfo/>
             <Userinfo/>
             <div class="buttons">
-                <div @click="contact" class="button">联系Ta</div>
+                <div @click="isContactChoicesShow = true" class="button">联系Ta</div>
                 <div @click="showConfirmBox" class="button highlight">确认送达</div>
             </div>
             <van-popup v-model="isConfirmBoxShow">
@@ -33,6 +33,18 @@
                     <div class="pop-buttons">
                         <div @click="confirmSent" class="button">提交</div>
                         <div @click="cancel" class="button">取消</div>
+                    </div>
+                </div>
+            </van-popup>
+            <van-popup v-model="isContactChoicesShow">
+                <div class="contact-choices">
+                    <div class="top">
+                        <div @click="isContactChoicesShow = false" class="button">取消</div>
+                        <div class="title">联系收件人</div>
+                        <div @click="contact" class="button">确认</div>
+                    </div>
+                    <div class="choices-box">
+                        <div @click="indexOfContactChoicesChosen = i" v-for="(item, i) in contactChoices" :key="i" :class="['choice', i === indexOfContactChoicesChosen ? 'chosen' : '']">{{item}}</div>
                     </div>
                 </div>
             </van-popup>
@@ -52,7 +64,13 @@ import Userinfo from '@/components/userinfo.vue';
         return {
             status: '派送中',
             // status: '待抢单'
-            isConfirmBoxShow: false
+            isConfirmBoxShow: false,
+            isContactChoicesShow: false,
+            contactChoices: [
+                "打电话",
+                "私聊"
+            ],
+            indexOfContactChoicesChosen: 0
         };
     },
     methods: {
@@ -60,7 +78,13 @@ import Userinfo from '@/components/userinfo.vue';
 
         },
         contact() {
-
+            let method = this.contactChoices[this.indexOfContactChoicesChosen]
+            if(method === "打电话") {
+                //
+            } else if(method === "私聊") {
+                //
+            }
+            this.isContactChoicesShow = false
         },
         showConfirmBox() {
             this.isConfirmBoxShow = true
@@ -132,6 +156,42 @@ import Userinfo from '@/components/userinfo.vue';
             font-size: 20px;
             &:first-of-type {
                 color: rgba(234, 12, 12, 87);
+            }
+        }
+    }
+}
+
+.contact-choices {
+    width: 366px;
+    .top {
+        display: flex;
+        justify-content: space-between;
+        margin: 5px 10px;
+        font-size: 16px;
+
+        .button {
+            color: rgba(234, 12, 12, 73);
+        }
+
+        .title {
+            color: rgb(234, 12, 12) 73%;
+        }
+    }
+    .choices-box {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
+        box-sizing: border-box;
+        // height: 164px;
+        padding: 20px;
+        .choice {
+            margin: 10px 0;
+            text-align: center;
+            font-size: 16px;
+            color: rgba(16, 16, 16, 100);
+            &.chosen {
+                color: rgba(16, 16, 16, 100);
+                font-weight: 600;
             }
         }
     }
