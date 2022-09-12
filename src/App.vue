@@ -20,7 +20,6 @@ export default {
 <style>
 body{user-select: none;
      background-color: #EFEFEF ;
-     padding: 16px 6px;
 }
 
 </style>

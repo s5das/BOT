@@ -29,7 +29,7 @@
 <script>
 export default {
   name: 'user-info',
-  props: [],
+  props: ['id'],
   data() {
     return {
       userinfo: {

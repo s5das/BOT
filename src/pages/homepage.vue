@@ -65,6 +65,7 @@ export default {
 
 <style scoped lang="less">
 .box1{
+  margin-top: 15px;
   display: flex;
   justify-content: space-around;
 }
@@ -74,6 +75,7 @@ export default {
   width: 182px;
   background-color: #fff;
   display: flex;
+  border-radius: 7px;
   flex-direction: column;
   justify-content: space-around;
   align-items: center;

@@ -22,6 +22,11 @@ export default new VueRouter({
             path: '/payfinish',
             component: () => import("@/pages/payfinish.vue")
         },
+        {
+            path: '/withdraw',
+            component: () => import("@/pages/withdraw.vue")
+        }
+        ,
         // 派送员相关
         {
             name: 'grabOrder',

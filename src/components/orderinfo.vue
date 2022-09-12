@@ -39,7 +39,7 @@
 <script>
 export default {
     name: 'order-info',
-    props: [],
+    props: ['orderid'],
     data() {
         return {
             orderinfo: {
