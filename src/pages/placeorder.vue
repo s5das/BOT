@@ -9,7 +9,7 @@
 <van-field
   readonly
   clickable
-  name="size"
+  name="spec_name"
   :value="value1"
   label="快递规格"
   placeholder="点击选择规格"
@@ -27,7 +27,7 @@
 <van-field
   readonly
   clickable
-  name="num"
+  name="num_of_packge"
   :value="value2"
   label="快递数量"
   placeholder="点击选择数量"
@@ -50,7 +50,7 @@
   <van-field
   readonly
   clickable
-  name="location"
+  name="pickup_station_name"
   :value="value3"
   label="快递点"
   placeholder="点击选择快递点"
@@ -65,7 +65,7 @@
   />
 </van-popup>
 
-<van-field name="pic" label="上传图片">
+<van-field name="pic" label="上传图片"> 
   <template #input>
     <van-uploader v-model="filelist" :after-read="afterRead" :max-count="1"/>
   </template>
@@ -74,7 +74,7 @@
 <van-field
   readonly
   clickable
-  name="starttime"
+  name="starting_time"
   :value="value4"
   label="起始时间"
   placeholder="点击选择送达起始时间"
@@ -92,7 +92,7 @@
 <van-field
   readonly
   clickable
-  name="finishtime"
+  name="cut_off_time"
   :value="value5"
   label="送达时间"
   placeholder="点击选择送达截至时间"
@@ -109,7 +109,7 @@
 
 <van-field
   v-model="message"
-  name="备注"
+  name="remarks"
   rows="2"
   autosize
   label="备注"
@@ -126,7 +126,7 @@
   <div class="content2">
     <van-field
     v-model="user_receiveplace"
-    name="收件地址"
+    name="reciplent_adress"
     label="收件地址"
     placeholder="请输入收件地址"
     
@@ -134,7 +134,7 @@
 
   <van-field
     v-model="user_name"
-    name="收件人"
+    name="reciplent_name"
     label="收件人"
     placeholder="请输入收件人名称"
 
@@ -142,7 +142,7 @@
 
   <van-field
     v-model="user_phone"
-    name="手机号"
+    name="reciplent_phone_number"
     label="手机号"
     placeholder="请输入手机号"
 
@@ -158,7 +158,9 @@
 
 <script>
 import fmt from '@/utils/format'
-import {Toast} from 'vant'
+import { Toast } from 'vant'
+import compressImg from '@/utils/compressImg'
+import axios from 'axios'
 export default {
     
     name: 'place-order',
@@ -167,7 +169,9 @@ export default {
     minDate:new Date(),
     // 快递规格
       value1: '',
-      columns1: ['大件(3-5kg)','中件(1-3kg)','小件(小于1kg)'],
+      columns1: ['大件(3-5kg)', '中件(1-3kg)', '小件(小于1kg)'],
+      reward_per_package: [1,2,3],
+      royalty_rate:[],
       showPicker1: false,
     // 快递数量
       value2: '',
@@ -202,13 +206,39 @@ export default {
       this.value2 = value;
       this.showPicker2 = false;
       },
-      onConfirm3(value) {
+    onConfirm3(value) {
       this.value3 = value;
       this.showPicker3 = false;
-      },
-      afterRead(file) {
-        console.log(file.file);
-      },
+    },
+     
+   async upload(file){
+   const img = await this.readImg(file)
+   const blob = await compressImg(img, file.type, 1000, 1000)
+   const formData = new FormData()
+   formData.append('orderPic', blob)
+   axios.post('/fanbook/deliverbot/front/order/client/upload_order_pic',formData)
+    },
+
+  readImg(file)  {
+  return new Promise((resolve, reject) => {
+    const img = new Image()
+    const reader = new FileReader()
+    reader.onload = function(e) {
+      img.src = e.target.result
+    }
+    reader.onerror = function(e) {
+      reject(e)
+    }
+    reader.readAsDataURL(file)
+    img.onload = function() {
+      resolve(img)
+    }
+    img.onerror = function(e) {
+      reject(e)
+    }
+  })
+},
+
       onConfirm4(value) {
       
       this.value4 = fmt(value);
@@ -228,15 +258,41 @@ export default {
               return true;
         }
       },
-      onSubmit(data) {
-          data['金额'] = this.jine;
-          if(this.check_info(data))
-          console.log(data);
-      }
+    onSubmit(data) {
+        data['reward'] = this.jine;
+        delete data['pic'];
+        data['pic_nums'] = this.filelist.length
+        data['num_of_packge'] = Number(data['num_of_packge'].replace('件',''))
+      if (this.check_info(data)) {
+        axios.post('/fanbook/deliverbot/front/order/client/create_order', data);
+        this.upload(this.filelist[0].file)
+        }
+        
+    },
+    // 动态申请规格、单价、利率、地点
+      mounted() {
+        axios.get('/fanbook/deliverbot/general/order/get_specifications').then((response)=>{
+          this.columns1 = response.spec_name
+          this.reward_per_package = response.reward_per_package
+          this.royalty_rate = response.royalty_rate
+        }, (err) => { console.log(err.message); })
+        
+        axios.get('/fanbook/deliverbot/general/pickup_station/get_all').then((response) => {
+          this.columns3 = response.pickup_address
+        },(err)=>{console.log(err.message);})
+      },
     },
     computed: {
         jine() {
-            return 5;
+        if (this.value1 && this.value2) {
+          const num = Number(this.value2.replace('件', ''))
+          const per_value = this.reward_per_package[this.columns1.indexOf(this.value1)]
+          return num * per_value
+        }
+        else {
+          return 0
+        }
+
     }
   }
 }
