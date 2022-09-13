@@ -67,7 +67,7 @@
 
 <van-field name="pic" label="上传图片"> 
   <template #input>
-    <van-uploader v-model="filelist" :after-read="afterRead" :max-count="1"/>
+    <van-uploader v-model="filelist"  :max-count="1"/>
   </template>
 </van-field>
 
@@ -171,7 +171,7 @@ export default {
       value1: '',
       columns1: ['大件(3-5kg)', '中件(1-3kg)', '小件(小于1kg)'],
       reward_per_package: [1,2,3],
-      royalty_rate:[],
+      royalty_rate:[0.1,0.1,0.1],
       showPicker1: false,
     // 快递数量
       value2: '',
