@@ -21,6 +21,7 @@
 <script>
 import SignupPopup from '@/components/courier/signupPopup.vue';
 // import { Toast } from 'vant';
+import { getUserInfo, login } from '@/http/api/user';
 
 export default {
     name: "home-page",
@@ -35,10 +36,29 @@ export default {
             isCouierSignupPopupShow: false,
 
             // 用户身份
-            isCouier: true
+            isCouier: false
         };
     },
+  mounted() {
+    this.init();
+    this.loginAsync();
+  },
   methods: {
+    async init() {
+      let params = {
+        menuId: 11
+      }
+      const data = await getUserInfo(params);
+      console.log('data', data);
+    },
+    async loginAsync() {
+      let params = {
+        email: '123',
+        password: '12321'
+      }
+      let data = await login(params);
+      console.log('data', data);
+    },
     handle(type) {
       // Toast(type)
       if (type === 1) {

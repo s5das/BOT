@@ -126,9 +126,10 @@
             right: 10px;
             font-size: 14px;
             display: flex;
-
+            padding-right: 5px;
             .button {
-                margin: 0 13px;
+                margin: 0 10px;
+                padding: 0 5px;
                 border: 1px solid;
                 border-radius: 4px;
                 height: 23px;

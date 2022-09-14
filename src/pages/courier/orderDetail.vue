@@ -1,6 +1,7 @@
 <!-- 抢单详情页 -->
 <template>
     <div>
+        <!-- 1 待抢单 -->
         <div v-if="status === '待抢单'">
             <Orderinfo/>
             <div class="buttons">
@@ -8,8 +9,9 @@
             </div>
         </div>
 
+        <!-- 2 派送中 -->
         <div v-if="status === '派送中'">
-            <Successhead v-show="status === '派送中'">
+            <Successhead>
                 <template v-slot:content>
                     <div>
                         抢单成功
@@ -62,7 +64,7 @@ import Userinfo from '@/components/userinfo.vue';
     },
     data() {
         return {
-            status: '派送中',
+            status: '待抢单',
             // status: '待抢单'
             isConfirmBoxShow: false,
             isContactChoicesShow: false,
@@ -96,6 +98,10 @@ import Userinfo from '@/components/userinfo.vue';
         },
         cancel() {
             this.isConfirmBoxShow = false
+        },
+        confirmReceived() {
+            this.isConfirmBoxShow = false
+            // 发送变更状态请求
         }
     },
     components: { Orderinfo, Successhead, Userinfo }
@@ -107,6 +113,7 @@ import Userinfo from '@/components/userinfo.vue';
     background-color: #FFFFFF;
     width: 366px;
     margin: 0 auto;
+    min-height: 140px;
     
     display: flex;
     flex-direction: column;
