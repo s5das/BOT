@@ -23,6 +23,8 @@ import {
   CellGroup,
   Calendar,
   Icon,
+  PullRefresh,
+  List,
 } from "vant";
 
 Vue.use(Button);
@@ -39,6 +41,9 @@ Vue.use(CellGroup);
 
 Vue.use(Calendar);
 Vue.use(Icon);
+
+Vue.use(PullRefresh);
+Vue.use(List)
 
 new Vue({
   render: (h) => h(App),

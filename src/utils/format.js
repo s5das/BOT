@@ -18,5 +18,5 @@ export default function (fmt) {
         minute = '0' + minute;
     }
 
-    return year+'-'+month+'-'+day+' '+hour + ':' + minute;
+    return ''+year+'-'+month+'-'+day+' '+hour + ':' + minute;
 } 

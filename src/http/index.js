@@ -1,6 +1,6 @@
 import axios from "axios";
+import { Toast } from "vant";
 import serverConfig from "./config";
-import qs from 'qs';
 
 // 创建axios实例
 const serviceAxios = axios.create({
@@ -19,16 +19,16 @@ serviceAxios.interceptors.request.use(
             config.headers["Authorization"] = localStorage.getItem("token");
         }
 
-        // 设置请求头
-        if(!config.headers["content-type"]) { // 如果没有设置请求头
-            if(config.method === 'post') {
-            config.headers["content-type"] = "application/x-www-form-urlencoded"; // post 请求
-            config.data = qs.stringify(config.data); // 序列化,比如表单数据
-            } else {
-            config.headers["content-type"] = "application/json"; // 默认类型
-            }
-        }
-        console.log("请求配置", config);
+        // // 设置请求头
+        // if(!config.headers["content-type"]) { // 如果没有设置请求头
+        //     if(config.method === 'post') {
+        //     config.headers["content-type"] = "application/x-www-form-urlencoded"; // post 请求
+        //     config.data = qs.stringify(config.data); // 序列化,比如表单数据
+        //     } else {
+        //     config.headers["content-type"] = "application/json"; // 默认类型
+        //     }
+        // }
+        // console.log("请求配置", config);
 
         return config;
     },
@@ -43,6 +43,7 @@ serviceAxios.interceptors.response.use(
         let data = res.data;
         // 处理自己的业务逻辑，比如判断 token 是否过期等等
         // 代码块
+        
         return data;
     },
     (error) => {
@@ -92,6 +93,7 @@ serviceAxios.interceptors.response.use(
               message = "异常问题，请联系管理员！";
               break;
           }
+          Toast('请求失败')
         }
         return Promise.reject(message);
     }

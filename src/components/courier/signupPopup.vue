@@ -42,6 +42,7 @@
 
 <script>
 import { Toast } from 'vant'
+import { courierRegister } from '@/http/api/courier'
 
     export default {
         emits: ['changeShow'],
@@ -109,12 +110,16 @@ import { Toast } from 'vant'
                 }
 
                 // 只有通过前端校验才能成功提交
-                Toast(
-                    '成功提交审核\n' +
-                    'trueName: ' + trueName + '\n' +
-                    'teleNum: '  + teleNum + '\n' +
-                    'remarks: ' + remarks + '\n'
-                )
+
+                let params = {
+                    phone_number: teleNum,
+                    real_name: trueName,
+                    remarks: remarks
+                }
+                courierRegister(params).then(() => {
+                    Toast('提交审核')
+                    this.isShow = false
+                })
             }
         },
         watch: {
