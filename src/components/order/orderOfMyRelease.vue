@@ -35,7 +35,7 @@
                 派送员: {{orderInfo.courier}}正在为您配送
             </div>
             <div class="buttons">
-                <div v-if="orderInfo.status === '待接单'" class="button cancel">取消订单</div>
+                <div @click="cancel" v-if="orderInfo.status === '待接单'" class="button cancel">取消订单</div>
                 <div @click="gotoOrderDetail(orderInfo.id)" class="button detail">查看详情</div>
             </div>
         </div>
@@ -43,6 +43,7 @@
 </template>
 
 <script>
+import { cancelOrder } from '@/http/api/user';
     export default {
         props: {
             orderInfo: Object
@@ -50,11 +51,17 @@
         methods: {
             gotoOrderDetail(id) {
                 this.$router.push({
-                    name: "orderDetail",
+                    name: "orderDetail/user",
                     params: {
-                        id: id
+                        id: id,
+                        status: this.orderInfo.status
                     }
                 });
+            },
+            cancel() {
+                cancelOrder({
+                    orderId: this.orderInfo.id
+                })
             }
         }
     }

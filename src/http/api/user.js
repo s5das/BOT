@@ -1,21 +1,34 @@
 import serviceAxios from "../index";
 
-export const getUserInfo = (params) => {
+export const completeOrder = (params) => {
     return serviceAxios({
-        method: "get",
-        url: "/api/website/queryMenuWebsite",
-        params: params,
+        method: 'get',
+        url: '/fanbook/deliverbot/front/order/client/complete_order',
+        params
     });
 };
 
-export const login = (data) => {
+export const getOrderList = (params) => {
     return serviceAxios({
-        url: "/api/user/login",
-        method: "GET",
-        data,
-        headers: {
-            'content-type': 'application/x-www-form-urlencoded'
-        },
-        requestType: 'form',
+        method: 'post',
+        url: '/fanbook/deliverbot/front/order/client/get_order_list',
+        params
     });
 };
+
+export const blurSearch = (params) => {
+    return serviceAxios({
+        method: 'post',
+        url: '/fanbook/deliverbot/front/order/client/blur_search',
+        params
+    });
+};
+
+export const cancelOrder = (params) => {
+    return serviceAxios({
+        method: 'get',
+        url: '/fanbook/deliverbot/front/order/client/cancel_order',
+        params
+    });
+};
+

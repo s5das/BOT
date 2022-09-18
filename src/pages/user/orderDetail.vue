@@ -4,40 +4,15 @@
         <!-- 1 待接单 -->
         <div v-if="status === '待接单'">
             <Orderinfo/>
-            <div class="buttons">
-                <div @click="grab" class="button">我要抢单</div>
-            </div>
         </div>
 
         <!-- 2 派送中 -->
         <div v-if="status === '派送中'">
-            <Successhead>
-                <template v-slot:content>
-                    <div>
-                        抢单成功
-                    </div>
-                </template>
-            </Successhead>
             <Orderinfo/>
             <Userinfo/>
             <div class="buttons">
                 <div @click="isContactChoicesShow = true" class="button">联系Ta</div>
-                <div @click="showConfirmBox" class="button highlight">确认送达</div>
             </div>
-            <van-popup v-model="isConfirmBoxShow">
-                <div class="confirm-box">
-                    <div class="title">
-                        确认送达
-                    </div>
-                    <div class="content">
-                        若该订单已送达, 请点击提交
-                    </div>
-                    <div class="pop-buttons">
-                        <div @click="confirmSent" class="button">提交</div>
-                        <div @click="cancel" class="button">取消</div>
-                    </div>
-                </div>
-            </van-popup>
             <van-popup v-model="isContactChoicesShow">
                 <div class="contact-choices">
                     <div class="top">
@@ -127,7 +102,6 @@
 
 <script>
 import Orderinfo from '@/components/orderinfo.vue';
-import Successhead from '@/components/successhead.vue'
 import Userinfo from '@/components/userinfo.vue';
 import { takeOrder, turnDelivered } from '@/http/api/courier';
 import { completeOrder } from '@/http/api/user';
@@ -196,7 +170,7 @@ import { completeOrder } from '@/http/api/user';
             })
         }
     },
-    components: { Orderinfo, Successhead, Userinfo }
+    components: { Orderinfo, Userinfo }
 }
 </script>
 
