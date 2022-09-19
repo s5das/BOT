@@ -11,7 +11,7 @@ export default new VueRouter({
             component:() => import('@/pages/getservice/placeorder.vue')
         },
         {
-            path: '/order',
+            path: '/order:mode?',
             component: () => import("@/pages/order.vue"),
             props({ query }) {
                 console.log(query);
@@ -41,9 +41,15 @@ export default new VueRouter({
             component: () => import("@/pages/courier/grabOrder.vue")
         },
         {
-            name: 'orderDetail',
-            path: '/courier/orderDetail/:id',
+            name: 'orderDetail/courier',
+            path: '/courier/orderDetail/:id:status',
             component: () => import("@/pages/courier/orderDetail.vue")
+        },
+        // 用户
+        {
+            name: 'orderDetail/user',
+            path: '/user/orderDetail/:id:status',
+            component: () => import("@/pages/user/orderDetail.vue")
         }
     ]
 

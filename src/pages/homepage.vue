@@ -24,11 +24,13 @@ import SignupPopup from '@/components/courier/signupPopup.vue';
 import { getUserType } from '@/http/api/common';
 import { TYPE } from '@/http/const/const';
 import authorize from '@/utils/authorize'
-
+import PubSub from 'pubsub-js';
 export default {
     name: "home-page",
     data() {
-        return {
+      return {
+        // tabbar id
+            id:0,
             pagedata: [
                 { text1: "我是客户", text2: "去下单", src: require("@/assets/customer.png") },
                 { text1: "我是派送员", text2: "去抢单", src: require("@/assets/worker.png") }
@@ -42,6 +44,7 @@ export default {
         };
     },
   mounted() {
+    PubSub.publish('changetabbar',this.id)
     // this.init();登录并缓存得到的结果
   },
   methods: {

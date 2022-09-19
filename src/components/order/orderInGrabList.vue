@@ -36,9 +36,10 @@
         methods: {
             gotoOrderDetial(id) {
                 this.$router.push({
-                    name: "orderDetail",
+                    name: "orderDetail/courier",
                     params: {
-                        id: id
+                        id: id,
+                        status: '待抢单'
                     }
                 });
             }

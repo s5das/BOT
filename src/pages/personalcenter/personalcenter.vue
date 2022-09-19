@@ -35,12 +35,15 @@
 </template>
 
 <script >
+import PubSub from 'pubsub-js';
 import serviceAxios from '@/http';
 import authorize from '@/utils/authorize';
 export default {
   name: 'personal-center',
   data() {
     return {
+      // tabbar id
+      id:2,
       statistics:{},
       name: '未登录',
       barlist: [{
@@ -66,10 +69,10 @@ export default {
     handleclick(index) {
       switch (index) {
 
-        case 0: this.$router.push({ path: '/order?condition=0' }); break;
-        case 1: this.$router.push({ path: '/order?condition=1'}); break;
-        case 2: this.$router.push({ path: '/order?condition=2'}); break;
-        case 3: this.$router.push({ path: '/order?condition=3'}); break;
+        case 0: this.$router.replace({ path: '/order?condition=0' }); break;
+        case 1: this.$router.replace({ path: '/order?condition=1'}); break;
+        case 2: this.$router.replace({ path: '/order?condition=2'}); break;
+        case 3: this.$router.replace({ path: '/order?condition=3'}); break;
 
         }
     },
@@ -81,6 +84,7 @@ export default {
   }
   },
   mounted() {
+      PubSub.publish('changetabbar', this.id);
       serviceAxios({
         method: 'get',
         url:'/fanbook/deliverbot/general/user_center/get_statistics'

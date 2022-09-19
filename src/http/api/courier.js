@@ -9,14 +9,6 @@ export const courierRegister = (params) => {
     });
 };
 
-// 模糊搜索订单
-export const blueSearch= (params) => {
-    return serviceAxios({
-        method: 'post',
-        url: '/fanbook/deliverbot/front/order/courier/blur_search_orders',
-        params: params
-    });
-};
 
 // 查询未抢订单的详情
 export const getBasicInfo = (data) => {
