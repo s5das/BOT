@@ -22,15 +22,21 @@
         </div>
 
         <!-- 订单 -->
-        <div class="orders">
-            <OrderInGrabList v-for="item in orders" :key="item.id" :order-info="item"></OrderInGrabList>
-        </div>
+        <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
+            <van-list class="orders" v-model="loading" :finished="finished" finished-text="没有更多了" @load="getOrders">
+                <OrderInGrabList v-for="item in orders" :key="item.id" :order-info="item"></OrderInGrabList>
+            </van-list>
+        </van-pull-refresh>
     </div>
 </template>
 
 <script>
-import { Toast } from 'vant'
 import OrderInGrabList from '@/components/order/orderInGrabList.vue'
+import { showOrdersToTake } from '@/http/api/courier';
+import format from '@/utils/format';
+import { getAllSite } from '@/http/api/common'
+import { ORDER } from '@/http/const/const'
+
 
     export default {
     name: "grabOrder",
@@ -41,18 +47,25 @@ import OrderInGrabList from '@/components/order/orderInGrabList.vue'
                     // 这里id才起标识作用
                     // 而名字会在complete中改变
                     id: 0,
-                    name: "金额高低",
+                    name: "金额",
                     // 子选项应该在conditionsCilckHandler中获取
                     // 这里先用假数据
                     idOfChosen: 0,
                     choices: [
                         {
                             id: 0,
-                            name: "金额高低",
+                            name: "金额不限",
+                            value: 0
                         },
                         {
                             id: 1,
-                            name: "时间先后",
+                            name: "金额降序",
+                            value: 1
+                        },
+                        {
+                            id: 2,
+                            name: '金额升序',
+                            value: 2
                         }
                     ]
                 },
@@ -63,7 +76,7 @@ import OrderInGrabList from '@/components/order/orderInGrabList.vue'
                     choices: [
                         {
                             id: 0,
-                            name: "不限",
+                            name: "快递点不限",
                         },
                         {
                             id: 1,
@@ -98,24 +111,28 @@ import OrderInGrabList from '@/components/order/orderInGrabList.vue'
                     choices: [
                         {
                             id: 0,
-                            name: "不限"
-                        },
-                        {
-                            id: 1,
-                            name: "17:00之前"
-                        },
-                        {
-                            id: 2,
-                            name: "18:00之前"
-                        },
-                        {
-                            id: 3,
-                            name: "19:00之前"
-                        },
+                            name: "时间不限",
+                            value: null
+                        }
                     ]
                 }
             ],
+            
+            // 当由折叠变展开时, old_conditions复制conditions
+            // 若用户不确认, 直接折叠, 将old_conditions赋给conditions, 使conditions与展开前一样
+            old_conditions: {},
             idOfActivated: -1,
+            
+            // 第一次请求是请求第一页
+            // 每页10条数据
+            pageNum: 1,
+
+            loading: false,
+            finished: false,
+
+            refreshing: false,
+
+            // 假数据, 等后端部署之后清空orders
             orders: [
                 {
                     id: 0,
@@ -156,17 +173,129 @@ import OrderInGrabList from '@/components/order/orderInGrabList.vue'
             ]
         };
     },
+    mounted() {
+
+    },
     methods: {
-        conditionClickHandler(item) {
+        async onRefresh() {
+            this.orders.length = 2
+            this.pageNum = 1
+            this.getOrders()
+            this.refreshing = false
+        },
+        async getOrders() {
+            let before_time = this.conditions[2].choices[this.conditions[2].idOfChosen].value
+            let ordered_by_reward_desc = this.conditions[0].choices[this.conditions[0].idOfChosen].value
+            let pickup_address = this.conditions[1].choices[this.conditions[1].idOfChosen].value
+            let serial_number = this.pageNum
+            
+            let params = {
+                    before_time,
+                    ordered_by_reward_desc,
+                    pickup_address,
+                    serial_number,
+                }
+
+            showOrdersToTake(params).then(orders_new => {
+                for(let order in orders_new) {
+                    this.orders.push(
+                        {
+                            id: order[ORDER.order_id],
+                            receiveAddress: order[ORDER.recipient_address],
+                            expressSite: order[ORDER.pickup_address],
+                            price: order[ORDER.reward],
+                            numOfExpress: order[ORDER.num_of_packages],
+                            timeOfArrive: order[ORDER.deliver_time_period_string],
+                            remarks: order[ORDER.remarks],
+                        }
+                    )
+                }
+                let length = orders_new.length
+                if(length < 10) this.finished = true
+                else this.pageNum++
+            })
+
+            this.loading = false
+        },
+        async conditionClickHandler(item) {
             if (item.id === this.idOfActivated) {
-                // 点中的是已展开的, 则收起
+                // 点中的是已展开的, 则将选项复原至展开前
+                this.conditions[0].idOfChosen = this.old_conditions.idOfChosen0
+                this.conditions[1].idOfChosen = this.old_conditions.idOfChosen1
+                this.conditions[2].idOfChosen = this.old_conditions.idOfChosen2
+                this.old_conditions = {}
+
+                // 折叠
                 this.idOfActivated = -1;
             }
             else {
                 // 点中的是未展开的
+
+                // 存旧选择
+                if(JSON.stringify(this.old_conditions) === '{}') {
+                    this.old_conditions = {
+                        idOfChosen0: this.conditions[0].idOfChosen,
+                        idOfChosen1: this.conditions[1].idOfChosen,
+                        idOfChosen2: this.conditions[2].idOfChosen,
+                    }
+                }
+
+                // 1 这里应该获取子选项
+                if(item.id === 1) {
+                    // 获取快递点子选项
+                    let choices = [
+                        {
+                            id: 0,
+                            name: "快递点不限",
+                            value: null
+                        },
+                    ]
+                    let siteArray = await getAllSite()
+                    let length = siteArray.length
+                    if(length !== undefined) {
+                        for(let i = 1; i <= length; ++i) {
+                            choices.push({
+                                id: i,
+                                name: siteArray[i-1].pickup_address,
+                                value: siteArray[i-1].pickup_address
+                            })
+                        }
+                    }
+                }
+
+                if(item.id === 2) {
+                    // 获取时间的子选项
+                    // 第0个为不限, 其余24个为往后的24个整点
+                    let dateOfNow = new Date()
+                    let hourOfNow = dateOfNow.getHours()
+                    let choices = [
+                        {
+                            id: 0,
+                            name: '时间不限',
+                            value: null
+                        }
+                    ]
+                    for(let i = 1; i <= 24; ++i) {
+                        let hour = (hourOfNow + i) % 24;
+
+                        let data = new Date()
+                        data.setMilliseconds(0)
+                        data.setMinutes(0)
+                        data.setHours(data.getHours() + i)
+
+                        choices.push({
+                            id: i,
+                            name: `${hour <= hourOfNow ? '次日 ' : ''}${hour < 10 ? '0' + hour : hour}:00之前`,
+                            value: format(data)
+                        })
+                    }
+                    this.conditions[2].choices = choices
+                }
+
+                // 2 展开
                 this.idOfActivated = item.id;
             }
-            // 这里应该获取子选项
+
         },
         choicesClickHandler(item) {
             this.conditions[this.idOfActivated].idOfChosen = item.id;
@@ -177,11 +306,9 @@ import OrderInGrabList from '@/components/order/orderInGrabList.vue'
                 c.name = c.choices[c.idOfChosen].name;
             });
             this.idOfActivated = -1;
-            // 根据选中的条件发起请求
-            Toast("按condition请求订单数组\n" +
-                this.conditions[0].name + "\n" +
-                this.conditions[1].name + "\n" +
-                this.conditions[2].name + "\n");
+            this.old_conditions = {}
+
+            this.getOrders()
         }
     },
     components: { OrderInGrabList }
@@ -210,10 +337,11 @@ import OrderInGrabList from '@/components/order/orderInGrabList.vue'
             justify-content: space-between;
             align-items: center;
             width: 33%;
-            padding: 0 20px;
+            padding: 0 18px;
             text-align: center;
             color: rgba(16, 16, 16, 100);
             font-size: 14px;
+            overflow: hidden;
 
             &:hover {
                 cursor: pointer;
@@ -322,6 +450,7 @@ import OrderInGrabList from '@/components/order/orderInGrabList.vue'
 
     .orders {
         margin-top: 56px;
+        min-height: 800px;
     }
 }
 </style>

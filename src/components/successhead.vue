@@ -9,14 +9,20 @@
   </div>
    </div>
     <div>
-      <van-button color="#E99D42" plain size='small' round  @click="jump(index)">订单列表</van-button>
+      <!-- <van-button color="#E99D42" plain size='small' round  @click="jump(index)">订单列表</van-button> -->
+      <van-button color="#E99D42" plain size='small' round  @click="jump()">订单列表</van-button>
     </div>
   </div>
 </template>
 
 <script>
 export default {
-name:'success-head'
+  name:'success-head',
+  methods: {
+    jump() {
+      //
+    }
+  }
 }
 </script>
 
