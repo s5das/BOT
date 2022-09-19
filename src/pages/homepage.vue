@@ -23,6 +23,7 @@ import SignupPopup from '@/components/courier/signupPopup.vue';
 // import { Toast } from 'vant';
 import { getUserType } from '@/http/api/common';
 import { TYPE } from '@/http/const/const';
+import authorize from '@/utils/authorize'
 
 export default {
     name: "home-page",
@@ -41,11 +42,11 @@ export default {
         };
     },
   mounted() {
-    this.init();
+    // this.init();登录并缓存得到的结果
   },
   methods: {
     async init() {
-
+      authorize();
     },
     async handle(type) {
       // Toast(type)

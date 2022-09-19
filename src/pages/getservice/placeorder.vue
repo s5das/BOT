@@ -95,7 +95,7 @@
   name="cut_off_time"
   :value="value5"
   label="送达时间"
-  placeholder="点击选择送达截至时间"
+  placeholder="点击选择送达截止时间"
   @click="showPicker5 = true"
 />
 <van-popup v-model="showPicker5" position="bottom">
@@ -160,12 +160,13 @@
 import fmt from '@/utils/format'
 import { Toast } from 'vant'
 import compressImg from '@/utils/compressImg'
-import axios from 'axios'
+import serviceAxios from "../../http/index";
 export default {
     
     name: 'place-order',
     data() {
-        return {
+      return {
+    orderId:-1,
     minDate:new Date(),
     // 快递规格
       value1: '',
@@ -211,13 +212,19 @@ export default {
       this.showPicker3 = false;
     },
      
-   async upload(file){
-   const img = await this.readImg(file)
-   const blob = await compressImg(img, file.type, 1000, 1000)
-   const formData = new FormData()
-   formData.append('orderPic', blob)
-   axios.post('/fanbook/deliverbot/front/order/client/upload_order_pic',formData)
+    async upload(file) {
+      const img = await this.readImg(file)
+      const blob = await compressImg(img, file.type, 1000, 1000)
+      // console.log(blob);
+      const formData = new FormData()
+      formData.append('orderPic', blob)
+      return serviceAxios({
+        method: 'post',
+        url: '/fanbook/deliverbot/front/order/client/upload_order_pic',
+        data: formData
+      })
     },
+
 
   readImg(file)  {
   return new Promise((resolve, reject) => {
@@ -262,22 +269,68 @@ export default {
         data['reward'] = this.jine;
         delete data['pic'];
         data['pic_nums'] = this.filelist.length
-        data['num_of_packge'] = Number(data['num_of_packge'].replace('件',''))
+      data['num_of_packge'] = Number(data['num_of_packge'].replace('件', ''))
+      // console.log(data);
       if (this.check_info(data)) {
-        axios.post('/fanbook/deliverbot/front/order/client/create_order', data);
-        this.upload(this.filelist[0].file)
-        }
-        
+        this.pay().then(
+          (res) => {
+          this.orderId = res;
+          return serviceAxios({
+          method: 'post',
+          url: '/fanbook/deliverbot/front/order/client/create_order',
+          data
+          })
+          }
+        ).then(
+          () => {
+            return this.upload(this.filelist[0].file)
+          }
+        ).then(
+          () => {
+            this.$router.push({
+              path: '/payfinish',
+              querry: {
+                orderId:this.orderId
+              }
+            }).catch(
+          (err)=>{console.log(err.message);}
+        )
+          }
+        )
+
+
+
+        .then(
+          () => { this.upload(this.filelist[0].file) },
+        ).then(
+          () => {
+            this.$router.push({
+              path: '/payfinish'
+            })
+          }
+        )
+      }
     },
+    async pay() {
+      let orderId = 0;
+      return orderId
+    },
+
     // 动态申请规格、单价、利率、地点
       mounted() {
-        axios.get('/fanbook/deliverbot/general/order/get_specifications').then((response)=>{
+        serviceAxios({
+          method: 'get',
+          url:'/fanbook/deliverbot/general/order/get_specifications'
+        }).then((response)=>{
           this.columns1 = response.spec_name
           this.reward_per_package = response.reward_per_package
           this.royalty_rate = response.royalty_rate
         }, (err) => { console.log(err.message); })
         
-        axios.get('/fanbook/deliverbot/general/pickup_station/get_all').then((response) => {
+        serviceAxios({
+          method: 'get',
+          url:'/fanbook/deliverbot/general/pickup_station/get_all'
+        }).then((response) => {
           this.columns3 = response.pickup_address
         },(err)=>{console.log(err.message);})
       },

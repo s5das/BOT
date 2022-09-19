@@ -8,23 +8,30 @@ export default new VueRouter({
         },
         {
             path: '/placeorder',
-            component:() => import('@/pages/placeorder.vue')
+            component:() => import('@/pages/getservice/placeorder.vue')
         },
         {
             path: '/order',
             component: () => import("@/pages/order.vue"),
+            props({ query }) {
+                console.log(query);
+                return {condition:query.condition}
+            }
         },
         {
             path: '/personalcenter',
-            component: () => import("@/pages/personalcenter.vue")
+            component: () => import("@/pages/personalcenter/personalcenter.vue")
         },
         {
             path: '/payfinish',
-            component: () => import("@/pages/payfinish.vue")
+            component: () => import("@/pages/getservice/payfinish.vue"),
+            props({querry}) {
+                return {orderId:querry.orderId}
+            }
         },
         {
             path: '/withdraw',
-            component: () => import("@/pages/withdraw.vue")
+            component: () => import("@/pages/personalcenter/withdraw.vue")
         }
         ,
         // 派送员相关

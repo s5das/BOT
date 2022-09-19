@@ -10,11 +10,15 @@
 import tabbar from '@/components/tabbar.vue'
 
 
+
 export default {
   components: { tabbar},
   name: 'App',
+  methods: {
 
+  }
 }
+
 </script>
 
 <style>

@@ -7,7 +7,7 @@
       </div>
     </div>
     <div class="conditions-box">
-      <div @click="changeCondition(i)" v-for="(item, i) in modes[idOfModeActivated].conditions" :key="i" :class="['condition', i === modes[idOfModeActivated].idOfConditionActivated ? 'isActivated' : '']">
+      <div @click="changeCondition(i)" v-for="(item, i) in modes[idOfModeActivated].conditions" :key="i" :class="['condition', i == modes[idOfModeActivated].idOfConditionActivated ? 'isActivated' : '']">
         {{item}}
       </div>
     </div>
@@ -44,6 +44,7 @@ import OrderOfMyRelease from '@/components/order/orderOfMyRelease.vue';
 
 export default {
     name: "order-page",
+    props:['condition'],
     data() {
         return {
             modes: [
@@ -133,7 +134,12 @@ export default {
                   },
             ]
         };
-    },
+  },
+  mounted() {
+    this.changeCondition(this.condition || 0);
+    
+  }
+    ,
     methods: {
         changeMode(i) {
             this.idOfModeActivated = i;
@@ -159,7 +165,8 @@ export default {
             this.isChoosingTime = false;
             this.getOrderList();
         }
-    },
+  },
+
     components: { OrderOfMyGrap, OrderOfMyRelease }
 }
 </script>

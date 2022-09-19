@@ -14,7 +14,7 @@
           <div style="color:#EA0C0C;line-height: 40px;" @click="getmax">全部提现</div>
         </div>
         <div class="b3">
-          <div class="b3_left">体现至</div>
+          <div class="b3_left">提现至</div>
           <div class="b3_right">
           <div><img src="@/assets/wechat.png"></div>
           <div>微信钱包</div>

@@ -12,31 +12,27 @@
     <div class="name_phone">
       <div class="name">
       <div class="title">收件人</div>
-    <div class="content">{{userinfo.name}}</div>
+    <div class="content">{{orderinfo.recipient_name}}</div>
      </div>
      <div class="phone">
       <div class="title">手机号</div>
-    <div class="content">{{userinfo.phone}}</div>
+    <div class="content">{{orderinfo.recipient_phone_number}}</div>
      </div>
     </div>
     <div class="pic">
-    <img :src="userinfo.pic" >
+    <img :src="orderinfo.order_pic_urls[0]" >
     </div>
   </div>
   </div>
 </template>
 
 <script>
+
 export default {
   name: 'user-info',
-  props: ['id'],
+  props: ['orderinfo'],
   data() {
     return {
-      userinfo: {
-        name: '朱猪猪',
-        phone: 18612345678,
-        pic:require('@/assets/customer.png')
-      }
     }
   }
 }

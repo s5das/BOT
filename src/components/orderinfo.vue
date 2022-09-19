@@ -2,33 +2,33 @@
   <div class="box">
   <div class="jine">
     <div class="title">金额</div>
-    <div class="content">¥ {{orderinfo.jine}}</div>
+    <div class="content">¥ {{orderinfo.reward}}</div>
   </div>
   <div class="location">
     <div class="title">收件地址</div>
-    <div class="content">{{orderinfo.location}}</div>
+    <div class="content">{{orderinfo.deliver_address}}</div>
   </div>
   <div class="kuaididian">
     <div class="title">快递点</div>
-    <div class="content">{{orderinfo.kuaididian}}</div>
+    <div class="content">{{orderinfo.pickup_address}}</div>
   </div>
   <div class="size_num">
      <div class="size">
         <div class="title">快递规格</div>
-    <div class="content">{{orderinfo.size}}</div>
+    <div class="content">{{orderinfo.spec_name}}</div>
      </div>
       <div class="num">
         <div class="title">快递数量</div>
-    <div class="content">{{orderinfo.num}}</div>
+    <div class="content">{{orderinfo.num_of_packages}}</div>
       </div>
   </div>
   <div class="arrivetime"> 
     <div class="title">送达时间</div>
-    <div class="content">{{orderinfo.arrivetime}}</div>
+    <div class="content">{{orderInfo.deliver_time_period_string}}</div>
   </div>
   <div class="beizhu">
     <div class="title">备注</div>
-    <div class="content">{{orderinfo.beizhu}}</div>
+    <div class="content">{{orderInfo.remarks}}</div>
   </div>
   <div class="status">
     {{orderinfo.status}}
@@ -37,23 +37,14 @@
 </template>
 
 <script>
+
 export default {
     name: 'order-info',
-    props: ['orderid'],
+    props: ['orderinfo'],
     data() {
         return {
-            orderinfo: {
-                status:'待接单',
-                jine: '5.00',
-                location: '收件地址',
-                kuaididian: '深大一区',
-                size: '大件（3-5kg）',
-                num: 1,
-                arrivetime: '2022-08-07  15：00 ~ 18:00',
-                beizhu:'这是备注'
-            }
         }
-    }
+  }
 }
 </script>
 

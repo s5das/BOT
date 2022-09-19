@@ -1,12 +1,12 @@
 <template>
   <div>
-    <div class="box1">
+    <div class="box1" @click="handleLogin">
       <div class="photo">
         <img src="@/assets/customer.png">
       </div>
       <div class="name">{{name}}</div>
       <div class="box2">
-      <div class="bar" v-for="(item,index) in barlist" :key="index">
+      <div class="bar" v-for="(item,index) in barlist" :key="index" @click="handleclick(index)">
            <div><img :src="item.ico"></div>
            <div>{{item.text}}</div>
       </div>
@@ -18,15 +18,15 @@
       <div class="content">
 
         <van-cell-group>
-        <van-cell title="总收入金额" title-class="cell_title"   :icon="require('@/assets/money.png')"  clickable value="内容" />
+        <van-cell title="总收入金额" title-class="cell_title"   :icon="require('@/assets/money.png')"  clickable :value="statistics.可以提现的金额 || '请求错误'" />
         <div class="line"></div>
-        <van-cell title="未提现金额" title-class="cell_title"   :icon="require('@/assets/finish2.png')" :to="{path:'withdraw'}" clickable value="内容" is-link/>
+        <van-cell title="未提现金额" title-class="cell_title"   :icon="require('@/assets/finish2.png')" :to="{path:'withdraw'}" clickable :value="statistics.money_earned || '请求错误'" is-link/>
         <div class="line"></div>
-        <van-cell title="全部订单数" title-class="cell_title"   :icon="require('@/assets/order2.png')"  clickable value="内容" is-link/>
+        <van-cell title="全部订单数" title-class="cell_title"   :icon="require('@/assets/order2.png')"  clickable :value="statistics.total_take_order_nums || '请求错误'" is-link/>
         <div class="line"></div>
-        <van-cell title="已完成订单数" title-class="cell_title"  :icon="require('@/assets/mail.png')" clickable value="内容" is-link/>
+        <van-cell title="已完成订单数" title-class="cell_title"  :icon="require('@/assets/mail.png')" clickable :value="statistics.finished_order_nums || '请求错误'" is-link/>
         <div class="line"></div>
-        <van-cell title="未完成订单数" title-class="cell_title"  :icon="require('@/assets/mail2.png')" clickable value="内容" is-link/>
+        <van-cell title="未完成订单数" title-class="cell_title"  :icon="require('@/assets/mail2.png')" clickable :value="statistics.ongoing_order_nums || '请求错误'" is-link/>
       </van-cell-group>
 
       </div>
@@ -35,11 +35,14 @@
 </template>
 
 <script >
+import serviceAxios from '@/http';
+import authorize from '@/utils/authorize';
 export default {
   name: 'personal-center',
   data() {
     return {
-      name: 'fanbook昵称',
+      statistics:{},
+      name: '未登录',
       barlist: [{
         ico: require('@/assets/order.png'),
         text: '全部订单'
@@ -58,8 +61,35 @@ export default {
       },
       ]
   }
+  },
+  methods: {
+    handleclick(index) {
+      switch (index) {
+
+        case 0: this.$router.push({ path: '/order?condition=0' }); break;
+        case 1: this.$router.push({ path: '/order?condition=1'}); break;
+        case 2: this.$router.push({ path: '/order?condition=2'}); break;
+        case 3: this.$router.push({ path: '/order?condition=3'}); break;
+
+        }
+    },
+    handleLogin() {
+      // 未登录
+      if (!(localStorage.getItem('jwt_token') && localStorage.getItem('avatar_url') && localStorage.getItem('fanbook_nick_name') && localStorage.getItem('user_id'))) {
+        authorize();
+      } 
   }
+  },
+  mounted() {
+      serviceAxios({
+        method: 'get',
+        url:'/fanbook/deliverbot/general/user_center/get_statistics'
+      }).then(
+        (res) => { this.statistics = res}
+        )
+      },
 }
+
 </script>
 
 <style scoped lang="less">
