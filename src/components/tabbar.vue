@@ -24,7 +24,7 @@ export default {
         }
     },
     mounted() {
-        pubsub.subscribe('changetabbar',this.change)
+        pubsub.subscribe('changetabbar', this.change)
     }
 }
 </script >
