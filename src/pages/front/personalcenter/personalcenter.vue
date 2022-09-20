@@ -151,7 +151,7 @@ display: flex;
    border-bottom: #bbb solid 1px;
   }
   .content{
-   
+  
   }
   .cell_title{
     font-weight: 600;
