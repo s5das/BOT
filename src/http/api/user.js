@@ -32,3 +32,10 @@ export const cancelOrder = (params) => {
     });
 };
 
+export const login = (code) => {
+    return serviceAxios({
+        methods: 'post',
+        data:{code}
+    })
+}
+

@@ -160,7 +160,7 @@
 import fmt from '@/utils/format'
 import { Toast } from 'vant'
 import compressImg from '@/utils/compressImg'
-import serviceAxios from "../../http/index";
+import serviceAxios from '@/http'
 export default {
     
     name: 'place-order',

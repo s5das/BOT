@@ -4,15 +4,15 @@ export default new VueRouter({
     routes:[
         {
             path: '/',
-            component: () => import("@/pages/homepage.vue")
+            component: () => import("@/pages/front/homepage.vue")
         },
         {
             path: '/placeorder',
-            component:() => import('@/pages/getservice/placeorder.vue')
+            component:() => import('@/pages/front/getservice/placeorder.vue')
         },
         {
             path: '/order:mode?',
-            component: () => import("@/pages/order.vue"),
+            component: () => import("@/pages/front/order.vue"),
             props({ query }) {
                 console.log(query);
                 return {condition:query.condition}
@@ -20,36 +20,36 @@ export default new VueRouter({
         },
         {
             path: '/personalcenter',
-            component: () => import("@/pages/personalcenter/personalcenter.vue")
+            component: () => import("@/pages/front/personalcenter/personalcenter.vue")
         },
         {
             path: '/payfinish',
-            component: () => import("@/pages/getservice/payfinish.vue"),
+            component: () => import("@/pages/front/getservice/payfinish.vue"),
             props({querry}) {
                 return {orderId:querry.orderId}
             }
         },
         {
             path: '/withdraw',
-            component: () => import("@/pages/personalcenter/withdraw.vue")
+            component: () => import("@/pages/front/personalcenter/withdraw.vue")
         }
         ,
         // 派送员相关
         {
             name: 'grabOrder',
             path: '/courier/grabOrder',
-            component: () => import("@/pages/courier/grabOrder.vue")
+            component: () => import("@/pages/front/courier/grabOrder.vue")
         },
         {
             name: 'orderDetail/courier',
             path: '/courier/orderDetail/:id:status',
-            component: () => import("@/pages/courier/orderDetail.vue")
+            component: () => import("@/pages/front/courier/orderDetail.vue")
         },
         // 用户
         {
             name: 'orderDetail/user',
             path: '/user/orderDetail/:id:status',
-            component: () => import("@/pages/user/orderDetail.vue")
+            component: () => import("@/pages/front/user/orderDetail.vue")
         }
     ]
 

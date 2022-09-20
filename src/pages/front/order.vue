@@ -63,7 +63,7 @@
 
 <script>
 import { Toast } from 'vant'
-import '../../node_modules/vant/lib/icon/local.css'
+import '../../../node_modules/vant/lib/icon/local.css'
 import OrderOfMyGrap from '@/components/order/orderOfMyGrab.vue'
 import OrderOfMyRelease from '@/components/order/orderOfMyRelease.vue';
 import format from '@/utils/format';
