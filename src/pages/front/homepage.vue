@@ -22,8 +22,8 @@
 import SignupPopup from '@/components/courier/signupPopup.vue';
 // import { Toast } from 'vant';
 import { getUserType } from '@/http/api/common';
-import { TYPE } from '@/http/const/const';
 import authorize from '@/utils/authorize'
+import { TYPE } from '@/http/const/const';
 import PubSub from 'pubsub-js';
 export default {
     name: "home-page",
@@ -40,7 +40,7 @@ export default {
             isCouierSignupPopupShow: false,
 
             // 用户身份
-            typeArray: []
+            type: ''
         };
     },
   mounted() {
@@ -56,7 +56,7 @@ export default {
       if (type === 1) {
         // 拿到类型数组
         this.typeArray = await getUserType();
-        if (TYPE.IDENTIFIED_COURIER in this.typeArray) {
+        if (TYPE.IDENTIFIED_COURIER === this.type) {
           // 未入驻 去申请入驻
           this.isCouierSignupPopupShow = true
         } else {
