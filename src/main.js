@@ -25,6 +25,7 @@ import {
   Icon,
   PullRefresh,
   List,
+  Dialog 
 } from "vant";
 
 Vue.use(Button);
@@ -38,12 +39,12 @@ Vue.use(Picker);
 Vue.use(DatetimePicker);
 Vue.use(Cell);
 Vue.use(CellGroup);
-
 Vue.use(Calendar);
 Vue.use(Icon);
-
 Vue.use(PullRefresh);
 Vue.use(List)
+Vue.use(Dialog);
+
 
 new Vue({
   render: (h) => h(App),

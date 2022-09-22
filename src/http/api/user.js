@@ -34,8 +34,16 @@ export const cancelOrder = (params) => {
 
 export const login = (code) => {
     return serviceAxios({
-        methods: 'post',
-        data:{code}
+        methods: 'get',
+        url:'/fanbook/deliverbot/general/login/front',
+        params:{code}
     })
 }
 
+export const login_back = (code) => {
+    return serviceAxios({
+        methods: 'get',
+        url:'/fanbook/deliverbot/general/login/back',
+        params:{code}
+    })
+}

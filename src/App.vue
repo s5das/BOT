@@ -2,7 +2,7 @@
   <div id="app">
     
   <router-view></router-view>
-  
+
   </div>
 </template>
 
@@ -11,19 +11,18 @@
 
 
 
+
 export default {
-
-  name: 'App',
-  methods: {
-
-  }
+    name: "App",
+    methods: {},
 }
 
 </script>
 
 <style>
-body{user-select: none;
-     background-color: #EFEFEF ;
+body{
+  user-select: none;
+  background: #fcf6f4;
 }
 
 </style>

@@ -1,6 +1,6 @@
 
 <template>
-  <div>
+  <div class="main">
     <div class="box1">
       <div v-for="(item,index) of pagedata" :key="index" class="box2">
         <div class="pic">
@@ -78,15 +78,19 @@ export default {
 </script >
 
 <style scoped lang="less">
+  .main{
+    padding: 15px;
+    height: 800px;
+    background-color: #EFEFEF ;
+  }
 .box1{
-  margin-top: 15px;
   display: flex;
   justify-content: space-around;
 }
 
 .box2{
   height: 210px;
-  width: 182px;
+  width: 170px;
   background-color: #fff;
   display: flex;
   border-radius: 7px;
@@ -97,4 +101,5 @@ export default {
 .text1{
   font-size: 14px;
 }
+
 </style>

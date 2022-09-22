@@ -1,25 +1,109 @@
 <template>
-  <div>
-    <van-cell-group>
-        <van-cell title="总收入金额" title-class="cell_title"   :icon="require('@/assets/back1.png')"  clickable :value="statistics.可以提现的金额 || '请求错误'" />
-        <div class="line"></div>
-        <van-cell title="未提现金额" title-class="cell_title"   :icon="require('@/assets/finish2.png')" :to="{path:'withdraw'}" clickable :value="statistics.money_earned || '请求错误'" is-link/>
-        <div class="line"></div>
-        <van-cell title="全部订单数" title-class="cell_title"   :icon="require('@/assets/order2.png')"  clickable :value="statistics.total_take_order_nums || '请求错误'" is-link/>
-        <div class="line"></div>
-        <van-cell title="已完成订单数" title-class="cell_title"  :icon="require('@/assets/mail.png')" clickable :value="statistics.finished_order_nums || '请求错误'" is-link/>
-        <div class="line"></div>
-        <van-cell title="未完成订单数" title-class="cell_title"  :icon="require('@/assets/mail2.png')" clickable :value="statistics.ongoing_order_nums || '请求错误'" is-link/>
-      </van-cell-group>
+  <div class="main">
+    <div class="box1">
+      <Cellgroup :items="items1"></Cellgroup>
+    </div>
+    <div class="box1">
+      <Cellgroup :items="items2"></Cellgroup>
+    </div>
+    <div class="box1">
+      <Cellgroup :items="items3"></Cellgroup>
+    </div>
+    <div class="box1">
+      <Cellgroup :items="items4"></Cellgroup>
+    </div>
   </div>
 </template>
-
+ 
 <script>
+import Cellgroup from '@/components/cellgroup.vue'
 export default {
-name:'back-homepage'
+  components:{Cellgroup},
+  name: 'back-homepage',
+  data() {
+    return {
+      items1: [
+        {
+          ico: require('@/assets/back1.png'),
+          title: '入住审核',
+          config: '',
+          arrow: true,
+          to:'/back/setdown'
+        },
+        {
+          ico: require('@/assets/back2.png'),
+          title: '提现审核',
+          config: '',
+          arrow: true,
+          to:'/back/moneymanage'
+        },
+        {
+          ico: require('@/assets/back3.png'),
+          title: '派送员管理',
+          config: '',
+          arrow: true,
+          to:'/login'
+        }
+      ],
+      items2: [
+        {
+          ico: require('@/assets/back3.png'),
+          title: '客户管理',
+          config: '',
+          arrow: true,
+          to:'/back/customermanage'
+        },
+        {
+          ico: require('@/assets/back4.png'),
+          title: '订单管理',
+          config: '',
+          arrow: true,
+          to:'/getin'
+        }
+      ],
+      items3: [
+        {
+          ico: require('@/assets/back2.png'),
+          title: '价格配置',
+          config: '',
+          arrow: true,
+          to:'/back/sizesettings'
+        },
+        {
+          ico: require('@/assets/back5.png'),
+          title: '快递点配置',
+          config: '',
+          arrow: true,
+          to:'/back/locationsettings'
+        }
+      ],
+      items4: [
+        {
+          ico: require('@/assets/back6.png'),
+          title: '设置',
+          config: '',
+          arrow: true,
+          to:'/back/settings'
+        }
+      ],
+    }
+
+
+  } 
 }
 </script>
 
-<style>
+<style scoped lang="less">
+  .main{
 
+    background: #fcf6f4;
+    height: 850px;
+    padding-top: 30px;
+  }
+  .box1{
+     margin-bottom: 30px;
+  }
+  body{
+     background-color: pink ;
+  }
 </style>

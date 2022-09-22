@@ -1,8 +1,8 @@
 <template>
-  <div>
-    <div class="box1" @click="handleLogin">
+  <div class="main">
+    <div class="box1">
       <div class="photo">
-        <img src="@/assets/customer.png">
+        <img :src="src">
       </div>
       <div class="name">{{name}}</div>
       <div class="box2">
@@ -18,7 +18,7 @@
       <div class="content">
 
         <van-cell-group>
-        <van-cell title="总收入金额" title-class="cell_title"   :icon="require('@/assets/money.png')"  clickable :value="statistics.可以提现的金额 || '请求错误'" />
+        <van-cell title="总收入金额" title-class="cell_title"   :icon="require('@/assets/money.png')"  clickable :value="statistics.money_could_withdraw|| '请求错误'" />
         <div class="line"></div>
         <van-cell title="未提现金额" title-class="cell_title"   :icon="require('@/assets/finish2.png')" :to="{path:'withdraw'}" clickable :value="statistics.money_earned || '请求错误'" is-link/>
         <div class="line"></div>
@@ -37,66 +37,67 @@
 <script >
 import PubSub from 'pubsub-js';
 import serviceAxios from '@/http';
-import authorize from '@/utils/authorize';
+
+
 export default {
-  name: 'personal-center',
-  data() {
-    return {
-      // tabbar id
-      id:2,
-      statistics:{},
-      name: '未登录',
-      barlist: [{
-        ico: require('@/assets/order.png'),
-        text: '全部订单'
-      },
-      {
-        ico: require('@/assets/time.png'),
-        text: '待接单'
-        },
-        {
-        ico: require('@/assets/car.png'),
-        text: '进行中'
-        },
-        {
-        ico: require('@/assets/finish.png'),
-        text: '已完成'
-      },
-      ]
-  }
-  },
-  methods: {
-    handleclick(index) {
-      switch (index) {
-
-        case 0: this.$router.replace({ path: '/order?condition=0' }); break;
-        case 1: this.$router.replace({ path: '/order?condition=1'}); break;
-        case 2: this.$router.replace({ path: '/order?condition=2'}); break;
-        case 3: this.$router.replace({ path: '/order?condition=3'}); break;
-
+    name: "personal-center",
+    data() {
+        return {
+            // tabbar id
+           id: 2,
+           statistics: {},
+           src:localStorage.getItem('avatar_url'),
+           name: localStorage.getItem('fanbook_nick_name'),
+            barlist: [{
+                    ico: require("@/assets/order.png"),
+                    text: "全部订单"
+                }, {
+                    ico: require("@/assets/time.png"),
+                    text: "待接单"
+                }, {
+                    ico: require("@/assets/car.png"),
+                    text: "进行中"
+                }, {
+                    ico: require("@/assets/finish.png"),
+                    text: "已完成"
+                },
+            ]
+        };
+    },
+    methods: {
+        handleclick(index) {
+            switch (index) {
+                case 0:
+                    this.$router.replace({ path: "/order?condition=0" });
+                    break;
+                case 1:
+                    this.$router.replace({ path: "/order?condition=1" });
+                    break;
+                case 2:
+                    this.$router.replace({ path: "/order?condition=2" });
+                    break;
+                case 3:
+                    this.$router.replace({ path: "/order?condition=3" });
+                    break;
+            }
         }
     },
-    handleLogin() {
-      // 未登录
-      if (!(localStorage.getItem('jwt_token') && localStorage.getItem('avatar_url') && localStorage.getItem('fanbook_nick_name') && localStorage.getItem('user_id'))) {
-        authorize();
-      } 
-  }
-  },
-  mounted() {
-      PubSub.publish('changetabbar', this.id);
-      serviceAxios({
-        method: 'get',
-        url:'/fanbook/deliverbot/general/user_center/get_statistics'
-      }).then(
-        (res) => { this.statistics = res}
-        )
-      },
+    mounted() {
+        PubSub.publish("changetabbar", this.id);
+        serviceAxios({
+            method: "get",
+            url: "/fanbook/deliverbot/general/user_center/get_statistics"
+        }).then((res) => { this.statistics = res; });
+    }
 }
 
 </script>
 
 <style scoped lang="less">
+  .main{
+    height: 800px;
+    background-color: #EFEFEF ;
+  }
 .box1{
 height: 155px;
 background-color: #eb2929;

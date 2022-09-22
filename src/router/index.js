@@ -1,10 +1,22 @@
 import VueRouter from "vue-router";
 
 export default new VueRouter({
-    routes:[
-        {
+    mode:'history',
+    routes: [
+        {   //登录
             path: '/',
-            redirect: '/homepage',
+            component:() => import("@/pages/login2.vue")
+        },
+        {
+            path: '/login',
+            component: () => import("@/pages/login.vue"),
+            props({ query }) {
+                return {code:query.code}
+            }
+        },
+        {
+            path: '/front',
+            redirect:'/front/homepage',
             component: () => import("@/pages/front/frontIndex.vue"),
             children: [
                 {
@@ -67,9 +79,38 @@ export default new VueRouter({
                 {
                     path: 'homepage',
                     component: () => import("@/pages/back/back_homepage.vue"),
+                },
+                {
+                    path: 'settings',
+                    component: () => import("@/pages/back/settings.vue"),
+                },
+                {
+                    path: 'locationsettings',
+                    component: () => import("@/pages/back/locationsettings.vue"),
+                },
+                {
+                    path: 'gennewsize',
+                    component: () => import("@/pages/back/gennewsize.vue"),                    
+                },
+                {
+                    path: 'sizesettings',
+                    component:() => import("@/pages/back/sizesettings.vue") 
+                },
+                {
+                    path: 'customermanage',
+                    component:() => import("@/pages/back/customermanage.vue")
+                },
+                {
+                    path: 'setdown',
+                    component:() => import("@/pages/back/setdown.vue")
+                },
+                {
+                    path: 'moneymanage',
+                    component:() => import("@/pages/back/moneymanage.vue")
                 }
             ]
-        }
-    ]
+        },
 
+    ]
+     
 })
