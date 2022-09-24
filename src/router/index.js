@@ -67,6 +67,18 @@ export default new VueRouter({
                 {
                     path: 'homepage',
                     component: () => import("@/pages/back/back_homepage.vue"),
+                },
+                {
+                    path: 'clientManage',
+                    component: () => import("@/pages/back/clientManage"),
+                },
+                {
+                    path: 'courierManage',
+                    component: () => import("@/pages/back/courierManage.vue")
+                },
+                {
+                    path: 'orderManage',
+                    component: () => import("@/pages/back/orderManage.vue")
                 }
             ]
         }
