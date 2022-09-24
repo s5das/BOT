@@ -2,6 +2,7 @@
     <div>
         <div class="search-area">
             <van-icon @click="isInputingKey = true" name="search" size="20px"/>
+            <slot name="prompt" v-if="name + phoneNum === ''"></slot>
             <div class="search-prompt" v-if="name + phoneNum !== ''">
                 <div class="text">
                     {{`${name!==''?'姓名: '+name+' ':''}${phoneNum!==''?'电话: '+phoneNum:''}`}}
@@ -68,7 +69,9 @@
     .search-prompt {
       display: flex;
       align-items: center;
+      margin-left: 2px;
       .text {
+        margin-top: 1px;
         max-width: 200px;
         height: 30px;
         line-height: 30px;

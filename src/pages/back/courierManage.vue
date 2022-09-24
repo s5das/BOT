@@ -14,8 +14,9 @@
 
         <!-- 派送员信息列表 -->
         <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
-            <van-list class="list" v-model="loading" :finished="finished" finished-text="没有更多了" @load="getCourierInfos">
-                <div class="courierInfo" v-for="item in courierInfoS" :key="item.courier_id">
+            <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="getCourierInfos">
+                <div class="list">
+                    <div class="courierInfo" v-for="item in courierInfoS" :key="item.courier_id">
                     <div class="up">
                         <div @click="edit(item)" class="modify">
                             <van-icon color="#2B5ACC" name="edit" size='24'/>
@@ -60,7 +61,9 @@
                             <div class="l2">{{item.ongoing_order_nums}}</div>
                         </div>
                     </div>
+                    </div>
                 </div>
+
             </van-list>
         </van-pull-refresh>
 
@@ -394,6 +397,7 @@ import BlurSearch from '@/components/common/blurSearch.vue';
 
 .list {
     margin-top: 10px;
+    min-height: 900px;
     .courierInfo {
         display: flex;
         flex-direction: column;
