@@ -111,7 +111,7 @@
         </van-popup>
 
         <!-- 编辑 - 快递员状态选择 -->
-        <van-popup v-model="isChoosingStatusInEditing">
+        <van-popup v-model="isChoosingStatusInEditing" position="bottom">
             <van-picker title="接单状态" show-toolbar :columns="columns" @confirm="confirmChosenStatus" @cancel="isChoosingStatusInEditing = false"></van-picker>
         </van-popup>
     </div>
@@ -265,6 +265,8 @@ import BlurSearch from '@/components/common/blurSearch.vue';
                 phone_number: this.phone_number,
                 real_name: this.real_name,
                 remarks_at_register: this.remarks_at_register
+            }).then(() => {
+                this.isEditing = false
             })
         },
         confirmChosenStatus(status) {
@@ -293,7 +295,7 @@ import BlurSearch from '@/components/common/blurSearch.vue';
     .status-filter {
         display: flex;
         align-items: center;
-        margin-left: 34px;
+        margin-left: 25px;
         font-size: 16px;
 
         .label {
@@ -403,7 +405,7 @@ import BlurSearch from '@/components/common/blurSearch.vue';
         flex-direction: column;
         align-items: flex-start;
         position: relative;
-        width: 100%;
+        width: 375px - 18px;
         box-sizing: border-box;
         margin: 0 auto;
         background-color: rgba(255,255,255,0.8);
@@ -419,6 +421,7 @@ import BlurSearch from '@/components/common/blurSearch.vue';
 
             border-bottom: 1px solid rgba(125,124,123,1);
             overflow-y: scroll;
+            overflow: hidden;
 
             .modify {
                 position: absolute;
