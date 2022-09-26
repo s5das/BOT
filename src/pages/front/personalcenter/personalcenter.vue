@@ -1,7 +1,7 @@
 <template>
   <div class="main">
     <div class="box1">
-      <div class="photo">
+      <div class="photo" @click="quit">
         <img :src="src">
       </div>
       <div class="name">{{name}}</div>
@@ -39,6 +39,7 @@ import PubSub from 'pubsub-js';
 import serviceAxios from '@/http';
 
 
+
 export default {
     name: "personal-center",
     data() {
@@ -64,7 +65,13 @@ export default {
             ]
         };
     },
-    methods: {
+  methods: {
+      quit() {
+        localStorage.clear(),
+          this.$router.replace({
+            path:'/'
+        })
+        },
         handleclick(index) {
             switch (index) {
                 case 0:

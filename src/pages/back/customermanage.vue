@@ -40,7 +40,7 @@ export default {
 
     data() {
         return {
-            finished:true,
+            finished:false,
             loading: false,
             isLoading: false,
             serial_number: 1,
@@ -71,35 +71,53 @@ export default {
                     num
                 }
             }).then((res) => {
-                this.client_id = res.client_id
-                this.fanbook_nick_name = res.fanbook_nick_name
-                this.phone_number = res.phone_number
-                this.total_create_order_num = res.total_create_order_num
-
+                    this.client_id.concat(res.client_id)
+                    this.fanbook_nick_name.concat(res.fanbook_nick_name)
+                    this.phone_number.concat(res.phone_number)
+                    this.total_create_order_num.concat(res.total_create_order_num)
             },
                 () => {
-                Toast.fail('无更多信息')
-            }
-
+                    this.finished = true
+                }
+            )
+        },
+        changeinfo(name,num) {
+            serviceAxios({
+                method: 'post',
+                url: '/fanbook/deliverbot/back/admin/client/blur_search_clients',
+                data: {
+                    name,
+                    num
+                }
+            }).then((res) => {
+                    this.client_id=res.client_id
+                    this.fanbook_nick_name=res.fanbook_nick_name
+                    this.phone_number=res.phone_number
+                    this.total_create_order_num=res.total_create_order_num
+            },
+                () => {
+                    Toast.fail('刷新失败')
+                }
             )
         },
         onLoad() {
             this.getinfo(this.content, this.serial_number)
             this.serial_number++
-            this.loading = false
             
         },
         onRefresh() {
             this.serial_number = 1
-            this.getinfo(this.content, this.serial_number);
+            this.changeinfo(this.content, this.serial_number);
+            this.serial_number++
             this.isLoading =false
         },
         search() {
-            this.getinfo(this.content,1)
+            this.changeinfo(this.content, 1)
+            this.serial_number++
         }
     },
     mounted() {
-        this.getinfo(this.content, this.serial_number);
+        this.changeinfo(this.content, this.serial_number);
         this.serial_number ++
     }
 }

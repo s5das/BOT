@@ -9,15 +9,14 @@
 // import { login} from '@/http/api/user'
 // import { Dialog } from 'vant';
 export default {
-    name: 'log-in',
-    props: ['code'],
+  name: 'log-in',
+    props:['code'],
     methods: {
         close() {
         window.close()
         },
     },
-    mounted() {
-        console.log(this.code);
+  mounted() {
         localStorage.setItem('code',this.code)
         }
         

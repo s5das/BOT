@@ -1,16 +1,18 @@
 <template>
   <div class="main">
-    <div v-for="(item,index) in items" :key="item" :class="{item:true,selected:selected.indexOf(index)!=-1}" @click="select(index)">
+    <div id="my-navigation" class="navigation">
+    <div v-for="(item) in items" :key="item" :class="{item:true}" @click="select(item)" :data-id="item">
         <transition
         name="animate__animated animate__bounce"
         enter-active-class="animate__fadeIn"
         leave-active-class="animate__fadeOut"
         appear
         >
-        <div class="circle" v-if="status==1"></div>
+        <div :class="{circle2:selected.indexOf(item)!=-1,circle1:selected.indexOf(item)==-1}" v-if="status==1"></div>
         </transition>
         {{item}}
-    </div>
+        <div v-if="status==1" class="more"><img src="@/assets/back14.png" class="more_ico"></div>
+    </div></div>
     <div class="bottom">
         <div class="left" @click="handle1">{{box_text[status][0]}}</div>
         <div class="right" @click="handle2">{{box_text[status][1]}}</div>
@@ -26,6 +28,7 @@
 
 <script>
 import serviceAxios from '@/http';
+import Sortable from 'sortablejs';
 import 'animate.css'
 export default {
 
@@ -38,7 +41,9 @@ export default {
             location_name: '',
             status: 0,
             box_text: [['新建', '管理'], ['返回', '删除']],
-            selected : []           
+            selected: [],
+            arr_aftermove: [],
+            sortable:''           
         }
     },
 
@@ -59,6 +64,8 @@ export default {
             }
             if (this.status == 1) {
                 this.status = 0
+                this.sortable.option('disabled',true)
+                this.disablemove = true
                 this.selected = []
             }
 
@@ -85,11 +92,13 @@ export default {
         handle2() {
             if (this.status == 0) {
                 this.status = 1
+                this.sortable.option('disabled',false)
             } else {
+                if(this.selected.length>0){
                 let final_list = []
-                for (let i = 0; i < this.items.length; i++) {
-                    if (this.selected.indexOf(i) === -1) {
-                        final_list.push(this.items[i])
+                for (let i = 0; i < this.arr_aftermove.length; i++) {
+                    if (this.selected.indexOf(this.arr_aftermove[i]) === -1) {
+                        final_list.push(this.arr_aftermove[i])
                     }
                 }
                 console.log(final_list);
@@ -99,34 +108,58 @@ export default {
                     data: {
                         pickup_station_name:final_list
                     }
-                }).then(() => { this.status = 0; this.getInfo()})
+                }).then(() => { this.status = 0; this.sortable.option('disabled', true); this.getInfo()})
+                }
             }
 
         }, 
 
-        select(index) {
+        select(item) {
             if (this.status == 1) {
-                if (this.selected.indexOf(index) === -1) {
-                    this.selected.push(index)                    
+                if (this.selected.indexOf(item) === -1) {
+                    this.selected.push(item)                    
                 } else {
-                    this.selected.splice(this.selected.indexOf(index),1)
+                    this.selected.splice(this.selected.indexOf(item),1)
                 }
-
+                console.log(this.selected);
             }
-        }
+        },
+        
         },
 
         mounted() {
             this.getInfo();
+            this.arr_aftermove =this.items
+            var el = document.getElementById('my-navigation');
+            //设置配置
+            var ops = {
+                animation: 200,
+                group: '',
+                draggable: '.item', // 要拖动的目标
+                disabled: true, //是否禁用拖拽和排序
+                dataIdAttr: 'data-id', //指定获取拖动后排序的属性
+                //拖动结束
+                onEnd:()=> {
+                    //获取拖动后的排序
+                    this.$nextTick(() => {
+                    var arr = this.sortable.toArray();
+                    // arr数组里的值是 data-id 的顺序
+                    this.arr_aftermove = arr
+                    console.log(this.arr_aftermove);
+                    })
+
+                },
+            };
+            //初始化
+            this.sortable = Sortable.create(el, ops);
         }
 }
 
 </script>
 
 <style scoped lang="less">
-.selected{
-    background-color: rgb(226, 241, 247) !important;
-}
+
+
 .main{
     padding-top:30px;
     .item{
@@ -140,14 +173,34 @@ export default {
         font-weight: 600;
         background: #fff;
         text-indent: 25px;
-        .circle{
+        position: relative;
+    .more{
+     position: absolute;
+     right: 40px;
+     top: 32.5px;
+     height: 15px;
+     width: 15px;
+    .more_ico{
+        width: 100%;
+        height: 100%;
+    }
+}
+    }
+    .circle1{
             height: 10px;
             width: 10px;
-            border-radius: 5px;
-            background-color: pink;
+            border-radius: 7.5px;
+            border: #EF7C26 1px solid;
             margin-left: 10px;
             margin-right: 10px;
         }
+    .circle2{
+        height: 11px;
+        width: 11px;
+        border-radius: 7.5px;
+        background-color: #EF7C26;
+        margin-left: 10px;
+        margin-right: 10px;
     }
     .bottom{
         position: fixed;

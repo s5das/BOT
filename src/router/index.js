@@ -3,9 +3,13 @@ import VueRouter from "vue-router";
 export default new VueRouter({
     mode:'history',
     routes: [
+        
         {   //登录
             path: '/',
-            component:() => import("@/pages/login2.vue")
+            component: () => import("@/pages/login2.vue"),
+            props({query}){
+              return{state:query.state}
+            }
         },
         {
             path: '/login',

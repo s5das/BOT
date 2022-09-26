@@ -2,25 +2,25 @@
   <div class="main">
     <div class="head">登录界面</div>
     <div class="btn">
-    <div class="customer" @click="command1"><button>用户登录</button></div>
-    <div class="operator" @click="command2"><button>管理员登录</button></div>
+    <div class="customer" @click="handdlecommand" ref="btn"><button>点击登录</button></div>
     </div>
 
   </div>
 </template>
 
 <script>
-import { Dialog } from 'vant';
+import { Dialog, Toast } from 'vant';
 import {login,login_back} from '@/http/api/user'
 export default {
     name: 'log-in2',
+    props:['state'],
     methods: {
         command1() {
             window.fb.init({
                 success: () => {
                     window.fb.oAuth({ 'oAuthUrl': 'http://124.220.9.212:9098/fanbook/deliverbot/general/redirect' }).then(
                         () => {
-                            console.log(111);
+                            Toast.success(localStorage.getItem('code'))
                             login(localStorage.getItem('code')).then(
                                 (res) => {
                                     if (res.data.avatar_url) {
@@ -32,6 +32,7 @@ export default {
                                 }
                              )
                             setTimeout(() => {
+                            
                             if (localStorage.getItem('token')) {
                                 localStorage.setItem('id',"customer")
                                 this.$router.replace({
@@ -40,7 +41,7 @@ export default {
                             } else {
                                 Dialog({ message: '授权失败' });
                             }
-                           },1000)
+                           },2000)
                         },
                     )
                             }
@@ -72,15 +73,25 @@ export default {
                             } else {
                                 Dialog({ message: '权限不足' });
                             }
-                           },1000)
+                           },2000)
                         },
                     )
                             }
                         });
-            }
+        },
             
+    handdlecommand() {
+        if (this.state == '0') {
+            this.command1()
+        }
+        else if(this.state=='1') {
+            this.command2()
+            }        
+        },
     },
+    
     mounted() {
+        
         let tempid = localStorage.getItem('id')
         if (tempid) {
             if (tempid === 'customer') {
@@ -104,7 +115,7 @@ export default {
     .head{
      width: 100px;
      height: 50px;
-     font-size: 25px;
+     font-size: 22px;
      font-weight: 600;
      margin: 25px auto;
      margin-top: 0;
@@ -118,16 +129,6 @@ export default {
         justify-content: space-around;
         align-items: center;
         .customer{
-
-            button{
-                  width: 150px;
-                  height: 50px;
-                  background-color: orange;
-                  border-radius: 10px;
-                  font-size: 18px;
-            }
-        }
-        .operator{
 
             button{
                   width: 150px;

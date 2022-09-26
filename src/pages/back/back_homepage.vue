@@ -25,7 +25,7 @@ export default {
       items1: [
         {
           ico: require('@/assets/back1.png'),
-          title: '入住审核',
+          title: '入驻审核',
           config: '',
           arrow: true,
           to:'/back/setdown'
