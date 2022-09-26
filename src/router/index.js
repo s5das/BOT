@@ -111,6 +111,14 @@ export default new VueRouter({
                 {
                     path: 'moneymanage',
                     component:() => import("@/pages/back/moneymanage.vue")
+                },
+                {
+                    path: 'courierManage',
+                    component: () => import("@/pages/back/courierManage.vue")
+                },
+                {
+                    path: 'orderManage',
+                    component: () => import("@/pages/back/orderManage.vue")
                 }
             ]
         },

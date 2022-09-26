@@ -42,7 +42,7 @@ export default {
           title: '派送员管理',
           config: '',
           arrow: true,
-          to:'/login'
+          to:'/back/courierManage'
         }
       ],
       items2: [
@@ -58,7 +58,7 @@ export default {
           title: '订单管理',
           config: '',
           arrow: true,
-          to:'/getin'
+          to:'/back/orderManage'
         }
       ],
       items3: [
