@@ -631,7 +631,7 @@ import { getCouriers } from '@/http/api/back/courierController'
 
     .down {
         display: flex;
-        justify-content: end;
+        justify-content: flex-end;
         padding-top: 14px;
         padding-bottom: 8px;
         .button {

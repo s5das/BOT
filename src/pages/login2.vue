@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import { Dialog, Toast } from 'vant';
+import { Dialog} from 'vant';
 import {login,login_back} from '@/http/api/user'
 export default {
     name: 'log-in2',
@@ -20,7 +20,6 @@ export default {
                 success: () => {
                     window.fb.oAuth({ 'oAuthUrl': 'http://124.220.9.212:9098/fanbook/deliverbot/general/redirect' }).then(
                         () => {
-                            Toast.success(localStorage.getItem('code'))
                             login(localStorage.getItem('code')).then(
                                 (res) => {
                                     if (res.data.avatar_url) {
@@ -49,7 +48,7 @@ export default {
         },
         command2() {
 
- window.fb.init({
+            window.fb.init({
                 success: () => {
                     window.fb.oAuth({ 'oAuthUrl': 'http://124.220.9.212:9098/fanbook/deliverbot/general/redirect' }).then(
                         () => {
