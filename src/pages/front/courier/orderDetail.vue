@@ -3,7 +3,7 @@
     <div>
         <!-- 1 待接单 -->
         <div v-if="status === '待接单'">
-            <Orderinfo/>
+            <Orderinfo :orderinfo="orderInfo"/>
             <div class="buttons">
                 <div @click="grab" class="button">我要抢单</div>
             </div>
@@ -18,7 +18,7 @@
                     </div>
                 </template>
             </Successhead>
-            <Orderinfo/>
+            <Orderinfo :orderinfo="orderInfo"/>
             <Userinfo/>
             <div class="buttons">
                 <div @click="isContactChoicesShow = true" class="button">联系Ta</div>
@@ -60,7 +60,7 @@
                     快递已送达, 待确认收货, 24小时后自动确认送货
                 </div>
             </div>
-            <Orderinfo/>
+            <Orderinfo :orderinfo="orderInfo"/>
             <Userinfo/>
             <div class="buttons">
                 <div @click="isContactChoicesShow = true" class="button">联系Ta</div>
@@ -99,7 +99,7 @@
             <div class="completed-prompt">
                 <!-- 2022-08-07 16：00 确认收货 -->
             </div>
-            <Orderinfo/>
+            <Orderinfo :orderinfo="orderInfo"/>
             <Userinfo/>
             <div class="buttons">
                 <div @click="isContactChoicesShow = true" class="button">联系Ta</div>
@@ -120,7 +120,7 @@
 
         <!-- 5 已取消 -->
         <div v-if="status === '已取消'">
-            <Orderinfo/>
+            <Orderinfo :orderinfo="orderInfo"/>
         </div>
     </div>
 </template>
@@ -131,11 +131,17 @@ import Successhead from '@/components/successhead.vue'
 import Userinfo from '@/components/userinfo.vue';
 import { takeOrder, turnDelivered } from '@/http/api/courier';
 import { completeOrder } from '@/http/api/user';
-
+import { getDetails } from '@/http/api/general/generalOrderController';
+    
     export default {
     mounted() {
         this.orderId = this.$route.params.id;
         this.status = this.$route.params.status
+        getDetails({
+            orderId: this.orderId
+        }).then(res => {
+            this.orderInfo = res
+        })
     },
     data() {
         return {
@@ -152,6 +158,24 @@ import { completeOrder } from '@/http/api/user';
             ],
             indexOfContactChoicesChosen: 0,
             type: [],
+            orderInfo: {
+                "courier_id": "派送员的用户id",
+                "courier_name": "派送员名称",
+                "courier_phone_number": "派送员电话号码",
+                "create_time_string": "订单创建时间",
+                "deliver_address": "收件地址",
+                "deliver_time_period_string": "送达时间段",
+                "num_of_packages": "包裹数量",
+                "order_pic_urls": "客户上传到订单的图片的url地址列表",
+                "order_status": "订单状态",
+                "pickup_address": "快递点地址",
+                "recipient_id": "客户的用户id",
+                "recipient_name": "收件人名称",
+                "recipient_phone_number": "收件人电话号码",
+                "remarks": "客户备注",
+                "reward": "付款金额",
+                "spec_name": "规格名称"
+            }
         };
     },
     methods: {

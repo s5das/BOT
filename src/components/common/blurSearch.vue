@@ -2,10 +2,10 @@
     <div>
         <div class="search-area">
             <van-icon @click="isInputingKey = true" name="search" size="20px"/>
-            <slot name="prompt" v-if="name + phoneNum === ''"></slot>
-            <div class="search-prompt" v-if="name + phoneNum !== ''">
+            <slot name="prompt" v-if="blur_search_context === ''"></slot>
+            <div class="search-prompt" v-if="blur_search_context !== ''">
                 <div class="text">
-                    {{`${name!==''?'姓名: '+name+' ':''}${phoneNum!==''?'电话: '+phoneNum:''}`}}
+                    {{`关键词: ${blur_search_context}`}}
                 </div>
                 <div @click="clearKey" class="clear">
                     <van-icon name="close" size="20"/>
@@ -13,13 +13,23 @@
             </div>
         </div>
 
-        <van-popup v-model="isInputingKey" position="top">
+        <!-- <van-popup v-model="isInputingKey" position="top">
             <div class="search-box">
                 <input v-model="nameBuf" class="item" type="text" :placeholder="'姓名'"/>
                 <input v-model="phoneNumBuf" class="item" type="text" :placeholder="'手机号'"/>
                 <div class="search" @click="confirmKey">
                     搜索
                 </div>
+            </div>
+        </van-popup> -->
+
+        <van-popup v-model="isInputingKey" position="top">
+            <div class="blur-search-box">
+                <div class="enter-box">
+                    <van-icon class="icon" name="search" size="22px"></van-icon>
+                    <input type="text" v-model="blur_search_context_BUF" placeholder="请输入关键词"/>
+                </div>
+                <div class="confirm" @click="confirmKey">搜索</div>
             </div>
         </van-popup>
     </div>
@@ -31,27 +41,21 @@
         data() {
             return {
                 isInputingKey: false,
-                nameBuf: '',
-                phoneNumBuf: '',
-                name: '',
-                phoneNum: '',
+                blur_search_context: '',
+                blur_search_context_BUF: ''
             }
         },
         methods: {
             confirmKey() {
-                this.name = this.nameBuf
-                this.phoneNum = this.phoneNumBuf
+                this.blur_search_context = this.blur_search_context_BUF
                 this.isInputingKey = false
                 this.$emit('confirmKey', {
-                    name: this.name,
-                    phoneNum: this.phoneNum
+                    key: this.blur_search_context
                 })
             },
             clearKey() {
-                this.name = ''
-                this.nameBuf = ''
-                this.phoneNum = ''
-                this.phoneNumBuf = ''
+                this.blur_search_context = ''
+                this.blur_search_context_BUF = ''
                 this.$emit('clearKey')
             },
         }
@@ -109,5 +113,31 @@
     border: 1px solid #ddd;
     border-radius: 10px;
   }
+}
+
+.blur-search-box {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 400px;
+    height: 60px;
+    margin: 0 auto;
+    // background-color: #FCF6F4;
+    .enter-box {
+        width: 300px;
+        display: flex;
+        align-items: center;
+        margin-left: 15px;
+        font-size: 17px;
+        .icon {
+            margin-right: 5px;
+        }
+    }
+    .confirm {
+        margin-right: 10px;
+        font-size: 18px;
+        color: hsla(30, 86%, 60%, 1);
+        font-weight: bold;
+    }
 }
 </style>

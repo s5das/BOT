@@ -618,10 +618,10 @@ import { getCouriers } from '@/http/api/back/courierController'
             .item-name {
                 margin-right: 5px;
             }
-            .item-value {}
+            // .item-value {}
             &.highlight {
                 font-weight: bold;
-                .item-name {}
+                // .item-name {}
                 .item-value {
                     color: hsla(30, 86%, 60%, 1);
                 }

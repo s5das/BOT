@@ -180,8 +180,10 @@ import BlurSearch from '@/components/common/blurSearch.vue';
 
             courier_id: '',
             isEditing: false,
-            real_name: '',
+            
             phone_number: '',
+            real_name: '',
+            blur_search_context: '',
             remarks_at_register: '',
             courier_status: '',
 
@@ -203,15 +205,13 @@ import BlurSearch from '@/components/common/blurSearch.vue';
         },
         confirmKey(data) {
             // console.log('confirmKey', data)
-            this.courier_name = data.name
-            this.courier_phone_number = data.phoneNum
+            this.blur_search_context = data.key
 
             this.onRefresh()
         },
         clearKey() {
             // console.log('clearKey')
-            this.courier_name = ''
-            this.courier_phone_number = ''
+            this.blur_search_context = ''
         
             this.onRefresh()
         },
@@ -227,8 +227,7 @@ import BlurSearch from '@/components/common/blurSearch.vue';
         },
         getCourierInfos() {
             getCouriers({
-                courier_name: this.courier_name === '' ? null : this.courier_name,
-                courier_phone_number: this.courier_phone_number === '' ? null : this.courier_phone_number,
+                blur_search_context: this.blur_search_context,
                 courier_status: this.conditions[this.idOfConditionsChosen].value,
                 serial_number: this.serial_number
             }).then(res => {
