@@ -165,7 +165,7 @@ export default {
         },
   },
   mounted() {
-      this.changeinfo(this.serialnumber);
+      this.getinfo(this.serialnumber);
       this.serialnumber++
     }
 }
@@ -194,23 +194,27 @@ export default {
             }
         }
         .top{
-            height: 40px;
+            height: 49px;
             display: flex;
+            align-items: center;
             color: #bbb;
+            font-size: 14px;
             border-bottom: 1px solid #bbb;
           }
         .middle{
             
-            height: 120px;
+            height: 170px;
             display: flex;
             flex-direction: column;
             justify-content: space-around;
             font-size: 15px;
-            font-weight: 600;
+            font-weight: 500;
             color: #000;
+            border-bottom: #bbb solid 1px;
         }
 
         .bottom{
+          margin-top: 12px;
           height: 40px;
           display: flex;
           justify-content: flex-end;

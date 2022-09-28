@@ -54,7 +54,7 @@ import { Toast } from 'vant';
   
   
           getInfo() {
-              serviceAxios({
+              return serviceAxios({
               url: '/fanbook/deliverbot/general/order/get_specifications',
               method: 'get',
               }).then((res) => {
@@ -87,6 +87,7 @@ import { Toast } from 'vant';
                   this.status = 0
                   this.sortable.option('disabled',true)
                   this.selected = []
+                  this.sortable.sort(this.name,true)
               }
   
           },
@@ -95,12 +96,8 @@ import { Toast } from 'vant';
               if (this.status == 0) {
                   this.status = 1
                   this.sortable.option('disabled', false)
-                  this.arr_aftermove =this.name
+                  this.arr_aftermove = this.name
               } else {
-                  console.log('select');
-                  console.log(this.selected)
-                      console.log('after');
-                      console.log(this.arr_aftermove);
                       let new_spec_list = []
                       for (let i = 0; i < this.arr_aftermove.length; i++) {
                           if (this.selected.indexOf(this.arr_aftermove[i]) === -1) {
@@ -142,7 +139,7 @@ import { Toast } from 'vant';
           },
     mounted() {
         
-            this.getInfo();
+            this.getInfo()
             var el = document.getElementById('my-navigation');
             //设置配置
             var ops = {
@@ -184,8 +181,8 @@ import { Toast } from 'vant';
   .main{
       padding-top:30px;
       .item{
-          height:80px;
-          width: 365px;
+          height:86px;
+          width: 410px;
           margin: 0 auto; 
           margin-bottom: 15px;
           display: flex;
@@ -199,6 +196,7 @@ import { Toast } from 'vant';
            .name{
             display: flex;
             align-items: center;
+            font-size: 18px;
             width: 200px;
             .circle1{
             height: 10px;

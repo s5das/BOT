@@ -51,7 +51,8 @@ export default {
 
 
         getInfo() {
-            serviceAxios({
+
+            return serviceAxios({
             url: '/fanbook/deliverbot/general/pickup_station/get_all',
             method: 'get',
             }).then((res) => {
@@ -73,10 +74,10 @@ export default {
                 this.sortable.option('disabled', true)
                 this.getInfo()
                 this.selected = []
-                this.arr_aftermove = this.items;
+                console.log(this.arr_aftermove);
+                this.sortable.sort(this.items, true)
+                console.log(this.arr_aftermove);
             }
-            console.log(this.arr_aftermove);
-            console.log(this.items);
         },
 
 
@@ -87,7 +88,11 @@ export default {
                     method: 'post',
                     url:'/fanbook/deliverbot/back/admin/pickup_stations/add',
                     data:{pickup_station_name:this.location_name}
-                }).then(() => { this.location_name = ''; this.getInfo(); done()},()=>{done(false)})
+                }).then(() => {
+                    this.location_name = '';
+                    this.getInfo();
+                    done()
+                }, () => { done(false) })
             } else {
                 done(false)
             }
@@ -109,7 +114,6 @@ export default {
                         new_station_list.push({ pickup_station_name: this.arr_aftermove[i] })
                     }
                 }
-                console.log(new_station_list);
                 serviceAxios({
                     method: 'post',
                     url:'/fanbook/deliverbot/back/admin/pickup_stations/reset_station_list',
@@ -119,7 +123,6 @@ export default {
                 }).then(() => {
                     this.status = 0; this.sortable.option('disabled', true);
                     this.getInfo();
-                    this.$nextTick(() => { this.arr_aftermove = this.items; })
                 })
                 
             }
@@ -133,7 +136,6 @@ export default {
                 } else {
                     this.selected.splice(this.selected.indexOf(item),1)
                 }
-                console.log(this.selected);
             }
         },
         
@@ -156,7 +158,6 @@ export default {
                     var arr = this.sortable.toArray();
                     // arr数组里的值是 data-id 的顺序
                     this.arr_aftermove = arr
-                    console.log(this.arr_aftermove);
                     })
 
                 },
@@ -174,10 +175,10 @@ export default {
 .main{
     padding-top:30px;
     .item{
-        height:80px;
-        width: 365px;
+        height:60px;
+        width: 410px;
         margin: 0 auto; 
-        margin-bottom: 15px;
+        margin-bottom: 14px;
         display: flex;
         align-items: center;
         font-size: 15px;

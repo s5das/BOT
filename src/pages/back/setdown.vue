@@ -199,7 +199,7 @@ export default {
         background-color: #fff;
         padding: 20px;
         .top{
-            height: 140px;
+            height: 164px;
             display: flex;
             border-bottom: 1px solid #bbb;
           .left{
@@ -215,9 +215,10 @@ export default {
             display: flex;
             flex-direction: column;
             justify-content: space-around;
+            font-size: 15px;
             color: #bbb;
             .name{
-              font-size: 17px;
+              font-size: 18px;
               font-weight: 600;
               color: #000;
             }
@@ -229,17 +230,18 @@ export default {
           display: flex;
           justify-content: flex-end;
           align-items:center;
+          margin-top: 12px;
           .btn1{
-              width: 70px;
-              height: 25px;
+              width: 58px;
+              height: 24px;
               background-color: #fab855;
               color:#fff;
               margin-right: 15px;
               border-radius: 5px;
           }
           .btn2{
-              width: 70px;
-              height: 25px;
+              width: 58px;
+              height: 24px;
               background-color: #fff;
               border: 1px solid #fab855;
               color: #fab855;

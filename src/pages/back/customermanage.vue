@@ -88,6 +88,7 @@ export default {
                         this.finished = true
                 }
                 } else {
+                    this.finished = true
                     Toast.fail('请求频繁')
                 }
             }
@@ -154,8 +155,8 @@ export default {
     .main{
         padding-top: 30px;
         .in1{
-            height: 35px;
-            width: 320px;
+            height: 40px;
+            width: 360px;
             margin: 0 auto;
             margin-bottom: 30px;
             display: flex;
@@ -178,28 +179,28 @@ export default {
             display: flex;
             align-items: center;
             border-radius: 15px;
-            height: 110px;
-            width: 360px;
+            height: 100px;
+            width: 410px;
             margin: 0 auto;
             margin-top: 15px;
             background-color: #fff;
             .ico{
               margin-left: 20px;
               margin-right: 20px;
-              height: 70px;
-              width: 70px;
+              height: 60px;
+              width: 60px;
               img{
-                height: 90%;
-                width: 90%;
+                height: 100%;
+                width: 100%;
                 }
             }
             .detail{
-                height: 100px;
+                height: 79px;
                 display: flex;
                 flex-direction: column;
                 justify-content: space-around;
                 .title{
-                   font-weight: 600px;
+                   font-weight: 600;
                    font-size: 18px;
                 }
             }
