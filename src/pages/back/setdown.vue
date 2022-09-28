@@ -25,8 +25,8 @@
         </div>
       </div>
       <div class="bottom">
-        <button class="btn1" @click="pass">通过</button>
-        <button class="btn2" @click="reject">拒绝</button>
+        <button class="btn1" @click="pass(id[index])">通过</button>
+        <button class="btn2" @click="reject(id[index])">拒绝</button>
       </div>
      </div>
     </van-list>
@@ -53,13 +53,14 @@ export default {
       isLoading: false,
       finished: false,
       serialnumber: 1,
-      id: ['WWT'],
-      time: ['2021-12-12 12:12:12'],
-      nick_name: ['SADF'],
-      phone: ['FDASFDSA'],
-      real_name: ['ADFSFDA'],
-      remarks: ['ASDFADSASDFAS'],
-      reject_reason:''
+      id: [],
+      time: [],
+      nick_name: [],
+      phone: [],
+      real_name: [],
+      remarks: [],
+      reject_reason: '',
+      reject_id:''
     }
   },
 
@@ -69,27 +70,57 @@ export default {
         method: 'get',
         url:`/fanbook/deliverbot/back/admin/audit/get_register_applications/${num}`
       }).then((res) => {
-           this.id.concat(res.data.application_id)
-           this.time.concat(res.data.apply_date_time)
-           this.nick_name.concat(res.data.fanbook_nick_name)
-           this.phone.concat(res.data.phone_number)
-           this.real_name.concat(res.data.real_name)
-           this.remarks.concat(res.data.remarks)
-      },
-      ()=>{this.finished = true}
+        if (res.code == 0) {
+          
+          if (res.data.length != 0) {
+        for (var i = 0; i < res.data.length; i++){
+        let temp = res.data[i]
+          this.id.push(temp.application_id)
+           this.time.push(temp.apply_date_time)
+           this.nick_name.push(temp.fanbook_nick_name)
+           this.phone.push(temp.phone_number)
+           this.real_name.push(temp.real_name)
+           this.remarks.push(temp.remarks)          
+        }          
+          } else {
+          this.finished=true
+        }
+
+        } else {
+        Toast.fail('操作频繁')
+ }
+      }
       )
     },
+
+
     changeinfo(num) {
       serviceAxios({
         method: 'get',
         url:`/fanbook/deliverbot/back/admin/audit/get_register_applications/${num}`
       }).then((res) => {
-           this.id=res.data.application_id
-           this.time=res.data.apply_date_time
-           this.nick_name=res.data.fanbook_nick_name
-           this.phone=res.data.phone_number
-           this.real_name=res.data.real_name
-           this.remarks=res.data.remarks
+        if (res.code == 0) {
+          
+        
+        this.id = []
+        this.time = []
+        this.nick_name = []
+        this.phone = []
+        this.real_name =[]
+        this.remarks = []
+        for (var i = 0; i < res.data.length; i++){
+           let temp = res.data[i]
+           this.id.push(temp.application_id)
+           this.time.push(temp.apply_date_time)
+           this.nick_name.push(temp.fanbook_nick_name)
+           this.phone.push(temp.phone_number)
+           this.real_name.push(temp.real_name)
+           this.remarks.push(temp.remarks)
+          }
+        } else {
+          Toast.fail('操作频繁')
+        }
+
       },
       ()=>{Toast.fail('获取信息失败')}
       )
@@ -98,42 +129,60 @@ export default {
          this.serialnumber=1
          this.changeinfo(this.serialnumber)
          this.serialnumber++
-         this.isLoading=false
+      this.isLoading = false
+         this.finished = false
     },
     onLoad() {
         this.getinfo(this.serialnumber)
       this.serialnumber++
         this.loading = false
     },
-    pass() {
+    pass(id) {
       serviceAxios({
         method: 'get',
-        url:`/fanbook/deliverbot/back/admin/audit/pass_register_application/${this.id}`
+        url:`/fanbook/deliverbot/back/admin/audit/pass_register_application/${id}`
       }).then(() => { Toast.success('操作成功'); this.onRefresh()},()=>{Toast.fail('操作失败')})
     },
       
-    reject() {
+    reject(id) {
+
       this.show = true;
+      this.reject_id = id
+      
     },
-    beforeClose(action,done) {
-        if (action === 'confirm') {
+
+    beforeClose(action, done) {
+
+      if (action === 'confirm') {
+
             if (this.reject_reason) {
                 serviceAxios({
                     method: 'post',
                     url:'/fanbook/deliverbot/back/admin/audit/reject_register_application',
-                    data:{application_id:this.id,reject_reason:this.reject_reason}
-                }).then(() => { this.reject_reason = ''; this.onRefresh(); done()},()=>{done(false)})
+                    data:{application_id:this.reject_id,reject_reason:this.reject_reason}
+                }).then((res) => {
+                  if (res.code == 0) {
+                    this.reject_reason = '';
+                    this.reject_id = '';
+                    this.onRefresh();
+                    done()
+                  } else {
+                    done(false)
+                  }
+
+                })
             } else {
                 done(false)
             }
         } else {
             this.reject_reason = ''
+            this.reject_id=''
             done()
         }
         },
   },
   mounted() {
-      this.changeinfo(this.serialnumber);
+      this.getinfo(this.serialnumber);
       this.serialnumber++
     }
 }
@@ -143,8 +192,8 @@ export default {
     .main{
       padding-top:20px;
       .item{
-        height: 180px;
-        width: 320px;
+        height: 214px;
+        width: 370px;
         margin: 0 auto;
         margin-bottom: 20px;
         background-color: #fff;

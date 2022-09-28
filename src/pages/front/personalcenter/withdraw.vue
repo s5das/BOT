@@ -46,6 +46,7 @@
 </template>
 
 <script>
+import serviceAxios from '@/http'
 export default {
     name: 'with-draw',
     data() {
@@ -73,7 +74,14 @@ export default {
         getmax(){
           this.num = this.max_num
       }
+  },
+  mounted() {
+    serviceAxios({
+      method: 'get',
+      url: '/fanbook/deliverbot/front/withdraw_money/get_could_withdraw'
+    }).then((res) =>{this.max_num = res.data})
     }
+
 }
 </script>
 <style scoped lang="less">
@@ -114,7 +122,7 @@ position: absolute;
 padding: 16px 10px 16px 10px;
 top: 145px;
 border-radius: 6px;
-left: 6px;
+left: 25px;
 
 .b1{
     height: 40px;

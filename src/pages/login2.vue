@@ -18,7 +18,7 @@ export default {
         command1() {
             window.fb.init({
                 success: () => {
-                    window.fb.oAuth({ 'oAuthUrl': 'http://124.220.9.212:9098/fanbook/deliverbot/general/redirect' }).then(
+                    window.fb.oAuth({ 'oAuthUrl': 'http://124.220.9.212:9099/fanbook/deliverbot/general/redirect' }).then(
                         () => {
                             login(localStorage.getItem('code')).then(
                                 (res) => {
@@ -40,7 +40,7 @@ export default {
                             } else {
                                 Dialog({ message: '授权失败' });
                             }
-                           },2000)
+                           },4000)
                         },
                     )
                             }
@@ -50,7 +50,7 @@ export default {
 
             window.fb.init({
                 success: () => {
-                    window.fb.oAuth({ 'oAuthUrl': 'http://124.220.9.212:9098/fanbook/deliverbot/general/redirect' }).then(
+                    window.fb.oAuth({ 'oAuthUrl': 'http://124.220.9.212:9099/fanbook/deliverbot/general/redirect' }).then(
                         () => {
                             console.log(111);
                             login_back(localStorage.getItem('code')).then(

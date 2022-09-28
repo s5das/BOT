@@ -37,7 +37,7 @@ export default {
 <style scoped lang="less">
 .group{
     .item{
-        width: 375px;
+        width: 410px;
         margin: 0px auto;
         background-color: #fff;
         height: 45px;

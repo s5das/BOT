@@ -27,7 +27,7 @@
 <van-field
   readonly
   clickable
-  name="num_of_packge"
+  name="num_of_packages"
   :value="value2"
   label="快递数量"
   placeholder="点击选择数量"
@@ -126,7 +126,7 @@
   <div class="content2">
     <van-field
     v-model="user_receiveplace"
-    name="reciplent_adress"
+    name="recipient_address"
     label="收件地址"
     placeholder="请输入收件地址"
     
@@ -134,7 +134,7 @@
 
   <van-field
     v-model="user_name"
-    name="reciplent_name"
+    name="recipient_name"
     label="收件人"
     placeholder="请输入收件人名称"
 
@@ -142,7 +142,7 @@
 
   <van-field
     v-model="user_phone"
-    name="reciplent_phone_number"
+    name="recipient_phone_number"
     label="手机号"
     placeholder="请输入手机号"
 
@@ -159,7 +159,6 @@
 <script>
 import fmt from '@/utils/format'
 import { Toast } from 'vant'
-import compressImg from '@/utils/compressImg'
 import serviceAxios from '@/http'
 export default {
     
@@ -170,9 +169,9 @@ export default {
     minDate:new Date(),
     // 快递规格
       value1: '',
-      columns1: ['大件(3-5kg)', '中件(1-3kg)', '小件(小于1kg)'],
-      reward_per_package: [1,2,3],
-      royalty_rate:[0.1,0.1,0.1],
+      columns1: [],
+      reward_per_package: [],
+      royalty_rate:[],
       showPicker1: false,
     // 快递数量
       value2: '',
@@ -180,7 +179,7 @@ export default {
       showPicker2: false,  
     //   快递点
       value3: '',
-      columns3: ['深大一区菜鸟驿站', '深大一区菜鸟驿站'],
+      columns3: [],
       showPicker3: false, 
     //   图片
         filelist: [],
@@ -213,38 +212,20 @@ export default {
     },
      
     async upload(file) {
-      const img = await this.readImg(file)
-      const blob = await compressImg(img, file.type, 1000, 1000)
-      // console.log(blob);
-      const formData = new FormData()
-      formData.append('orderPic', blob)
-      return serviceAxios({
-        method: 'post',
-        url: '/fanbook/deliverbot/front/order/client/upload_order_pic',
-        data: formData
-      })
+      console.log(file);
+
+        console.log(1);
+        const formData = new FormData()
+        formData.append('file', file)
+        
+        return serviceAxios({
+          method: 'post',
+          url: '/fanbook/deliverbot/front/order/client/upload_order_pic',
+          data: formData
+        })
+
     },
 
-
-  readImg(file)  {
-  return new Promise((resolve, reject) => {
-    const img = new Image()
-    const reader = new FileReader()
-    reader.onload = function(e) {
-      img.src = e.target.result
-    }
-    reader.onerror = function(e) {
-      reject(e)
-    }
-    reader.readAsDataURL(file)
-    img.onload = function() {
-      resolve(img)
-    }
-    img.onerror = function(e) {
-      reject(e)
-    }
-  })
-},
 
       onConfirm4(value) {
       
@@ -269,72 +250,79 @@ export default {
         data['reward'] = this.jine;
         delete data['pic'];
         data['pic_nums'] = this.filelist.length
-      data['num_of_packge'] = Number(data['num_of_packge'].replace('件', ''))
-      // console.log(data);
+        data['num_of_packages'] = Number(data['num_of_packages'].replace('件', ''))
+        console.log(data);
       if (this.check_info(data)) {
-        this.pay().then(
-          (res) => {
-          this.orderId = res;
-          return serviceAxios({
+        serviceAxios({
           method: 'post',
           url: '/fanbook/deliverbot/front/order/client/create_order',
           data
-          })
+        }).then(
+          (res) => {
+            console.log(res);
+            this.orderId = res.data.order_id
+            if (res.code ==0) {
+               return this.upload(this.filelist[0].file)              
+            } else {
+              throw('err1')
+            }
+
           }
         ).then(
-          () => {
-            return this.upload(this.filelist[0].file)
-          }
-        ).then(
-          () => {
-            this.$router.push({
-              path: '/payfinish',
-              querry: {
-                orderId:this.orderId
+          (res) => {
+            if (res.code == '0') {
+              let orderId = this.orderId
+              this.$router.push({
+              path: '/front/payfinish',
+              query: {
+                orderId
               }
-            }).catch(
-          (err)=>{console.log(err.message);}
-        )
-          }
-        )
-
-
-
-        .then(
-          () => { this.upload(this.filelist[0].file) },
-        ).then(
-          () => {
-            this.$router.push({
-              path: '/payfinish'
             })
-          }
-        )
+            } else {
+              throw('err2')
+            }
+
+          }).catch((reason)=>{Toast.fail(reason)})
       }
     },
+
+
     async pay() {
       let orderId = 0;
       return orderId
     },
 
-    // 动态申请规格、单价、利率、地点
-      mounted() {
+
+  },
+        // 动态申请规格、单价、利率、地点
+        mounted() {
         serviceAxios({
           method: 'get',
           url:'/fanbook/deliverbot/general/order/get_specifications'
-        }).then((response)=>{
-          this.columns1 = response.spec_name
-          this.reward_per_package = response.reward_per_package
-          this.royalty_rate = response.royalty_rate
+        }).then((response) => {
+          console.log(response.data);
+          for (var i = 0; i < response.data.length; i++){
+            let temp = response.data[i]
+            this.columns1.push(temp.spec_name)
+            this.reward_per_package.push(temp.reward_per_package)
+            this.royalty_rate.push(temp.royalty_rate)
+            console.log(1);
+          }
+
         }, (err) => { console.log(err.message); })
         
         serviceAxios({
           method: 'get',
           url:'/fanbook/deliverbot/general/pickup_station/get_all'
         }).then((response) => {
-          this.columns3 = response.pickup_address
+          
+          for (var i = 0; i < response.data.length; i++) {
+            let temp = response.data[i]
+            this.columns3.push(temp.pickup_address)
+            console.log(1);
+          }
         },(err)=>{console.log(err.message);})
       },
-    },
     computed: {
         jine() {
         if (this.value1 && this.value2) {

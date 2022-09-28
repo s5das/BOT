@@ -40,7 +40,7 @@ export default {
             show: false,
             location_name: '',
             status: 0,
-            box_text: [['新建', '管理'], ['返回', '删除']],
+            box_text: [['新建', '管理'], ['返回', '确定']],
             selected: [],
             arr_aftermove: [],
             sortable:''           
@@ -54,7 +54,13 @@ export default {
             serviceAxios({
             url: '/fanbook/deliverbot/general/pickup_station/get_all',
             method: 'get',
-        }).then((res)=>{this.items = res.data.pickup_address},(err)=>{console.log(err.message);})
+            }).then((res) => {
+                this.items=[]
+                for (var i = 0; i < res.data.length; i++){
+                    let temp = res.data[i]
+                    this.items.push(temp.pickup_address)
+                }
+            })
         },
 
 
@@ -64,11 +70,13 @@ export default {
             }
             if (this.status == 1) {
                 this.status = 0
-                this.sortable.option('disabled',true)
-                this.disablemove = true
+                this.sortable.option('disabled', true)
+                this.getInfo()
                 this.selected = []
+                this.arr_aftermove = this.items;
             }
-
+            console.log(this.arr_aftermove);
+            console.log(this.items);
         },
 
 
@@ -92,24 +100,28 @@ export default {
         handle2() {
             if (this.status == 0) {
                 this.status = 1
-                this.sortable.option('disabled',false)
+                this.sortable.option('disabled', false)
+                this.arr_aftermove =this.items
             } else {
-                if(this.selected.length>0){
-                let final_list = []
+                let new_station_list = []
                 for (let i = 0; i < this.arr_aftermove.length; i++) {
                     if (this.selected.indexOf(this.arr_aftermove[i]) === -1) {
-                        final_list.push(this.arr_aftermove[i])
+                        new_station_list.push({ pickup_station_name: this.arr_aftermove[i] })
                     }
                 }
-                console.log(final_list);
+                console.log(new_station_list);
                 serviceAxios({
                     method: 'post',
                     url:'/fanbook/deliverbot/back/admin/pickup_stations/reset_station_list',
                     data: {
-                        pickup_station_name:final_list
+                        new_station_list
                     }
-                }).then(() => { this.status = 0; this.sortable.option('disabled', true); this.getInfo()})
-                }
+                }).then(() => {
+                    this.status = 0; this.sortable.option('disabled', true);
+                    this.getInfo();
+                    this.$nextTick(() => { this.arr_aftermove = this.items; })
+                })
+                
             }
 
         }, 
@@ -129,7 +141,6 @@ export default {
 
         mounted() {
             this.getInfo();
-            this.arr_aftermove =this.items
             var el = document.getElementById('my-navigation');
             //设置配置
             var ops = {

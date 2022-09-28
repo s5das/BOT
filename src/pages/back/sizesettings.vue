@@ -30,19 +30,20 @@
 import serviceAxios from '@/http';
 import Sortable from 'sortablejs';
   import 'animate.css'
+import { Toast } from 'vant';
   export default {
   
       name: 'size-settings',
   
       data() {
           return {
-              reward: [10, 20, 30],
-              name: ['大件（3-5kg）', '中件（1-2kg）', '小件（1kg以下）'],
-              rate: [0.1, 0.2, 0.3],
+              reward: [],
+              name: [],
+              rate: [],
               
               location_name: '',
               status: 0,
-              box_text: [['新建', '管理'], ['返回', '删除']],
+              box_text: [['新建', '管理'], ['返回', '确定']],
               selected: [],
               arr_aftermove: [],
               sortable:''           
@@ -57,10 +58,22 @@ import Sortable from 'sortablejs';
               url: '/fanbook/deliverbot/general/order/get_specifications',
               method: 'get',
               }).then((res) => {
-                  this.reward = res.data.reward_per_package
-                  this.name = res.data.spec_name
-                  this.rate = res.data.royalty_rate
-              }, (err) => { console.log(err.message); })
+                  if (res.code == 0) {
+                      this.reward = []
+                      this.name = []
+                      this.rate = []
+                      for (var i = 0; i < res.data.length; i++){
+                        let temp = res.data[i]
+                        this.reward.push(temp.reward_per_package)
+                        this.name.push(temp.spec_name)
+                        this.rate.push(temp.royalty_rate)                             
+                      }
+               
+                  } else {
+                    Toast.fail('请求频繁')
+                  }
+
+              })
           },
   
   
@@ -82,32 +95,35 @@ import Sortable from 'sortablejs';
               if (this.status == 0) {
                   this.status = 1
                   this.sortable.option('disabled', false)
+                  this.arr_aftermove =this.name
               } else {
-                  if (this.selected.length>0) {
-                      let final_reward = []
-                      let final_rate = []
-                      let final_name = []
+                  console.log('select');
+                  console.log(this.selected)
+                      console.log('after');
+                      console.log(this.arr_aftermove);
+                      let new_spec_list = []
                       for (let i = 0; i < this.arr_aftermove.length; i++) {
                           if (this.selected.indexOf(this.arr_aftermove[i]) === -1) {
                               let a = this.name.indexOf(this.arr_aftermove[i])
-                              final_reward.push(this.reward[a])
-                              final_rate.push(this.rate[a])
-                              final_name.push(this.name[a])
+                              new_spec_list.push({
+                                  reward_per_package: this.reward[a],
+                                  royalty_rate: this.rate[a],
+                                  specification_name:this.name[a]
+                              })
+                              
+                             
                           }
                       }
-                      console.log(final_reward);
-                      console.log(final_rate);
-                      console.log(final_name);
+                     
+                      console.log(new_spec_list);
                       serviceAxios({
                           method: 'post',
                           url: '/fanbook/deliverbot/back/admin/specs/reset_spec_list',
                           data: {
-                              reward_per_package: final_reward,
-                              royalty_rate: final_rate,
-                              specification_name: final_name
+                            new_spec_list
                           }
                       }).then(() => { this.status = 0; this.sortable.option('disabled', false); this.getInfo() })
-                  }
+                  
               }
   
           }, 
@@ -124,9 +140,9 @@ import Sortable from 'sortablejs';
               console.log(this.selected);
           }
           },
-          mounted() {
-              this.getInfo();
-            this.arr_aftermove =this.name
+    mounted() {
+        
+            this.getInfo();
             var el = document.getElementById('my-navigation');
             //设置配置
             var ops = {

@@ -16,8 +16,8 @@ serviceAxios.interceptors.request.use(
 
         // 如果开启token认证
         if(serverConfig.useTokenAuthorization) {
-            config.headers["Authorization"] = localStorage.getItem("token");
-        }
+            config.headers["Authorization"] =   localStorage.getItem("token");
+        } 
 
         // // 设置请求头
         // if(!config.headers["content-type"]) { // 如果没有设置请求头

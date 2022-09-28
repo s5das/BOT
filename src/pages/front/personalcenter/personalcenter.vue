@@ -18,15 +18,15 @@
       <div class="content">
 
         <van-cell-group>
-        <van-cell title="总收入金额" title-class="cell_title"   :icon="require('@/assets/money.png')"  clickable :value="statistics.money_could_withdraw|| '请求错误'" />
+        <van-cell title="总收入金额" title-class="cell_title"   :icon="require('@/assets/money.png')"  clickable :value="statistics.money_could_withdraw" />
         <div class="line"></div>
-        <van-cell title="未提现金额" title-class="cell_title"   :icon="require('@/assets/finish2.png')" :to="{path:'withdraw'}" clickable :value="statistics.money_earned || '请求错误'" is-link/>
+        <van-cell title="未提现金额" title-class="cell_title"   :icon="require('@/assets/finish2.png')" :to="{path:'/front/withdraw'}" clickable :value="statistics.money_earned" is-link/>
         <div class="line"></div>
-        <van-cell title="全部订单数" title-class="cell_title"   :icon="require('@/assets/order2.png')"  clickable :value="statistics.total_take_order_nums || '请求错误'" is-link/>
+        <van-cell title="全部订单数" title-class="cell_title"   :icon="require('@/assets/order2.png')"  clickable :value="statistics.total_take_order_nums " is-link/>
         <div class="line"></div>
-        <van-cell title="已完成订单数" title-class="cell_title"  :icon="require('@/assets/mail.png')" clickable :value="statistics.finished_order_nums || '请求错误'" is-link/>
+        <van-cell title="已完成订单数" title-class="cell_title"  :icon="require('@/assets/mail.png')" clickable :value="statistics.finished_order_nums " is-link/>
         <div class="line"></div>
-        <van-cell title="未完成订单数" title-class="cell_title"  :icon="require('@/assets/mail2.png')" clickable :value="statistics.ongoing_order_nums || '请求错误'" is-link/>
+        <van-cell title="未完成订单数" title-class="cell_title"  :icon="require('@/assets/mail2.png')" clickable :value="statistics.ongoing_order_nums " is-link/>
       </van-cell-group>
 
       </div>
@@ -94,7 +94,8 @@ export default {
         serviceAxios({
             method: "get",
             url: "/fanbook/deliverbot/general/user_center/get_statistics"
-        }).then((res) => { this.statistics = res; });
+        }).then((res) => { this.statistics = res.data;});
+        
     }
 }
 

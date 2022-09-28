@@ -27,13 +27,14 @@ export default {
     props:['orderId'],
     components: { Successhead, Orderinfo, Userinfo },
     methods: {
-      mounted() {
+
+  },
+  mounted() {
       serviceAxios({
         method: 'get',
         url:`/fanbook/deliverbot/general/order/get_details/${this.orderId}`
-        }).then((res)=>{this.orderinfo = res})
+        }).then((res)=>{this.orderinfo = res.data})
       },
-    }
 }
 
 </script>

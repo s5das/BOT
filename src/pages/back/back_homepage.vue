@@ -9,9 +9,6 @@
     <div class="box1">
       <Cellgroup :items="items3"></Cellgroup>
     </div>
-    <div class="box1">
-      <Cellgroup :items="items4"></Cellgroup>
-    </div>
   </div>
 </template>
  
@@ -76,16 +73,7 @@ export default {
           arrow: true,
           to:'/back/locationsettings'
         }
-      ],
-      items4: [
-        {
-          ico: require('@/assets/back6.png'),
-          title: '设置',
-          config: '',
-          arrow: true,
-          to:'/back/settings'
-        }
-      ],
+      ]
     }
 
 

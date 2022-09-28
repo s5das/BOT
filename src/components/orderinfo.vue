@@ -24,11 +24,11 @@
   </div>
   <div class="arrivetime"> 
     <div class="title">送达时间</div>
-    <div class="content">{{orderInfo.deliver_time_period_string}}</div>
+    <div class="content">{{orderinfo.deliver_time_period_string}}</div>
   </div>
   <div class="beizhu">
     <div class="title">备注</div>
-    <div class="content">{{orderInfo.remarks}}</div>
+    <div class="content">{{orderinfo.remarks}}</div>
   </div>
   <div class="status">
     {{orderinfo.status}}

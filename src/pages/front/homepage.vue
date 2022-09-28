@@ -65,7 +65,7 @@ export default {
         }
       } else {
         this.$router.push({
-          path: '/placeorder'
+          path: '/front/placeorder'
         })
       }
     },

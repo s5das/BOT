@@ -34,7 +34,7 @@ export default {
         })
         },
         finish() {
-            if (this.size && Number(this.price) && Number(this.price)) {
+            if (this.specification_name && Number(this.royalty_rate) && Number(this.reward_per_package)) {
                 serviceAxios({
                     method: 'post',
                     url:'/fanbook/deliverbot/back/admin/specs/add',

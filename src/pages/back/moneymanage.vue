@@ -23,8 +23,8 @@
       <div>fanbook昵称：{{nick_name[index]}}</div>
       </div>
       <div class="bottom">
-        <button class="btn1" @click="pass">通过</button>
-        <button class="btn2" @click="reject">拒绝</button>
+        <button class="btn1" @click="pass(id[index])">通过</button>
+        <button class="btn2" @click="reject(id[index])">拒绝</button>
       </div>
      </div>
     </van-list>
@@ -59,7 +59,8 @@ export default {
       phone: ['FDASFDSA','dsaf'],
       real_name: ['ADFSFDA','adfs'],
       money: [100,45465],
-      reject_reason:''
+      reject_reason: '',
+      reject_id:''
     }
   },
 
@@ -69,13 +70,26 @@ export default {
         method: 'get',
         url:`/fanbook/deliverbot/back/admin/audit/get_withdraw_money_applications/${num}`
       }).then((res) => {
-           this.id.concat(res.data.application_id)
-           this.time.concat(res.data.apply_create_time)
-           this.status.concat(res.data.audit_status)
-           this.nick_name.concat(res.data.fanbook_nick_name)
-           this.phone.concat(res.data.phone_number)
-           this.real_name.concat(res.data.real_name)
-           this.money.concat(res.data.money_to_withdraw)
+        if (res.code == 0) {
+          if (res.data.length != 0) {
+            for (var i = 0; i < res.data.length; i++){
+          let temp = res.data[i]
+          this.id.push(temp.application_id)
+           this.time.push(temp.apply_create_time)
+           this.status.push(temp.audit_status)
+           this.nick_name.push(temp.courier_fanbook_nick_name)
+           this.phone.push(temp.courier_phone_number)
+           this.real_name.push(temp.courier_real_name)
+           this.money.push(temp.money_to_withdraw)          
+          }           
+          } else {
+            this.finished=true
+          }
+       
+        } else {
+          Toast.fail('请求频繁')
+        }
+
       },
       ()=>{this.finished = true}
       )
@@ -85,13 +99,27 @@ export default {
         method: 'get',
         url:`/fanbook/deliverbot/back/admin/audit/get_withdraw_money_applications/${num}`
       }).then((res) => {
-        this.id = res.data.application_id
-           this.time = res.data.apply_create_time
-           this.status = res.data.audit_status
-           this.nick_name = res.data.fanbook_nick_name
-           this.phone = res.data.phone_number
-           this.real_name = res.data.real_name
-           this.money = res.data.money_to_withdraw
+        if (res.code == 0) {
+          this.id = []
+          this.time = []
+          this.status=[]  
+           this.nick_name=[]  
+           this.phone=[]  
+           this.real_name=[]  
+           this.money=[]    
+          for (var i = 0; i < res.data.length; i++){
+          let temp = res.data[i]
+          this.id.push(temp.application_id)
+           this.time.push(temp.apply_create_time)
+           this.status.push(temp.audit_status)
+           this.nick_name.push(temp.courier_fanbook_nick_name)
+           this.phone.push(temp.courier_phone_number)
+           this.real_name.push(temp.courier_real_name)
+           this.money.push(temp.money_to_withdraw)          
+          }           
+        } else {
+          Toast.fail('请求频繁')
+        }
       },
       ()=>{Toast.fail('获取信息失败')}
       )
@@ -107,15 +135,16 @@ export default {
       this.serialnumber++
       this.loading = false;
     },
-    pass() {
+    pass(id) {
       serviceAxios({
         method: 'get',
-        url:`/fanbook/deliverbot/back/admin/audit/pass_withdraw_money_application/${this.id}`
+        url:`/fanbook/deliverbot/back/admin/audit/pass_withdraw_money_application/${id}`
       }).then(() => { Toast.success('操作成功'); this.onRefresh()},()=>{Toast.fail('操作失败')})
     },
       
-    reject() {
+    reject(id) {
       this.show = true;
+      this.reject_id = id;
     },
     beforeClose(action,done) {
         if (action === 'confirm') {
@@ -123,13 +152,14 @@ export default {
                 serviceAxios({
                     method: 'post',
                     url:'/fanbook/deliverbot/back/admin/audit/reject_withdraw_money_application',
-                    data:{application_id:this.id,reject_reason:this.reject_reason}
-                }).then(() => { this.reject_reason = ''; this.onRefresh(); done()},()=>{done(false)})
+                    data:{application_id:this.reject_id,reject_reason:this.reject_reason}
+                }).then(() => { this.reject_reason = ''; this.reject_id = ''; this.onRefresh(); done()},()=>{done(false)})
             } else {
                 done(false)
             }
         } else {
-            this.reject_reason = ''
+          this.reject_reason = ''
+            this.reject_id = ''
             done()
         }
         },
@@ -145,8 +175,8 @@ export default {
     .main{
       padding-top:20px;
       .item{
-        height: 200px;
-        width: 320px;
+        height: 267px;
+        width: 370px;
         margin: 0 auto;
         margin-bottom: 20px;
         background-color: #fff;

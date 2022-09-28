@@ -46,8 +46,8 @@ export default new VueRouter({
                 {
                     path: 'payfinish',
                     component: () => import("@/pages/front/getservice/payfinish.vue"),
-                    props({querry}) {
-                        return {orderId:querry.orderId}
+                    props({query}) {
+                        return {orderId:query.orderId}
                     }
                 },
                 {
@@ -84,10 +84,7 @@ export default new VueRouter({
                     path: 'homepage',
                     component: () => import("@/pages/back/back_homepage.vue"),
                 },
-                {
-                    path: 'settings',
-                    component: () => import("@/pages/back/settings.vue"),
-                },
+
                 {
                     path: 'locationsettings',
                     component: () => import("@/pages/back/locationsettings.vue"),
