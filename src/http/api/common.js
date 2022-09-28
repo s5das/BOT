@@ -4,7 +4,7 @@ import serviceAxios from "..";
 export const getUserType = () => {
     return serviceAxios({
         method: 'get',
-        url: '/general/user/get_user_type',
+        url: '/fanbook/deliverbot/front/apply/courier/get_user_type',
     });
 };
 

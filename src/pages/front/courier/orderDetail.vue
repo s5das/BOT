@@ -2,7 +2,7 @@
 <template>
     <div>
         <!-- 1 待接单 -->
-        <div v-if="status === '待接单'">
+        <div v-if="orderInfo.order_status === '待接单'">
             <Orderinfo :orderinfo="orderInfo"/>
             <div class="buttons">
                 <div @click="grab" class="button">我要抢单</div>
@@ -10,7 +10,7 @@
         </div>
 
         <!-- 2 派送中 -->
-        <div v-if="status === '派送中'">
+        <div v-if="orderInfo.order_status === '派送中'">
             <Successhead>
                 <template v-slot:content>
                     <div>
@@ -19,7 +19,7 @@
                 </template>
             </Successhead>
             <Orderinfo :orderinfo="orderInfo"/>
-            <Userinfo/>
+            <Userinfo :orderinfo="orderInfo"/>
             <div class="buttons">
                 <div @click="isContactChoicesShow = true" class="button">联系Ta</div>
                 <div @click="showConfirmBox" class="button highlight">确认送达</div>
@@ -53,7 +53,7 @@
         </div>
 
         <!-- 3 已送达 -->
-        <div v-if="status === '已送达'" class="received-box">
+        <div v-if="orderInfo.order_status === '已送达'" class="received-box">
             <div class="auto-confirm-prompt">
                 <van-icon name="bell" color="#E99D42" size='21'/>
                 <div class="prompt-text">
@@ -61,7 +61,7 @@
                 </div>
             </div>
             <Orderinfo :orderinfo="orderInfo"/>
-            <Userinfo/>
+            <Userinfo :orderinfo="orderInfo"/>
             <div class="buttons">
                 <div @click="isContactChoicesShow = true" class="button">联系Ta</div>
                 <div @click="showConfirmBox" class="button highlight">确认收货</div>
@@ -80,46 +80,22 @@
                     </div>
                 </div>
             </van-popup>
-            <van-popup v-model="isContactChoicesShow">
-                <div class="contact-choices">
-                    <div class="top">
-                        <div @click="isContactChoicesShow = false" class="button">取消</div>
-                        <div class="title">联系收件人</div>
-                        <div @click="contact" class="button">确认</div>
-                    </div>
-                    <div class="choices-box">
-                        <div @click="indexOfContactChoicesChosen = i" v-for="(item, i) in contactChoices" :key="i" :class="['choice', i === indexOfContactChoicesChosen ? 'chosen' : '']">{{item}}</div>
-                    </div>
-                </div>
-            </van-popup>
         </div>
 
         <!-- 4 已完成 -->
-        <div v-if="status === '已完成'" class="completed-box">
+        <div v-if="orderInfo.order_status === '已完成'" class="completed-box">
             <div class="completed-prompt">
                 <!-- 2022-08-07 16：00 确认收货 -->
             </div>
             <Orderinfo :orderinfo="orderInfo"/>
-            <Userinfo/>
+            <Userinfo :orderinfo="orderInfo"/>
             <div class="buttons">
                 <div @click="isContactChoicesShow = true" class="button">联系Ta</div>
             </div>
-            <van-popup v-model="isContactChoicesShow">
-                <div class="contact-choices">
-                    <div class="top">
-                        <div @click="isContactChoicesShow = false" class="button">取消</div>
-                        <div class="title">联系收件人</div>
-                        <div @click="contact" class="button">确认</div>
-                    </div>
-                    <div class="choices-box">
-                        <div @click="indexOfContactChoicesChosen = i" v-for="(item, i) in contactChoices" :key="i" :class="['choice', i === indexOfContactChoicesChosen ? 'chosen' : '']">{{item}}</div>
-                    </div>
-                </div>
-            </van-popup>
         </div>
 
         <!-- 5 已取消 -->
-        <div v-if="status === '已取消'">
+        <div v-if="orderInfo.order_status === '已取消'">
             <Orderinfo :orderinfo="orderInfo"/>
         </div>
     </div>
@@ -132,6 +108,7 @@ import Userinfo from '@/components/userinfo.vue';
 import { takeOrder, turnDelivered } from '@/http/api/courier';
 import { completeOrder } from '@/http/api/user';
 import { getDetails } from '@/http/api/general/generalOrderController';
+import { Toast } from 'vant';
     
     export default {
     mounted() {
@@ -141,6 +118,7 @@ import { getDetails } from '@/http/api/general/generalOrderController';
             orderId: this.orderId
         }).then(res => {
             this.orderInfo = res
+            console.log(res)
         })
     },
     data() {
@@ -183,7 +161,7 @@ import { getDetails } from '@/http/api/general/generalOrderController';
             takeOrder({
                 orderId: this.orderId
             }).then(() => {
-                this.status = '派送中'
+                this.orderInfo.order_status = '派送中'
             })
         },
         contact() {
@@ -204,7 +182,8 @@ import { getDetails } from '@/http/api/general/generalOrderController';
             turnDelivered({
                 orderId: this.orderId
             }).then(() => {
-                this.status = '已送达'
+                this.orderInfo.order_status = '已送达'
+                Toast('操作成功')
             })
         },
         cancel() {
@@ -216,7 +195,8 @@ import { getDetails } from '@/http/api/general/generalOrderController';
             completeOrder({
                 orderId: this.orderId,
             }).then(() => {
-                this.status = '已完成'
+                this.orderInfo.order_status = '已完成'
+                Toast('操作成功')
             })
         }
     },

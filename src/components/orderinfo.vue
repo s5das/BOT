@@ -31,7 +31,7 @@
     <div class="content">{{orderinfo.remarks}}</div>
   </div>
   <div class="status">
-    {{orderinfo.status}}
+    {{orderinfo.order_status}}
   </div>
   </div>
 </template>

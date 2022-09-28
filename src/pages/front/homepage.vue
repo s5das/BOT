@@ -40,7 +40,7 @@ export default {
             isCouierSignupPopupShow: false,
 
             // 用户身份
-            type: ''
+            typeOfUser: ''
         };
     },
   mounted() {
@@ -51,18 +51,21 @@ export default {
     async init() {
       authorize();
     },
-    async handle(type) {
+    handle(type) {
       // Toast(type)
       if (type === 1) {
         // 拿到类型数组
-        this.typeArray = await getUserType();
-        if (TYPE.IDENTIFIED_COURIER === this.type) {
-          // 未入驻 去申请入驻
-          this.isCouierSignupPopupShow = true
-        } else {
-          // 已入驻 去抢单界面
-          this.$router.push({ name: 'grabOrder' })
-        }
+        getUserType().then(data => {
+          this.typeOfUser = data.user_type
+          // console.log(this.typeOfUser)
+          if (TYPE.IDENTIFIED_COURIER !== this.typeOfUser) {
+            // 未入驻 去申请入驻
+            this.isCouierSignupPopupShow = true
+          } else {
+            // 已入驻 去抢单界面
+            this.$router.push({ name: 'grabOrder' })
+          }
+        });
       } else {
         this.$router.push({
           path: '/front/placeorder'

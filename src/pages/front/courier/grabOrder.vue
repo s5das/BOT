@@ -35,8 +35,6 @@ import OrderInGrabList from '@/components/order/orderInGrabList.vue'
 import { showOrdersToTake } from '@/http/api/courier';
 import format from '@/utils/format';
 import { getAllSite } from '@/http/api/common'
-import { ORDER } from '@/http/const/const'
-
 
     export default {
     name: "grabOrder",
@@ -77,31 +75,8 @@ import { ORDER } from '@/http/const/const'
                         {
                             id: 0,
                             name: "快递点不限",
-                        },
-                        {
-                            id: 1,
-                            name: "深大一区",
-                        },
-                        {
-                            id: 2,
-                            name: "深大二区",
-                        },
-                        {
-                            id: 3,
-                            name: "深大三区",
-                        },
-                        {
-                            id: 4,
-                            name: "深大四区",
-                        },
-                        {
-                            id: 5,
-                            name: "深大五区",
-                        },
-                        {
-                            id: 6,
-                            name: "深大六区",
-                        },
+                            value: null
+                        }
                     ]
                 },
                 {
@@ -133,44 +108,7 @@ import { ORDER } from '@/http/const/const'
             refreshing: false,
 
             // 假数据, 等后端部署之后清空orders
-            orders: [
-                {
-                    id: 0,
-                    receiveAddress: "西南一区乔羽阁",
-                    expressSite: "深大一区",
-                    price: "5.00",
-                    numOfExpress: 1,
-                    timeOfArrive: "2022-08-07 15:00 ~ 18:00",
-                    remarks: "这是快递备注1"
-                },
-                {
-                    id: 1,
-                    receiveAddress: "西南二区乔羽阁",
-                    expressSite: "深大二区",
-                    price: "5.50",
-                    numOfExpress: 2,
-                    timeOfArrive: "2022-08-08 15:00 ~ 18:00",
-                    remarks: "这是快递备注2"
-                },
-                {
-                    id: 2,
-                    receiveAddress: "西南四区乔羽阁",
-                    expressSite: "深大三区",
-                    price: "5.50",
-                    numOfExpress: 2,
-                    timeOfArrive: "2022-08-08 15:00 ~ 18:00",
-                    remarks: "这是快递备注2"
-                },
-                {
-                    id: 3,
-                    receiveAddress: "西南四区乔羽阁",
-                    expressSite: "深大四区",
-                    price: "5.50",
-                    numOfExpress: 2,
-                    timeOfArrive: "2022-08-08 15:00 ~ 18:00",
-                    remarks: "这是快递备注2"
-                },
-            ]
+            orders: []
         };
     },
     mounted() {
@@ -180,6 +118,7 @@ import { ORDER } from '@/http/const/const'
         async onRefresh() {
             this.orders.length = 2
             this.pageNum = 1
+            this.orders = []
             this.getOrders()
             this.refreshing = false
         },
@@ -188,7 +127,7 @@ import { ORDER } from '@/http/const/const'
             let ordered_by_reward_desc = this.conditions[0].choices[this.conditions[0].idOfChosen].value
             let pickup_address = this.conditions[1].choices[this.conditions[1].idOfChosen].value
             let serial_number = this.pageNum
-            
+            // console.log(this.conditions[1].choices[this.conditions[1].idOfChosen])
             let params = {
                     before_time,
                     ordered_by_reward_desc,
@@ -197,19 +136,9 @@ import { ORDER } from '@/http/const/const'
                 }
 
             showOrdersToTake(params).then(orders_new => {
-                for(let order in orders_new) {
-                    this.orders.push(
-                        {
-                            id: order[ORDER.order_id],
-                            receiveAddress: order[ORDER.recipient_address],
-                            expressSite: order[ORDER.pickup_address],
-                            price: order[ORDER.reward],
-                            numOfExpress: order[ORDER.num_of_packages],
-                            timeOfArrive: order[ORDER.deliver_time_period_string],
-                            remarks: order[ORDER.remarks],
-                        }
-                    )
-                }
+                // console.log(orders_new)
+                this.orders = this.orders.concat(orders_new)
+
                 let length = orders_new.length
                 if(length < 10) this.finished = true
                 else this.pageNum++
@@ -251,6 +180,7 @@ import { ORDER } from '@/http/const/const'
                         },
                     ]
                     let siteArray = await getAllSite()
+                    console.log(siteArray)
                     let length = siteArray.length
                     if(length !== undefined) {
                         for(let i = 1; i <= length; ++i) {
@@ -261,6 +191,7 @@ import { ORDER } from '@/http/const/const'
                             })
                         }
                     }
+                    this.conditions[1].choices = choices
                 }
 
                 if(item.id === 2) {
@@ -308,7 +239,8 @@ import { ORDER } from '@/http/const/const'
             this.idOfActivated = -1;
             this.old_conditions = {}
 
-            this.getOrders()
+
+            this.onRefresh()
         }
     },
     components: { OrderInGrabList }

@@ -1,24 +1,24 @@
 <template>
-    <div class="order" @click="gotoOrderDetial(orderInfo.id)">
+    <div class="order" @click="gotoOrderDetial(orderInfo.order_id)">
         <div class="up">
             <div class="item">
                 <div class="item-name">收获地址: </div>
-                <div class="item-value">{{orderInfo.receiveAddress}}</div>
-                <div class="price">￥{{orderInfo.price}}</div>
+                <div class="item-value">{{orderInfo.recipient_address}}</div>
+                <div class="price">￥{{orderInfo.reward}}</div>
             </div>
             <div class="item">
                 <div class="item-name">快递点: </div>
-                <div class="item-value">{{orderInfo.expressSite}}</div>
+                <div class="item-value">{{orderInfo.pickup_address}}</div>
             </div>
         </div>
         <div class="down">
             <div class="item">
                 <div class="item-name">快递件数:</div>
-                <div class="item-value">{{orderInfo.numOfExpress}}</div>
+                <div class="item-value">{{orderInfo.num_of_packages}}</div>
             </div>
             <div class="item">
                 <div class="item-name">送达时间:</div>
-                <div class="item-value">{{orderInfo.timeOfArrive}}</div>
+                <div class="item-value">{{orderInfo.deliver_time_period_string}}</div>
             </div>
             <div class="item">
                 <div class="item-name">快递备注:</div>
@@ -36,10 +36,9 @@
         methods: {
             gotoOrderDetial(id) {
                 this.$router.push({
-                    name: "orderDetail/courier",
+                    name: "orderDetail",
                     params: {
-                        id: id,
-                        status: '待抢单'
+                        id: id
                     }
                 });
             }

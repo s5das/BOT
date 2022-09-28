@@ -44,23 +44,27 @@
 
 <script>
 import { cancelOrder } from '@/http/api/user';
+import { Toast } from 'vant';
     export default {
+        emits: ['cancelSucceed'],
         props: {
             orderInfo: Object
         },
         methods: {
             gotoOrderDetail(id) {
                 this.$router.push({
-                    name: "orderDetail/user",
+                    name: "orderDetail",
                     params: {
                         id: id,
-                        status: this.orderInfo.status
                     }
                 });
             },
             cancel() {
                 cancelOrder({
                     orderId: this.orderInfo.id
+                }).then(() => {
+                    Toast('操作成功')
+                    this.$emit('cancelSucceed') 
                 })
             }
         }

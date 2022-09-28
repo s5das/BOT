@@ -117,8 +117,8 @@ import { courierRegister } from '@/http/api/courier'
                     remarks: remarks
                 }
                 courierRegister(params).then(() => {
-                    Toast('提交审核')
-                    this.isShow = false
+                        Toast('成功提交审核')
+                        this.isShow = false
                 })
             }
         },

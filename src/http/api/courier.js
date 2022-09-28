@@ -14,8 +14,7 @@ export const courierRegister = (data) => {
 export const getBasicInfo = (params) => {
     return serviceAxios({
         method: 'get',
-        url: '/fanbook/deliverbot/front/order/courier/get_basic_info',
-        params
+        url: `/fanbook/deliverbot/front/order/courier/get_basic_info/${params.orderId}`,
     });
 };
 
@@ -42,8 +41,7 @@ export const showOrdersToTake = (data) => {
 export const takeOrder = (params) => {
     return serviceAxios({
         method: 'get',
-        url: '/fanbook/deliverbot/front/order/courier/take_order',
-        params,
+        url: `/fanbook/deliverbot/front/order/courier/take_order/${params.orderId}`,
     });
 };
 
@@ -52,8 +50,7 @@ export const takeOrder = (params) => {
 export const turnDelivered = (params) => {
     return serviceAxios({
         method: 'get',
-        url: '/fanbook/deliverbot/front/order/courier/turn_delivered',
-        params
+        url: `/fanbook/deliverbot/front/order/courier/turn_delivered/${params.orderId}`,
     });
 };
 

@@ -10,7 +10,7 @@
         <div v-if="status === '派送中'">
             <Orderinfo/>
             <Userinfo/>
-            <div class="buttons">
+            <div class="buttons-box">
                 <div @click="isContactChoicesShow = true" class="button">联系Ta</div>
             </div>
             <van-popup v-model="isContactChoicesShow">
@@ -37,7 +37,7 @@
             </div>
             <Orderinfo/>
             <Userinfo/>
-            <div class="buttons">
+            <div class="buttons-box">
                 <div @click="isContactChoicesShow = true" class="button">联系Ta</div>
                 <div @click="showConfirmBox" class="button highlight">确认收货</div>
             </div>
@@ -76,7 +76,7 @@
             </div>
             <Orderinfo/>
             <Userinfo/>
-            <div class="buttons">
+            <div class="buttons-box">
                 <div @click="isContactChoicesShow = true" class="button">联系Ta</div>
             </div>
             <van-popup v-model="isContactChoicesShow">
@@ -175,10 +175,11 @@ import { completeOrder } from '@/http/api/user';
 </script>
 
 <style lang="less" scoped>
-.buttons {
+.buttons-box {
     background-color: #FFFFFF;
-    width: 366px;
-    margin: 0 auto;
+    background-color: black;
+    width: 418px;
+    // margin: 0 auto;
     min-height: 140px;
     
     display: flex;
@@ -187,7 +188,7 @@ import { completeOrder } from '@/http/api/user';
     // margin-bottom: 50px;
     transform: translateY(-50px);
     .button {
-        width: 289px;
+        width: 418px;
         height: 40px;
         margin: 18px 0;
         margin-bottom: 5px;
@@ -208,7 +209,7 @@ import { completeOrder } from '@/http/api/user';
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    width: 366px;
+    width: 418px;
     height: 162px;
     font-size: 18px;
     text-align: center;
@@ -235,7 +236,7 @@ import { completeOrder } from '@/http/api/user';
 }
 
 .contact-choices {
-    width: 366px;
+    width: 418px;
     .top {
         display: flex;
         justify-content: space-between;

@@ -45,10 +45,9 @@
         methods: {
             gotoOrderDetial(id) {
             this.$router.push({
-                name: "orderDetail/courier",
+                name: "orderDetail",
                 params: {
-                    id: id,
-                    status: this.orderInfo.status
+                    id: id
                 }
             });
         }

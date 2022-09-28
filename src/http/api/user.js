@@ -3,31 +3,30 @@ import serviceAxios from "../index";
 export const completeOrder = (params) => {
   return serviceAxios({
     method: "get",
-    url: "/fanbook/deliverbot/front/order/client/complete_order",
-    params,
+    url: `/fanbook/deliverbot/front/order/client/complete_order/${params.orderId}`,
   });
 };
 
-export const getOrderList = (params) => {
+export const getOrderList = (data) => {
   return serviceAxios({
     method: "post",
     url: "/fanbook/deliverbot/front/order/client/get_order_list",
-    params,
+    data,
   });
 };
 
-export const blurSearch = (params) => {
+export const blurSearch = (data) => {
   return serviceAxios({
     method: "post",
     url: "/fanbook/deliverbot/front/order/client/blur_search",
-    params,
+    data,
   });
 };
 
 export const cancelOrder = (params) => {
   return serviceAxios({
     method: "get",
-    url: "/fanbook/deliverbot/front/order/client/cancel_order",
+    url: `/fanbook/deliverbot/front/order/client/cancel_order/${params.orderId}`,
     params,
   });
 };

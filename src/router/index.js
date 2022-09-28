@@ -62,14 +62,14 @@ export default new VueRouter({
                     component: () => import("@/pages/front/courier/grabOrder.vue")
                 },
                 {
-                    name: 'orderDetail/courier',
-                    path: 'courier/orderDetail/:id:status',
+                    name: 'orderDetail',
+                    path: 'courier/orderDetail/:id',
                     component: () => import("@/pages/front/courier/orderDetail.vue")
                 },
                 // 用户
                 {
-                    name: 'orderDetail/user',
-                    path: 'user/orderDetail/:id:status',
+                    name: 'orderDetail',
+                    path: 'user/orderDetail/:id',
                     component: () => import("@/pages/front/user/orderDetail.vue")
                 }
             ]
