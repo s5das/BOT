@@ -34,6 +34,9 @@ export default {
   data() {
     return {
     }
+  },
+  mounted() {
+    console.log(this.orderinfo);
   }
 }
 </script>

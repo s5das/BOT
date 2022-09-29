@@ -58,22 +58,19 @@ import { Toast } from 'vant';
               url: '/fanbook/deliverbot/general/order/get_specifications',
               method: 'get',
               }).then((res) => {
-                  if (res.code == 0) {
                       this.reward = []
                       this.name = []
                       this.rate = []
-                      for (var i = 0; i < res.data.length; i++){
-                        let temp = res.data[i]
+                      for (var i = 0; i < res.length; i++){
+                        let temp = res[i]
                         this.reward.push(temp.reward_per_package)
                         this.name.push(temp.spec_name)
                         this.rate.push(temp.royalty_rate)                             
                       }
-               
-                  } else {
-                    Toast.fail('请求频繁')
-                  }
-
-              })
+                          
+              },
+             ()=>{Toast.fail('请求频繁')}
+              )
           },
   
   

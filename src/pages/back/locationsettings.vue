@@ -57,8 +57,8 @@ export default {
             method: 'get',
             }).then((res) => {
                 this.items=[]
-                for (var i = 0; i < res.data.length; i++){
-                    let temp = res.data[i]
+                for (var i = 0; i < res.length; i++){
+                    let temp = res[i]
                     this.items.push(temp.pickup_address)
                 }
             })

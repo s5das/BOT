@@ -72,12 +72,11 @@ export default {
                     serial_number:num
                 }
             }).then((res) => {
-                if (res.code == 0) {
-                    if (res.data.length!=0) {
+                    if (res.length!=0) {
                         
                     
-                    for (var i = 0; i < res.data.length; i++){
-                    let temp = res.data[i]
+                    for (var i = 0; i < res.length; i++){
+                    let temp = res[i]
                     this.client_id.push(temp.client_id)
                     this.avatar_url.push(temp.avatar_url)
                     this.fanbook_nick_name.push(temp.fanbook_nick_name)
@@ -87,13 +86,15 @@ export default {
                     } else {
                         this.finished = true
                 }
-                } else {
+
+            },
+                () => {
                     this.finished = true
                     Toast.fail('请求频繁')
-                }
             }
             )
         },
+
         changeinfo(name,num) {
             serviceAxios({
                 method: 'post',
@@ -103,26 +104,23 @@ export default {
                     serial_number:num
                 }
             }).then((res) => {
-                if (res.code == 0) {
                 this.client_id = []
                 this.fanbook_nick_name = []
                 this.phone_number = []
                     this.total_create_order_num = []
                 this.avatar_url =[]
-                for (var i = 0; i < res.data.length; i++){
-                    let temp = res.data[i]
+                for (var i = 0; i < res.length; i++){
+                    let temp = res[i]
                     this.client_id.push(temp.client_id)
                     this.avatar_url.push(temp.avatar_url)
                     this.fanbook_nick_name.push(temp.fanbook_nick_name)
                     this.phone_number.push(temp.phone_number)
                     this.total_create_order_num.push(temp.total_create_order_num)
                     }
-                } else {
-                    Toast.fail('请求频繁')
-                }
+                    
             },
                 () => {
-                    Toast.fail('刷新失败')
+                    Toast.fail('请求频繁')
                 }
             )
         },

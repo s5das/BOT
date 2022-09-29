@@ -212,9 +212,7 @@ export default {
     },
      
     async upload(file) {
-      console.log(file);
-
-        console.log(1);
+        console.log(file);
         const formData = new FormData()
         formData.append('file', file)
         
@@ -260,17 +258,12 @@ export default {
         }).then(
           (res) => {
             console.log(res);
-            this.orderId = res.data.order_id
-            if (res.code ==0) {
-               return this.upload(this.filelist[0].file)              
-            } else {
-              throw('err1')
-            }
-
-          }
+            this.orderId = res.order_id
+            return this.upload(this.filelist[0].file)              
+          },
+          ()=>{throw('err1')}
         ).then(
-          (res) => {
-            if (res.code == '0') {
+          () => {
               let orderId = this.orderId
               this.$router.push({
               path: '/front/payfinish',
@@ -278,11 +271,9 @@ export default {
                 orderId
               }
             })
-            } else {
-              throw('err2')
-            }
-
-          }).catch((reason)=>{Toast.fail(reason)})
+          },
+          ()=>{throw('err2')}
+        ).catch((reason) => { Toast.fail(reason) })
       }
     },
 
@@ -300,9 +291,8 @@ export default {
           method: 'get',
           url:'/fanbook/deliverbot/general/order/get_specifications'
         }).then((response) => {
-          console.log(response.data);
-          for (var i = 0; i < response.data.length; i++){
-            let temp = response.data[i]
+          for (var i = 0; i < response.length; i++){
+            let temp = response[i]
             this.columns1.push(temp.spec_name)
             this.reward_per_package.push(temp.reward_per_package)
             this.royalty_rate.push(temp.royalty_rate)
@@ -316,10 +306,9 @@ export default {
           url:'/fanbook/deliverbot/general/pickup_station/get_all'
         }).then((response) => {
           
-          for (var i = 0; i < response.data.length; i++) {
-            let temp = response.data[i]
+          for (var i = 0; i < response.length; i++) {
+            let temp = response[i]
             this.columns3.push(temp.pickup_address)
-            console.log(1);
           }
         },(err)=>{console.log(err.message);})
       },

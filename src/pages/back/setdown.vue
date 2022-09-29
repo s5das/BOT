@@ -69,12 +69,10 @@ export default {
       serviceAxios({
         method: 'get',
         url:`/fanbook/deliverbot/back/admin/audit/get_register_applications/${num}`
-      }).then((res) => {
-        if (res.code == 0) {
-          
-          if (res.data.length != 0) {
-        for (var i = 0; i < res.data.length; i++){
-        let temp = res.data[i]
+      }).then((res) => {     
+        if (res.length != 0) {
+        for (var i = 0; i < res.length; i++){
+        let temp = res[i]
           this.id.push(temp.application_id)
            this.time.push(temp.apply_date_time)
            this.nick_name.push(temp.fanbook_nick_name)
@@ -86,10 +84,9 @@ export default {
           this.finished=true
         }
 
-        } else {
-        Toast.fail('操作频繁')
- }
-      }
+
+      },
+      ()=>{Toast.fail('操作频繁')}
       )
     },
 
@@ -99,17 +96,14 @@ export default {
         method: 'get',
         url:`/fanbook/deliverbot/back/admin/audit/get_register_applications/${num}`
       }).then((res) => {
-        if (res.code == 0) {
-          
-        
         this.id = []
         this.time = []
         this.nick_name = []
         this.phone = []
         this.real_name =[]
         this.remarks = []
-        for (var i = 0; i < res.data.length; i++){
-           let temp = res.data[i]
+        for (var i = 0; i < res.length; i++){
+           let temp = res[i]
            this.id.push(temp.application_id)
            this.time.push(temp.apply_date_time)
            this.nick_name.push(temp.fanbook_nick_name)
@@ -117,10 +111,6 @@ export default {
            this.real_name.push(temp.real_name)
            this.remarks.push(temp.remarks)
           }
-        } else {
-          Toast.fail('操作频繁')
-        }
-
       },
       ()=>{Toast.fail('获取信息失败')}
       )

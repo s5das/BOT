@@ -79,7 +79,7 @@ export default {
     serviceAxios({
       method: 'get',
       url: '/fanbook/deliverbot/front/withdraw_money/get_could_withdraw'
-    }).then((res) =>{this.max_num = res.data})
+    }).then((res) =>{this.max_num = res})
     }
 
 }

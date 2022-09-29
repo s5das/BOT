@@ -94,7 +94,7 @@ export default {
         serviceAxios({
             method: "get",
             url: "/fanbook/deliverbot/general/user_center/get_statistics"
-        }).then((res) => { this.statistics = res.data;});
+        }).then((res) => { this.statistics = res;});
         
     }
 }

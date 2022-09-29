@@ -70,10 +70,9 @@ export default {
         method: 'get',
         url:`/fanbook/deliverbot/back/admin/audit/get_withdraw_money_applications/${num}`
       }).then((res) => {
-        if (res.code == 0) {
-          if (res.data.length != 0) {
-            for (var i = 0; i < res.data.length; i++){
-          let temp = res.data[i]
+          if (res.length != 0) {
+            for (var i = 0; i < res.length; i++){
+          let temp = res[i]
           this.id.push(temp.application_id)
            this.time.push(temp.apply_create_time)
            this.status.push(temp.audit_status)
@@ -86,12 +85,9 @@ export default {
             this.finished=true
           }
        
-        } else {
-          Toast.fail('请求频繁')
-        }
-
+          
       },
-      ()=>{this.finished = true}
+        () => { Toast.fail('请求频繁'); this.finished = true}
       )
     },
     changeinfo(num) {
@@ -99,7 +95,6 @@ export default {
         method: 'get',
         url:`/fanbook/deliverbot/back/admin/audit/get_withdraw_money_applications/${num}`
       }).then((res) => {
-        if (res.code == 0) {
           this.id = []
           this.time = []
           this.status=[]  
@@ -107,8 +102,8 @@ export default {
            this.phone=[]  
            this.real_name=[]  
            this.money=[]    
-          for (var i = 0; i < res.data.length; i++){
-          let temp = res.data[i]
+          for (var i = 0; i < res.length; i++){
+          let temp = res[i]
           this.id.push(temp.application_id)
            this.time.push(temp.apply_create_time)
            this.status.push(temp.audit_status)
@@ -117,9 +112,7 @@ export default {
            this.real_name.push(temp.courier_real_name)
            this.money.push(temp.money_to_withdraw)          
           }           
-        } else {
-          Toast.fail('请求频繁')
-        }
+ 
       },
       ()=>{Toast.fail('获取信息失败')}
       )
