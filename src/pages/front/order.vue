@@ -188,6 +188,7 @@ export default {
             })
             this.loading = false
           }, () => {
+            this.finished = true
             this.loading = false
           })
         })
@@ -223,6 +224,7 @@ export default {
 
           this.loading = false
         }, () => {
+          this.finished = true
           this.loading = false
         })
       }

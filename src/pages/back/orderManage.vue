@@ -45,10 +45,10 @@
                 <van-pull-refresh v-model="refreshing_forCourier" @refresh="onRefresh_forCourier">
                     <van-list v-model="loading_forCourier" :finished="finished_forCourier" finished-text="没有更多了" @load="getCourierList">
                         <div class="courier-list">
-                            <div @click="indexOfCourierChosen = i" v-for="(courier, i) in courierList" :key="courier.courier_id" :class="['courier', i === indexOfCourierChosen ? 'active' : '']">
+                            <div @click="courier.courier_id !== orderOnHandling.courier_id && (indexOfCourierChosen = i)" v-for="(courier, i) in courierList" :key="courier.courier_id" :class="['courier', i === indexOfCourierChosen ? 'active' : '', courier.courier_id === orderOnHandling.courier_id ? 'now' : '']">
                                 <div class="info">
                                     <div class="img">
-                                        <img :src="courier.avatar_url">
+                                        <img :src="courier.avatar_url" style="width: 60px; height: 60px; border-radius: 50%;"/>
                                     </div>
                                     <div class="real-name">{{courier.real_name}}</div>
                                 </div>
@@ -73,7 +73,7 @@
                                 <div class="label"></div>
                             </div>
                         </div>
-                        <van-icon @click="isInputingBlurSearchKey = true" name="search" size="20"></van-icon>
+                        <van-icon class="search-icon" @click="isInputingBlurSearchKey = true" name="search" size="20"></van-icon>
                     </div>
                 </div>
 
@@ -106,8 +106,8 @@
                         </div>
                     </div>
                     <div class="down">
-                        <div @click="cancelOrder(order)" class="button" v-if="order.order_status in {0: '待接单', 1: '派送中'}">取消订单</div>
-                        <div @click="changeCourier(order)" class="button" v-if="order.order_status in {0: '待接单', 1: '派送中'}">换派送员</div>
+                        <div @click="cancelOrder(order)" class="button" v-if="order.order_status in {'待接单': 0, '派送中': 1}">取消订单</div>
+                        <div @click="changeCourier(order)" class="button" v-if="order.order_status in {'待接单': 0, '派送中': 1}">{{order.order_status === '待接单' ? '选派送员' : '换派送员' }}</div>
                         <div @click="checkDetail(order)" class="button">查看详情</div>
                     </div>
                 </div>
@@ -118,11 +118,18 @@
 
 <script>
 import format from '@/utils/format'
-import { getOrderList as getOrderListAPI, allocate, cancelOrder as cancelOrderAPI, reallocate } from '@/http/api/back/orderController'
+import { getOrderList as getOrderListAPI, allocate, cancelOrder as cancelOrderAPI, reallocate, getGuildStatistics } from '@/http/api/back/orderController'
 import { getCouriers } from '@/http/api/back/courierController'
+import { Toast } from 'vant'
 
     export default {
         mounted() {
+            getGuildStatistics().then((res) => {
+                this.nums[0].num = res.total_money
+                this.nums[1].num = res.total_order_nums
+            })
+
+            // 获取时间选项
             let now = new Date()
             let theYear = now.getFullYear()
             let dayNums = {
@@ -171,10 +178,10 @@ import { getCouriers } from '@/http/api/back/courierController'
         data() {
             return {
                 nums: [{
-                    num: 100000.00,
+                    num: '加载中...',
                     title: '总金额',
                 }, {
-                    num: 1000,
+                    num: '加载中...',
                     title: '总订单数',
                 }],
                 conditions: [
@@ -207,56 +214,57 @@ import { getCouriers } from '@/http/api/back/courierController'
                 finished: false,
                 serial_number: 1,
 
-                orderList: [{
-                    "client_id": "下单者id",
-                    "completed_time_string": "订单完成时间（只有已完成状态的订单这个字段才有数据）",
-                    "create_time_string": "订单创建时间",
-                    "deliver_time_period_string": "送达时间段",
-                    "num_of_packages": "包裹数量",
-                    "order_id": "订单id1",
-                    "order_status": 0,
-                    "pickup_address": "快递点地址",
-                    "recipient_address": "收件地址",
-                    "remarks": "下单者备注",
-                    "reward": "付款金额"
-                }, {
-                    "client_id": "下单者id2",
-                    "completed_time_string": "订单完成时间（只有已完成状态的订单这个字段才有数据）",
-                    "create_time_string": "订单创建时间",
-                    "deliver_time_period_string": "送达时间段",
-                    "num_of_packages": "包裹数量",
-                    "order_id": "订单id2",
-                    "order_status": 1,
-                    "pickup_address": "快递点地址",
-                    "recipient_address": "收件地址",
-                    "remarks": "下单者备注",
-                    "reward": "付款金额"
-                }, {
-                    "client_id": "下单者id3",
-                    "completed_time_string": "订单完成时间（只有已完成状态的订单这个字段才有数据）",
-                    "create_time_string": "订单创建时间",
-                    "deliver_time_period_string": "送达时间段",
-                    "num_of_packages": "包裹数量",
-                    "order_id": "订单id33",
-                    "order_status": 3,
-                    "pickup_address": "快递点地址",
-                    "recipient_address": "收件地址",
-                    "remarks": "下单者备注",
-                    "reward": "付款金额"
-                },{
-                    "client_id": "下单者id3",
-                    "completed_time_string": "订单完成时间（只有已完成状态的订单这个字段才有数据）",
-                    "create_time_string": "订单创建时间",
-                    "deliver_time_period_string": "送达时间段",
-                    "num_of_packages": "包裹数量",
-                    "order_id": "订单id32",
-                    "order_status": 4,
-                    "pickup_address": "快递点地址",
-                    "recipient_address": "收件地址",
-                    "remarks": "下单者备注",
-                    "reward": "付款金额"
-                }],
-
+                // orderList: [{
+                //     "client_id": "下单者id",
+                //     "completed_time_string": "订单完成时间（只有已完成状态的订单这个字段才有数据）",
+                //     "create_time_string": "订单创建时间",
+                //     "deliver_time_period_string": "送达时间段",
+                //     "num_of_packages": "包裹数量",
+                //     "order_id": "订单id1",
+                //     "order_status": "待接单",
+                //     "pickup_address": "快递点地址",
+                //     "recipient_address": "收件地址",
+                //     "remarks": "下单者备注",
+                //     "reward": "付款金额"
+                // }, {
+                //     "client_id": "下单者id2",
+                //     "completed_time_string": "订单完成时间（只有已完成状态的订单这个字段才有数据）",
+                //     "create_time_string": "订单创建时间",
+                //     "deliver_time_period_string": "送达时间段",
+                //     "num_of_packages": "包裹数量",
+                //     "order_id": "订单id2",
+                //     "order_status": "派送中",
+                //     "pickup_address": "快递点地址",
+                //     "recipient_address": "收件地址",
+                //     "remarks": "下单者备注",
+                //     "reward": "付款金额"
+                // }, {
+                //     "client_id": "下单者id3",
+                //     "completed_time_string": "订单完成时间（只有已完成状态的订单这个字段才有数据）",
+                //     "create_time_string": "订单创建时间",
+                //     "deliver_time_period_string": "送达时间段",
+                //     "num_of_packages": "包裹数量",
+                //     "order_id": "订单id33",
+                //     "order_status": "已完成",
+                //     "pickup_address": "快递点地址",
+                //     "recipient_address": "收件地址",
+                //     "remarks": "下单者备注",
+                //     "reward": "付款金额"
+                // },{
+                //     "client_id": "下单者id3",
+                //     "completed_time_string": "订单完成时间（只有已完成状态的订单这个字段才有数据）",
+                //     "create_time_string": "订单创建时间",
+                //     "deliver_time_period_string": "送达时间段",
+                //     "num_of_packages": "包裹数量",
+                //     "order_id": "订单id32",
+                //     "order_status": "已取消",
+                //     "pickup_address": "快递点地址",
+                //     "recipient_address": "收件地址",
+                //     "remarks": "下单者备注",
+                //     "reward": "付款金额"
+                // }],
+                orderList: [],
+                
                 order_status: -1,
                 bottom_create_date: null,
                 top_create_date: null,
@@ -278,63 +286,64 @@ import { getCouriers } from '@/http/api/back/courierController'
                 finished_forCourier: false,
                 serial_number_forCourier: 1,
                 indexOfCourierChosen: -1,
-                courierList: [{
-                    "avatar_url": "派送员的 fanbook 头像 url",
-                    "complete_order_nums": "派送员已完成订单数",
-                    "courier_id": 1,
-                    "courier_status": "派送员接单状态（0正常接单，1暂停接单）",
-                    "fanbook_nick_name": "派送员的 fanbook 昵称",
-                    "money_could_withdraw": "派送员剩余可提现金额",
-                    "money_earned": "派送员总收入",
-                    "ongoing_order_nums": "派送员目前未完成的订单数",
-                    "phone_number": "派送员手机号",
-                    "real_name": "派送员真名",
-                    "register_date": "派送员入驻时间，格式：yyyy-MM-dd",
-                    "remarks_at_register": "派送员入驻时填写的备注",
-                    "total_take_order_nums": "派送员接取订单总数"
-                },{
-                    "avatar_url": "派送员的 fanbook 头像 url",
-                    "complete_order_nums": "派送员已完成订单数",
-                    "courier_id": 2,
-                    "courier_status": "派送员接单状态（0正常接单，1暂停接单）",
-                    "fanbook_nick_name": "派送员的 fanbook 昵称",
-                    "money_could_withdraw": "派送员剩余可提现金额",
-                    "money_earned": "派送员总收入",
-                    "ongoing_order_nums": "派送员目前未完成的订单数",
-                    "phone_number": "派送员手机号",
-                    "real_name": "派送员真名",
-                    "register_date": "派送员入驻时间，格式：yyyy-MM-dd",
-                    "remarks_at_register": "派送员入驻时填写的备注",
-                    "total_take_order_nums": "派送员接取订单总数"
-                },{
-                    "avatar_url": "派送员的 fanbook 头像 url",
-                    "complete_order_nums": "派送员已完成订单数",
-                    "courier_id": 3,
-                    "courier_status": "派送员接单状态（0正常接单，1暂停接单）",
-                    "fanbook_nick_name": "派送员的 fanbook 昵称",
-                    "money_could_withdraw": "派送员剩余可提现金额",
-                    "money_earned": "派送员总收入",
-                    "ongoing_order_nums": "派送员目前未完成的订单数",
-                    "phone_number": "派送员手机号",
-                    "real_name": "派送员真名",
-                    "register_date": "派送员入驻时间，格式：yyyy-MM-dd",
-                    "remarks_at_register": "派送员入驻时填写的备注",
-                    "total_take_order_nums": "派送员接取订单总数"
-                },{
-                    "avatar_url": "派送员的 fanbook 头像 url",
-                    "complete_order_nums": "派送员已完成订单数",
-                    "courier_id": 4,
-                    "courier_status": "派送员接单状态（0正常接单，1暂停接单）",
-                    "fanbook_nick_name": "派送员的 fanbook 昵称",
-                    "money_could_withdraw": "派送员剩余可提现金额",
-                    "money_earned": "派送员总收入",
-                    "ongoing_order_nums": "派送员目前未完成的订单数",
-                    "phone_number": "派送员手机号",
-                    "real_name": "派送员真名",
-                    "register_date": "派送员入驻时间，格式：yyyy-MM-dd",
-                    "remarks_at_register": "派送员入驻时填写的备注",
-                    "total_take_order_nums": "派送员接取订单总数"
-                }],
+                // courierList: [{
+                //     "avatar_url": "派送员的 fanbook 头像 url",
+                //     "complete_order_nums": "派送员已完成订单数",
+                //     "courier_id": 1,
+                //     "courier_status": "派送员接单状态（0正常接单，1暂停接单）",
+                //     "fanbook_nick_name": "派送员的 fanbook 昵称",
+                //     "money_could_withdraw": "派送员剩余可提现金额",
+                //     "money_earned": "派送员总收入",
+                //     "ongoing_order_nums": "派送员目前未完成的订单数",
+                //     "phone_number": "派送员手机号",
+                //     "real_name": "派送员真名",
+                //     "register_date": "派送员入驻时间，格式：yyyy-MM-dd",
+                //     "remarks_at_register": "派送员入驻时填写的备注",
+                //     "total_take_order_nums": "派送员接取订单总数"
+                // },{
+                //     "avatar_url": "派送员的 fanbook 头像 url",
+                //     "complete_order_nums": "派送员已完成订单数",
+                //     "courier_id": 2,
+                //     "courier_status": "派送员接单状态（0正常接单，1暂停接单）",
+                //     "fanbook_nick_name": "派送员的 fanbook 昵称",
+                //     "money_could_withdraw": "派送员剩余可提现金额",
+                //     "money_earned": "派送员总收入",
+                //     "ongoing_order_nums": "派送员目前未完成的订单数",
+                //     "phone_number": "派送员手机号",
+                //     "real_name": "派送员真名",
+                //     "register_date": "派送员入驻时间，格式：yyyy-MM-dd",
+                //     "remarks_at_register": "派送员入驻时填写的备注",
+                //     "total_take_order_nums": "派送员接取订单总数"
+                // },{
+                //     "avatar_url": "派送员的 fanbook 头像 url",
+                //     "complete_order_nums": "派送员已完成订单数",
+                //     "courier_id": 3,
+                //     "courier_status": "派送员接单状态（0正常接单，1暂停接单）",
+                //     "fanbook_nick_name": "派送员的 fanbook 昵称",
+                //     "money_could_withdraw": "派送员剩余可提现金额",
+                //     "money_earned": "派送员总收入",
+                //     "ongoing_order_nums": "派送员目前未完成的订单数",
+                //     "phone_number": "派送员手机号",
+                //     "real_name": "派送员真名",
+                //     "register_date": "派送员入驻时间，格式：yyyy-MM-dd",
+                //     "remarks_at_register": "派送员入驻时填写的备注",
+                //     "total_take_order_nums": "派送员接取订单总数"
+                // },{
+                //     "avatar_url": "派送员的 fanbook 头像 url",
+                //     "complete_order_nums": "派送员已完成订单数",
+                //     "courier_id": 4,
+                //     "courier_status": "派送员接单状态（0正常接单，1暂停接单）",
+                //     "fanbook_nick_name": "派送员的 fanbook 昵称",
+                //     "money_could_withdraw": "派送员剩余可提现金额",
+                //     "money_earned": "派送员总收入",
+                //     "ongoing_order_nums": "派送员目前未完成的订单数",
+                //     "phone_number": "派送员手机号",
+                //     "real_name": "派送员真名",
+                //     "register_date": "派送员入驻时间，格式：yyyy-MM-dd",
+                //     "remarks_at_register": "派送员入驻时填写的备注",
+                //     "total_take_order_nums": "派送员接取订单总数"
+                // }],
+                courierList: [],
                 timerForCourier: null
             }
         },
@@ -343,9 +352,10 @@ import { getCouriers } from '@/http/api/back/courierController'
                 this.finished = false
                 this.serial_number = 1
                 this.orderList = []
-                this.getOrderList()
-
-                this.refreshing = false
+                this.loading = true
+                this.getOrderList().then(() => {
+                    this.refreshing = false
+                })
             },
             getOrderList() {
                 
@@ -356,7 +366,7 @@ import { getCouriers } from '@/http/api/back/courierController'
                     order_status: this.order_status,
                     serial_number: this.serial_number
                 }).then(res => {
-                    this.orderList = [...this.orderList, ...this.res]
+                    this.orderList = this.orderList.concat(res)
 
                     let length = res.length
                     if(length < 10) {
@@ -364,8 +374,12 @@ import { getCouriers } from '@/http/api/back/courierController'
                     } else  {
                         this.serial_number++
                     }
+                    this.loading = false
+                }, () => {
+                    this.finished = true
+                    this.loading = false
                 })
-                this.loading = false
+                return Promise.resolve()
             },
             confirmChosen(data, item) {
                 // console.log(data, item)
@@ -374,12 +388,14 @@ import { getCouriers } from '@/http/api/back/courierController'
                     item.title = data.join('')
 
                     let date = new Date()
+                    // console.log(date)
                     date.setMonth(data[0].slice(0, 2) - 1)
                     date.setDate(data[1].slice(0, 2) - 0)
-                    date.setHours(data[1].slice(0, 2) - 0)
+                    date.setHours(data[2].slice(0, 2) - 0)
                     date.setMinutes(0)
                     date.setMilliseconds(0)
                     let dateStr = format(date)
+                    // console.log(data)
                     // console.log(date)
                     if(item.id === '起始时间') {
                         this.bottom_create_date = dateStr
@@ -404,24 +420,20 @@ import { getCouriers } from '@/http/api/back/courierController'
             },
             checkDetail(order) {
                 this.$router.push({
-                    name: "orderDetail/courier",
+                    name: "orderDetail",
                     params: {
-                        id: order.order_id,
-                        status: {
-                            0: '待接单',
-                            1: '派送中',
-                            2: '已送达',
-                            3: '已完成',
-                            4: '已取消'
-                        }[order.status]
+                        id: order.order_id
                     }
                 });
             },
             confirmCancel() {
+                // console.log(this.orderOnHandling)
                 cancelOrderAPI({
-                    orderId: this.orderOnHandling.orderId
+                    orderId: this.orderOnHandling.order_id
                 }).then(() => {
+                    Toast('成功取消订单')
                     this.isConfirmCancel = false
+                    this.onRefresh()
                 })
             },
             changeCourier(order) {
@@ -432,8 +444,10 @@ import { getCouriers } from '@/http/api/back/courierController'
                 this.finished_forCourier = false
                 this.serial_number = 1
                 this.courierList = []
-                this.getCourierList()
-                this.refreshing = false
+                this.loading_forCourier = true
+                this.getCourierList().then(() => {
+                    this.refreshing_forCourier = false
+                })
             },
             getCourierList() {
                 getCouriers({
@@ -441,19 +455,20 @@ import { getCouriers } from '@/http/api/back/courierController'
                     courier_status: 0, // 正常接单
                     serial_number: this.serial_number_forCourier
                 }).then(res => {
-                    this.courierList = [...this.courierList, ...res]
+                    this.courierList = this.courierList.concat(res)
                     
                     let length = res.length
                     if(length < 10) {
-                        this.finished = true
+                        this.finished_forCourier = true
                     } else {
                         this.serial_number_forCourier++
                     }
                     this.loading_forCourier= false
                 }, () => {
+                    this.finished_forCourier = true
                     this.loading_forCourier= false
                 })
-                this.loading_forCourier = false // 上线时要注释掉这行
+                return Promise.resolve() 
             },
             inputKeyForCourier() {
                 clearTimeout(this.timerForCourier)
@@ -463,21 +478,25 @@ import { getCouriers } from '@/http/api/back/courierController'
                 }, 500)
             },
             confirmAllocate() {
-                if(this.orderOnHandling.order_status === 0) {
+                if(this.orderOnHandling.order_status === '待接单') {
                     // 为带待接单的订单分配
                     allocate({
                         courierId: this.courierList[this.indexOfCourierChosen].courier_id,
-                        orderId: this.orderOnHandling.orderId
+                        orderId: this.orderOnHandling.order_id
                     }).then(() => {
+                        Toast('成功选定派送员')
+                        this.onRefresh()
                         this.isReallocating = false
                     })
-                } else if(this.orderOnHandling.order_status === 1) {
+                } else if(this.orderOnHandling.order_status === '派送中') {
                     // 为派送中的订单重分配
                     reallocate({
-                        formerCourierId: this.courierList[this.indexOfCourierChosen].courier_id,
+                        formerCourierId: this.orderOnHandling.courier_id,
                         orderId: this.orderOnHandling.order_id,
-                        latterCourierId: this.orderOnHandling.courier_id
+                        latterCourierId: this.courierList[this.indexOfCourierChosen].courier_id,
                     }).then(() => {
+                        Toast('成功更换派送员')
+                        // this.onRefresh()
                         this.isReallocating = false
                     })
                 }
@@ -519,6 +538,7 @@ import { getCouriers } from '@/http/api/back/courierController'
     }
 }
 
+
 .list-box {
     margin: 0 4px;
     margin-top: 22px;
@@ -526,7 +546,8 @@ import { getCouriers } from '@/http/api/back/courierController'
 
     .select-box {
         display: flex;
-        justify-content: space-between;
+        // justify-content: space-between;
+        position: relative;
         align-items: center;
         margin-left: 26px;
         margin-right: 25px;
@@ -543,7 +564,7 @@ import { getCouriers } from '@/http/api/back/courierController'
                 font-weight: bold;
                 color: hsla(7, 10%, 31%, 1);
                 .title {
-                    max-width: 80px;
+                    max-width: 85px;
                     overflow: hidden;
                     text-overflow: ellipsis;
                     white-space: nowrap;
@@ -559,6 +580,10 @@ import { getCouriers } from '@/http/api/back/courierController'
                     border-top-color: hsla(8, 10%, 31%, 1);
                 }
             }
+        }
+        .search-icon {
+            position: absolute;
+            right: -5px;
         }
     }
 }
@@ -761,6 +786,33 @@ import { getCouriers } from '@/http/api/back/courierController'
                 border-radius: 50%;
             }
         }
+    }
+    &.now {
+        .label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            border-color: #584A48;
+
+            &::before {
+                content: '';
+                width: 8px;
+                height: 8px;
+                border-radius: 50%;
+                background-color: #584A48;
+            }
+
+            &::after {
+                content: '当前派送员';
+                position: absolute;
+                width: 80px;
+                left: -90px;
+            }
+        }
+
+
+
     }
 }
 
