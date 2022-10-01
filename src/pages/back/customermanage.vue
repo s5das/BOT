@@ -7,7 +7,7 @@
         </div>
         <input type="text" v-model="client_fanbook_nick_name" placeholder="请输入名称" @blur="search"></div>
 
-    <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
+    <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
 
             <van-list
             v-model="loading"
@@ -34,7 +34,6 @@
 
 <script>
 import serviceAxios from '@/http';
-import { Toast } from 'vant';
 export default {
     name: 'customer-manage',
 
@@ -42,7 +41,7 @@ export default {
         return {
             finished:false,
             loading: false,
-            isLoading: false,
+            refreshing: false,
             serial_number: 1,
             client_fanbook_nick_name: '',
             client_id: [],
@@ -72,9 +71,6 @@ export default {
                     serial_number:num
                 }
             }).then((res) => {
-                    if (res.length!=0) {
-                        
-                    
                     for (var i = 0; i < res.length; i++){
                     let temp = res[i]
                     this.client_id.push(temp.client_id)
@@ -83,68 +79,48 @@ export default {
                     this.phone_number.push(temp.phone_number)
                     this.total_create_order_num.push(temp.total_create_order_num)
                         }
-                    } else {
+
+                 if (res.length<10) {
                         this.finished = true
-                }
+                    }
+                     this.serial_number++            
+                     this.loading = false
 
             },
                 () => {
                     this.finished = true
-                    Toast.fail('请求频繁')
+                    this.loading = false
             }
             )
+            return Promise.resolve()
         },
 
-        changeinfo(name,num) {
-            serviceAxios({
-                method: 'post',
-                url: '/fanbook/deliverbot/back/admin/client/blur_search_clients',
-                data: {
-                    client_fanbook_nick_name:name,
-                    serial_number:num
-                }
-            }).then((res) => {
-                this.client_id = []
-                this.fanbook_nick_name = []
-                this.phone_number = []
-                    this.total_create_order_num = []
-                this.avatar_url =[]
-                for (var i = 0; i < res.length; i++){
-                    let temp = res[i]
-                    this.client_id.push(temp.client_id)
-                    this.avatar_url.push(temp.avatar_url)
-                    this.fanbook_nick_name.push(temp.fanbook_nick_name)
-                    this.phone_number.push(temp.phone_number)
-                    this.total_create_order_num.push(temp.total_create_order_num)
-                    }
-                    
-            },
-                () => {
-                    Toast.fail('请求频繁')
-                }
-            )
-        },
+
         onLoad() {
+            console.log('onload');
             this.getinfo(this.content, this.serial_number)
-            this.serial_number++
-            
         },
         onRefresh() {
-            this.serial_number = 1
-            this.changeinfo(this.content, this.serial_number);
-            this.serial_number++
-            this.isLoading = false
+            console.log('refresh');
+            this.loading = true
+            this.refreshing = true
             this.finished =  false
+            this.client_id = []
+            this.fanbook_nick_name = []
+            this.phone_number = []
+            this.total_create_order_num = []
+            this.avatar_url =[]
+            this.serial_number = 1
+            this.getinfo(this.content, this.serial_number).then(()=>{
+                this.refreshing = false
+            });
+
         },
         search() {
-            this.changeinfo(this.content, 1)
-            this.serial_number++
+            this.onRefresh()
         }
-    },
-    mounted() {
-        this.getinfo(this.content, this.serial_number);
-        this.serial_number ++
     }
+
 }
 </script>
 

@@ -65,12 +65,6 @@ export default new VueRouter({
                     name: 'orderDetail',
                     path: 'courier/orderDetail/:id',
                     component: () => import("@/pages/front/courier/orderDetail.vue")
-                },
-                // 用户
-                {
-                    name: 'orderDetail',
-                    path: 'user/orderDetail/:id',
-                    component: () => import("@/pages/front/user/orderDetail.vue")
                 }
             ]
         },

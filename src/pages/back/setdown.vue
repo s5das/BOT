@@ -150,17 +150,16 @@ export default {
                     method: 'post',
                     url:'/fanbook/deliverbot/back/admin/audit/reject_register_application',
                     data:{application_id:this.reject_id,reject_reason:this.reject_reason}
-                }).then((res) => {
-                  if (res.code == 0) {
+                }).then(() => {
+
                     this.reject_reason = '';
                     this.reject_id = '';
                     this.onRefresh();
                     done()
-                  } else {
-                    done(false)
-                  }
-
-                })
+                    
+                },
+                ()=>{done(false)}
+                )
             } else {
                 done(false)
             }
