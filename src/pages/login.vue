@@ -19,9 +19,6 @@ export default {
   mounted() {
         localStorage.setItem('code',this.code)
         }
-        
-
-    
 }
 </script>
 

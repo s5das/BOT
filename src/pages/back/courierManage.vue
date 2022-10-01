@@ -23,7 +23,7 @@
                         </div>
                         <div class="left">
                             <div class="up-img">
-
+                                <img :src="item.avatar_url" style="width: 60px; height: 60px; border-radius: 50%;"/>
                             </div>
                             <div :class="['status', 's' + item.courier_status]">
                                 {{{0: '正常接单', 1: '暂停接单'}[item.courier_status]}}
@@ -120,6 +120,7 @@
 <script>
 import { getCouriers, resetPrimaryInfo  } from '@/http/api/back/courierController';
 import BlurSearch from '@/components/common/blurSearch.vue';
+import { Toast } from 'vant';
 
     export default {
     data() {
@@ -150,33 +151,34 @@ import BlurSearch from '@/components/common/blurSearch.vue';
             loading: false,
             finished: false,
 
-            courierInfoS: [{
-                    "complete_order_nums": 50,
-                    "courier_id": "派送员的id",
-                    "courier_status": 0,
-                    "fanbook_nick_name": "派送员的 fanbook 昵称",
-                    "money_could_withdraw": "派送员剩余可提现金额",
-                    "money_earned": "派送员总收入",
-                    "ongoing_order_nums": 100,
-                    "phone_number": "13666666666",
-                    "real_name": "张三",
-                    "register_date": "派送员入驻时间，格式：yyyy-MM-dd",
-                    "remarks_at_register": "派送员入驻时填写的备注",
-                    "total_take_order_nums": 100
-                },{
-                    "complete_order_nums": 50,
-                    "courier_id": "派送员的id1",
-                    "courier_status": 1,
-                    "fanbook_nick_name": "派送员的 fanbook 昵称",
-                    "money_could_withdraw": "派送员剩余可提现金额",
-                    "money_earned": "派送员总收入",
-                    "ongoing_order_nums": 100,
-                    "phone_number": "派送员手机号",
-                    "real_name": "派送员真名",
-                    "register_date": "派送员入驻时间，格式：yyyy-MM-dd",
-                    "remarks_at_register": "派送员入驻时填写的备注",
-                    "total_take_order_nums": 100
-                }],
+            // courierInfoS: [{
+            //         "complete_order_nums": 50,
+            //         "courier_id": "派送员的id",
+            //         "courier_status": 0,
+            //         "fanbook_nick_name": "派送员的 fanbook 昵称",
+            //         "money_could_withdraw": "派送员剩余可提现金额",
+            //         "money_earned": "派送员总收入",
+            //         "ongoing_order_nums": 100,
+            //         "phone_number": "13666666666",
+            //         "real_name": "张三",
+            //         "register_date": "派送员入驻时间，格式：yyyy-MM-dd",
+            //         "remarks_at_register": "派送员入驻时填写的备注",
+            //         "total_take_order_nums": 100
+            //     },{
+            //         "complete_order_nums": 50,
+            //         "courier_id": "派送员的id1",
+            //         "courier_status": 1,
+            //         "fanbook_nick_name": "派送员的 fanbook 昵称",
+            //         "money_could_withdraw": "派送员剩余可提现金额",
+            //         "money_earned": "派送员总收入",
+            //         "ongoing_order_nums": 100,
+            //         "phone_number": "派送员手机号",
+            //         "real_name": "派送员真名",
+            //         "register_date": "派送员入驻时间，格式：yyyy-MM-dd",
+            //         "remarks_at_register": "派送员入驻时填写的备注",
+            //         "total_take_order_nums": 100
+            //     }],
+            courierInfoS: [],
 
             courier_id: '',
             isEditing: false,
@@ -192,16 +194,17 @@ import BlurSearch from '@/components/common/blurSearch.vue';
         };
     },
     mounted() {
-        // this.getCourierInfos()
-        getCouriers()
+
     },
     methods: {
         onRefresh() {
             this.serial_number = 1
             this.finished = false
             this.courierInfoS = []
-            this.refreshing = false
-            this.getCourierInfos()
+            this.loading = true
+            this.getCourierInfos().then(() => {
+                this.refreshing = false
+            })
         },
         confirmKey(data) {
             // console.log('confirmKey', data)
@@ -226,12 +229,16 @@ import BlurSearch from '@/components/common/blurSearch.vue';
             this.onRefresh()
         },
         getCourierInfos() {
-            getCouriers({
+            let data = {
                 blur_search_context: this.blur_search_context,
                 courier_status: this.conditions[this.idOfConditionsChosen].value,
                 serial_number: this.serial_number
-            }).then(res => {
-                this.courierInfoS = [...this.courierInfoS, ...res]
+            }
+            console.log(data)
+            getCouriers(
+                data
+            ).then(res => {
+                this.courierInfoS = this.courierInfoS.concat(res)
 
                 let length = res.length
                 if(length < 10) {
@@ -242,8 +249,11 @@ import BlurSearch from '@/components/common/blurSearch.vue';
                 
                 this.loading = false
             }, () => {
+                // 失败了就不请求了，重进页面才请求
+                this.finished = true
                 this.loading = false
             })
+            return Promise.resolve()
         },
         edit(item) {
             console.log(item)
@@ -265,6 +275,7 @@ import BlurSearch from '@/components/common/blurSearch.vue';
                 real_name: this.real_name,
                 remarks_at_register: this.remarks_at_register
             }).then(() => {
+                Toast('修改成功')
                 this.isEditing = false
             })
         },
