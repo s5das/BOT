@@ -83,8 +83,7 @@ export default {
 <style scoped lang="less">
   .main{
     padding: 15px;
-    height: 800px;
-    background-color: #EFEFEF ;
+
   }
 .box1{
   display: flex;

@@ -83,10 +83,7 @@ export default {
 
 <style scoped lang="less">
   .main{
-
-    background: #fcf6f4;
-    height: 850px;
-    padding-top: 30px;
+    padding-top:20px ;
   }
   .box1{
      margin-bottom: 30px;
