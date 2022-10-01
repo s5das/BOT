@@ -18,15 +18,15 @@ export default {
         command1() {
             window.fb.init({
                 success: () => {
-                    window.fb.oAuth({ 'oAuthUrl': 'http://124.220.9.212:9098/fanbook/deliverbot/general/redirect' }).then(
+                    window.fb.oAuth({ 'oAuthUrl': 'http://124.220.9.212:9099/fanbook/deliverbot/general/redirect' }).then(
                         () => {
                             login(localStorage.getItem('code')).then(
                                 (res) => {
-                                    if (res.data.avatar_url) {
-                                        localStorage.setItem('avatar_url', res.data.avatar_url)
-                                        localStorage.setItem('fanbook_nick_name', res.data.fanbook_nick_name)
-                                        localStorage.setItem('token', res.data.jwt_token)
-                                        localStorage.setItem('user_id', res.data.user_id)                    
+                                    if (res.avatar_url) {
+                                        localStorage.setItem('avatar_url', res.avatar_url)
+                                        localStorage.setItem('fanbook_nick_name', res.fanbook_nick_name)
+                                        localStorage.setItem('token', res.jwt_token)
+                                        localStorage.setItem('user_id', res.user_id)                    
                                     }
                                 }
                              )
@@ -50,16 +50,16 @@ export default {
 
             window.fb.init({
                 success: () => {
-                    window.fb.oAuth({ 'oAuthUrl': 'http://124.220.9.212:9098/fanbook/deliverbot/general/redirect' }).then(
+                    window.fb.oAuth({ 'oAuthUrl': 'http://124.220.9.212:9099/fanbook/deliverbot/general/redirect' }).then(
                         () => {
                             console.log(111);
                             login_back(localStorage.getItem('code')).then(
                                 (res) => {
-                                    if (res.data.avatar_url) {
-                                        localStorage.setItem('avatar_url', res.data.avatar_url)
-                                        localStorage.setItem('fanbook_nick_name', res.data.fanbook_nick_name)
-                                        localStorage.setItem('token', res.data.jwt_token)
-                                        localStorage.setItem('user_id', res.data.user_id)                    
+                                    if (res.avatar_url) {
+                                        localStorage.setItem('avatar_url', res.avatar_url)
+                                        localStorage.setItem('fanbook_nick_name', res.fanbook_nick_name)
+                                        localStorage.setItem('token', res.jwt_token)
+                                        localStorage.setItem('user_id', res.user_id)                    
                                     }
                                 }
                              )
