@@ -149,9 +149,8 @@ import { courierRegister } from '@/http/api/courier'
 
 
     .title {
-        font-family: PingFangSC-semiBold;
-        color: rgba(16, 16, 16, 100);
-        font-size: 16px;
+        color: rgba(88,74,72,1);
+        font-size: 20px;
         height: 60px;
         font-weight: 800;
         line-height: 60px;
@@ -163,11 +162,11 @@ import { courierRegister } from '@/http/api/courier'
         justify-content: space-between;
         align-items: center;
         width: 290px;
-        height: 28px;
+        height: 40px;
         line-height: 28px;
-        margin-top: 18px;
+        margin-top: 14px;
         border-bottom: #BBB solid 1px;
-        font-size: 14px;
+        font-size: 20px;
         
 
         .item-name {
@@ -175,10 +174,10 @@ import { courierRegister } from '@/http/api/courier'
         }
 
         .inputArea {
-            width: 120px;
+            width: 140px;
             margin-bottom: 1px;
             padding: 0;
-            font-size: 14px;
+            font-size: 20px;
             text-align: left;
             &::placeholder {
                 color: rgba(102, 102, 102, 78);
@@ -188,7 +187,7 @@ import { courierRegister } from '@/http/api/courier'
         .error-prompt {
             position: absolute;
             right: 0;
-            top: -20px;
+            top: -15px;
             height: 20px;
             line-height: 20px;
             font-size: 8px;
@@ -201,8 +200,10 @@ import { courierRegister } from '@/http/api/courier'
         height: 39px;
         margin-top: 38px;
         line-height: 39px;
-        color: rgba(234, 12, 12, 73);
-        border: rgba(234, 12, 12, 73) solid 1px;
+        font-size: 20px;
+        font-weight: bold;
+        color: rgba(250,184,85,1);
+        border: rgba(250,184,85,1) solid 2px;
         border-radius: 19px;
     }
 }

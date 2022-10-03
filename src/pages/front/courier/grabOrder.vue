@@ -96,6 +96,7 @@ import { getAllSite } from '@/http/api/common'
             // 当由折叠变展开时, old_conditions复制conditions
             // 若用户不确认, 直接折叠, 将old_conditions赋给conditions, 使conditions与展开前一样
             old_conditions: {},
+            // idOfActivated: -1,
             idOfActivated: -1,
             
             // 第一次请求是请求第一页
@@ -248,9 +249,12 @@ import { getAllSite } from '@/http/api/common'
 </script>
 
 <style lang="less" scoped>
+* {
+    box-sizing: border-box;
+}
 .main {
+    background: url("@/assets/background/front.png");
     background-color: #EFEFEF;
-    font-family: PingFangSC-regular;
 
     .condition {
         position: fixed;
@@ -259,11 +263,11 @@ import { getAllSite } from '@/http/api/common'
         left: 0;
         display: flex;
         align-items: center;
-        background-color: #FFFFFF;
+        background-color: rgba(255,255,255,0.5);
         width: 100%;
         height: 42px;
         
-        border-bottom: #ddd solid 1px;
+        border-radius: 5px;
         .item {
             display: flex;
             justify-content: space-between;
@@ -271,8 +275,8 @@ import { getAllSite } from '@/http/api/common'
             width: 33%;
             padding: 0 18px;
             text-align: center;
-            color: rgba(16, 16, 16, 100);
-            font-size: 14px;
+            color: rgba(88,74,72,1);
+            font-size: 16px;
             overflow: hidden;
 
             &:hover {
@@ -287,18 +291,18 @@ import { getAllSite } from '@/http/api/common'
                 box-sizing: border-box;
                 width: 6px;
                 height: 6px;
-                border: #FFFFFF solid 6px;
-                border-top: rgba(154, 154, 154, 64) solid 6px;
+                border: rgba(154, 154, 154, 0) solid 6px;
+                border-top: rgba(154, 154, 154, 1) solid 6px;
             }
 
             // 条件被选中
             &.isActivated {
-                color: rgba(234, 12, 12, 73);
+                color: rgba(239,124,38,1);
                 // 三角向上
                 .label {
                     top: -2px;
-                    border: #FFFFFF solid 6px;
-                    border-bottom: rgba(234, 12, 12, 73) solid 6px;
+                    border: rgba(239,124,38,0) solid 6px;
+                    border-bottom: rgba(239,124,38,1) solid 6px;
                 }
             }
         }
@@ -317,66 +321,62 @@ import { getAllSite } from '@/http/api/common'
         height: 208px;
 
         .choices {
-            height: 208 - 45px;
-            background-color: #FFF;
+            // background-image: url("@/assets/background/front.png");
+            // background-position: 800px;
+            background-color: #FDEEE3;
+            height: 208 - 51px;
             overflow-y: scroll;
 
             .choice {
                 display: flex;
                 align-items: center;
-                height: 40px;
-                line-height: 40px;
+                height: 45px;
+                line-height: 45px;
                 margin-left: 28px;
-                font-family: SourceHanSansSC-regular;
-                color: rgba(93, 93, 93, 100);
-                font-size: 14px;
+                margin-top: 3px;
+                color: rgba(88,74,72,1);
+                font-size: 18px;
                 .label {
                     width: 14px;
                     height: 14px;
-                    border: rgba(217, 217, 217, 100) solid 2px;
+                    border: rgba(239,124,38,1) solid 1px;
                     border-radius: 50%;
                 }
                 .name {
-                    margin-left: 5px;
-                }
-
-                &:hover {
-                    cursor: pointer;;
+                    margin-left: 7px;
                 }
 
                 &.isActivated {
-                    color: rgba(234, 12, 12, 73);
+                    color: rgba(239,124,38,1);
 
                     .label {
                         display: flex;
                         justify-content: center;
                         align-items: center;
-                        border: rgba(234, 12, 12, 73) solid 2px;
+                        border: rgba(234, 12, 12, 73) solid 1px;
                         border-radius: 50%;
-                        overflow: visible;
                         &::before {
-                            width: 10px;
-                            height: 10px;
-                            color: #000;
+                            width: 7px;
+                            height: 7px;
                             content: "";
                             border-radius: 50%;
-                            background-color: rgba(234, 12, 12, 73);
+                            background-color: rgba(239,124,38,1);
                         }
                     }
                 }
             }
         }
         .complete {
-            height: 45px;
-            color: rgba(255, 255, 255, 100);
+            height: 51px;
+            color: rgba(88,74,72,1);
+            font-weight: bold;
 
             line-height: 45px;
             
             
-            font-size: 14px;
+            font-size: 20px;
             text-align: center;
-            font-family: Arial;
-            background-color: rgba(234, 12, 12, 73);
+            background-color: rgba(254,208,175,1);
         }
     }
 

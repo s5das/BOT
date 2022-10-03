@@ -55,31 +55,31 @@
         margin: 0 auto;
         margin-top: 14px;
         padding: 1px;
-        background-color: #FFF;
+        background-color: rgba(255,255,255,0.65);
         border-radius: 10px 10px 0 0;
 
         .up {
             position: relative;
-            height: 70px;
+            // height: 70px;
             border-bottom: 1px solid #bbb;
+            padding-bottom: 10px;
             .price {
                 position: absolute;
                 right: 10px;
                 top: 20px;
                 width: 56px;
-                height: 35px;
-                font-size: 18px;
-                color: rgba(234, 12, 12, 93);
+                font-size: 20px;
+                font-weight: 800;
+                color: rgba(241,153,64,1);
             }
 
             .item-name {
-                width: 54px;
                 margin-right: 5px;
-                font-size: 12px;
+                font-size: 14px;
                 color: rgba(102, 102, 102, 78);
             }
             .item-value {
-                font-size: 14px;
+                font-size: 16px;
                 color:  #000;
             }
         }
@@ -96,16 +96,17 @@
             display: flex;
             flex-direction: column;
             justify-content: space-evenly;
-                font-size: 14px;
             .item {
                 margin-top: 0;
                 .item-name {
+                    font-size: 14px;
                     width: 60px;
                     margin-right: 5px;
                     color: rgba(16, 16, 16, 100);
                 }
                 .item-value {
-                        color:  rgba(16, 16, 16, 100);
+                    font-size: 16px;
+                    color:  rgba(16, 16, 16, 100);
                 }
                 &:last-of-type {
                     margin-bottom: 10px;

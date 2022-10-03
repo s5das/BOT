@@ -45,6 +45,7 @@ export default {
     },
   mounted() {
     PubSub.publish('changetabbar',this.id)
+    this.isCouierSignupPopupShow = true
     // this.init();登录并缓存得到的结果
   },
   methods: {
