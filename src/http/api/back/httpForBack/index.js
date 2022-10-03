@@ -32,8 +32,8 @@ serviceAxios.interceptors.response.use(
         let data = res.data;
         // 处理自己的业务逻辑，比如判断 token 是否过期等等
         // 代码块
-        // console.log(data)
         if (res.data.code !== 0) {
+          console.log(11456);
           Toast(data.data)
           return Promise.reject(new Error(data.data))
         }

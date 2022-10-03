@@ -9,8 +9,8 @@
 </template>
 
 <script>
-import { Dialog, Toast } from 'vant';
-import { login, login_back } from '@/http/api/user'
+// import {Toast } from 'vant';
+// import { login } from '@/http/api/user'
 import loginStatus from '@/utils/loginStatus'
 export default {
     name: 'log-in2',
@@ -19,32 +19,33 @@ export default {
         command1() {
             window.fb.init({
                 success: () => {
-                    window.fb.oAuth({ 'oAuthUrl': 'http://124.220.9.212:9098/fanbook/deliverbot/general/redirect' }).then(
-                        (res) => {
-                            console.log(res);
-                            login(localStorage.getItem('code')).then(
-                                (res) => {
-                                    if (res.avatar_url) {
-                                        localStorage.setItem('avatar_url', res.avatar_url)
-                                        localStorage.setItem('fanbook_nick_name', res.fanbook_nick_name)
-                                        localStorage.setItem('token', res.jwt_token)
-                                        localStorage.setItem('user_id', res.user_id)
-                                    }
-                                }
-                            )
-                            setTimeout(() => {
+                    window.fb.oAuth({ 'oAuthUrl': 'http://124.220.9.212:9098/fanbook/deliverbot/general/redirect' })
+            //         .then(
+            //             (res) => {
+            //                 console.log(res);
+            //                 login(localStorage.getItem('code')).then(
+            //                     (res) => {
+            //                         if (res.avatar_url) {
+            //                             localStorage.setItem('avatar_url', res.avatar_url)
+            //                             localStorage.setItem('fanbook_nick_name', res.fanbook_nick_name)
+            //                             localStorage.setItem('token', res.jwt_token)
+            //                             localStorage.setItem('user_id', res.user_id)
+            //                         }
+            //                     }
+            //                 )
+            //                 setTimeout(() => {
 
-                                if (localStorage.getItem('token')) {
-                                    localStorage.setItem('id', "customer")
-                                    this.$router.push({
-                                        path: '/front'
-                                    })
-                                } else {
-                                    Dialog({ message: '授权失败' });
-                                }
-                            }, 4000)
-                        },
-                    )
+            //                     if (localStorage.getItem('token')) {
+            //                         localStorage.setItem('id', "customer")
+            //                         this.$router.push({
+            //                             path: '/front'
+            //                         })
+            //                     } else {
+            //                         Dialog({ message: '授权失败' });
+            //                     }
+            //                 }, 4000)
+            //             },
+            //         )
                 }
             });
         },
@@ -52,32 +53,39 @@ export default {
 
             window.fb.init({
                 success: () => {
-                    window.fb.oAuth({ 'oAuthUrl': 'http://124.220.9.212:9098/fanbook/deliverbot/general/redirect' }).then(
-                        (res) => {
-                            let code = res.data.code
-                            Toast(code)
-                            login_back(localStorage.getItem('code')).then(
-                                (res) => {
-                                    if (res.avatar_url) {
-                                        localStorage.setItem('avatar_url', res.avatar_url)
-                                        localStorage.setItem('fanbook_nick_name', res.fanbook_nick_name)
-                                        localStorage.setItem('token', res.jwt_token)
-                                        localStorage.setItem('user_id', res.user_id)
-                                    }
-                                }
-                            )
-                            setTimeout(() => {
-                                if (localStorage.getItem('token')) {
-                                    localStorage.setItem('id', "operator")
-                                    this.$router.push({
-                                        path: '/back'
-                                    })
-                                } else {
-                                    Dialog({ message: '权限不足' });
-                                }
-                            }, 2000)
-                        },
-                    )
+                    // try{
+                    //     window.fb.getCurrentGuild()
+                    // }
+                    // catch(error){
+                    //     Toast.fail(error.message);
+                    // }
+                    window.fb.oAuth({ 'oAuthUrl': 'http://124.220.9.212:9098/fanbook/deliverbot/general/redirect' })
+                    // .then(
+                    //     (res) => {
+                    //         let code = res.data.code
+                    //         Toast(code)
+                    //         login_back(localStorage.getItem('code')).then(
+                    //             (res) => {
+                    //                 if (res.avatar_url) {
+                    //                     localStorage.setItem('avatar_url', res.avatar_url)
+                    //                     localStorage.setItem('fanbook_nick_name', res.fanbook_nick_name)
+                    //                     localStorage.setItem('token', res.jwt_token)
+                    //                     localStorage.setItem('user_id', res.user_id)
+                    //                 }
+                    //             }
+                    //         )
+                    //         setTimeout(() => {
+                    //             if (localStorage.getItem('token')) {
+                    //                 localStorage.setItem('id', "operator")
+                    //                 this.$router.push({
+                    //                     path: '/back'
+                    //                 })
+                    //             } else {
+                    //                 Dialog({ message: '权限不足' });
+                    //             }
+                    //         }, 2000)
+                        // },
+                    // )
                 }
             });
         },

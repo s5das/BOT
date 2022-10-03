@@ -25,8 +25,7 @@ export default {
             localStorage.setItem('user_id', res.user_id)
           }
         }
-      )
-      setTimeout(() => {
+      ).then(()=>{
         if (localStorage.getItem('token')) {
           localStorage.setItem('lastLoginTime',new Date().getTime())
           this.$router.push({
@@ -35,7 +34,7 @@ export default {
         } else {
           Dialog({ message: '权限不足' });
         }
-      }, 2000)
+      })
     } else {
       login(this.code).then(
         (res) => {
@@ -46,9 +45,7 @@ export default {
             localStorage.setItem('user_id', res.user_id)
           }
         }
-      )
-      setTimeout(() => {
-
+      ).then(()=>{
         if (localStorage.getItem('token')) {
           localStorage.setItem('lastLoginTime',new Date().getTime())
           this.$router.push({
@@ -57,7 +54,7 @@ export default {
         } else {
           Dialog({ message: '授权失败' });
         }
-      }, 2000)
+      })
     }
   }
 }
