@@ -10,7 +10,8 @@
         >
         <div :class="{circle2:selected.indexOf(item)!=-1,circle1:selected.indexOf(item)==-1}" v-if="status==1"></div>
         </transition>
-        {{item}}
+        <div  style="margin-left:28px">{{item}}</div>
+        
         <div v-if="status==1" class="more"><img src="@/assets/back14.png" class="more_ico"></div>
     </div></div>
     <div class="bottom">
@@ -27,7 +28,7 @@
 </template>
 
 <script>
-import serviceAxios from '@/http';
+import serviceAxios from '@/http/api/back/httpForBack';
 import Sortable from 'sortablejs';
 import 'animate.css'
 export default {
@@ -57,8 +58,8 @@ export default {
             method: 'get',
             }).then((res) => {
                 this.items=[]
-                for (var i = 0; i < res.data.length; i++){
-                    let temp = res.data[i]
+                for (var i = 0; i < res.length; i++){
+                    let temp = res[i]
                     this.items.push(temp.pickup_address)
                 }
             })
@@ -184,12 +185,11 @@ export default {
         font-size: 15px;
         font-weight: 600;
         background: #fff;
-        text-indent: 25px;
         position: relative;
     .more{
      position: absolute;
      right: 40px;
-     top: 32.5px;
+     top: 22px;
      height: 15px;
      width: 15px;
     .more_ico{

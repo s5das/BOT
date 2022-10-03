@@ -1,17 +1,33 @@
 <template>
-    <div>
+    <div class="box" :style="{height:h +'px'}">
         <router-view></router-view>
         <Tabbar></Tabbar>
+        <div class="block"></div>
     </div>
 </template>
 
 <script>
 import Tabbar from '@/components/tabbar.vue';
     export default {
-    components: { Tabbar }
+    components: { Tabbar },
+    data() {
+        return {
+            h: 0
+        }
+      },
+    mounted() {
+    this.h = document.body.clientHeight
+    }
 }
 </script>
 
 <style lang="less" scoped>
-
+.box{
+  user-select: none;
+  background: #fcf6f4;
+}
+.block{
+  height: 70px;
+  width: 100%;
+}
 </style>

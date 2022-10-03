@@ -8,7 +8,7 @@ export default new VueRouter({
             path: '/',
             component: () => import("@/pages/login2.vue"),
             props({query}){
-              return{state:query.state}
+              return{state:query.state,code:query.code}
             }
         },
         {
@@ -65,12 +65,6 @@ export default new VueRouter({
                     name: 'orderDetail',
                     path: 'courier/orderDetail/:id',
                     component: () => import("@/pages/front/courier/orderDetail.vue")
-                },
-                // 用户
-                {
-                    name: 'orderDetail',
-                    path: 'user/orderDetail/:id',
-                    component: () => import("@/pages/front/user/orderDetail.vue")
                 }
             ]
         },

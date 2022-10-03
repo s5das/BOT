@@ -11,18 +11,16 @@
 
 
 
-
 export default {
     name: "App",
-  methods: {},
+    methods: {},
 }
 
 </script>
 
 <style>
 body{
-  user-select: none;
-  background: #fcf6f4;
+height: 100%;
 }
 
 </style>
