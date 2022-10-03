@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="main" :style="{height: total_h + 'px'}">
         <div class="nums-box">
             <div class="item" v-for="item in nums" :key="item.title">
                 <div class="num">{{item.num}}</div>
@@ -48,7 +48,8 @@
                             <div @click="courier.courier_id !== orderOnHandling.courier_id && (indexOfCourierChosen = i)" v-for="(courier, i) in courierList" :key="courier.courier_id" :class="['courier', i === indexOfCourierChosen ? 'active' : '', courier.courier_id === orderOnHandling.courier_id ? 'now' : '']">
                                 <div class="info">
                                     <div class="img">
-                                        <img :src="courier.avatar_url" style="width: 60px; height: 60px; border-radius: 50%;"/>
+                                        <!-- <img :src="courier.avatar_url" style="width: 60px; height: 60px; border-radius: 50%;"/> -->
+                                        <img :src="courier.avatar_url" :onerror="defaultAvatar" style="width: 60px; height: 60px; border-radius: 50%;"/>
                                     </div>
                                     <div class="real-name">{{courier.real_name}}</div>
                                 </div>
@@ -177,6 +178,8 @@ import { Toast } from 'vant'
         },
         data() {
             return {
+                total_h: document.body.clientHeight,
+                defaultAvatar: `this.src="${require('@/assets/back9.png')}"`,
                 nums: [{
                     num: '加载中...',
                     title: '总金额',
@@ -509,6 +512,10 @@ import { Toast } from 'vant'
 <style lang="less" scoped>
 * {
     box-sizing: border-box;
+}
+
+.main {
+    background-image: url("@/assets/bg1.png");
 }
 .nums-box {
     display: flex;

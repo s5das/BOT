@@ -74,6 +74,8 @@ import format from '@/utils/format';
 import { getOrderList as getOrdersOfUser } from '@/http/api/user';
 import { getTakenOrderList as getOrdersOfCourier } from '@/http/api/courier';
 import BlurSearch from '@/components/common/blurSearch.vue';
+import { cancelOrder } from '@/http/api/user';
+import { Toast } from 'vant';
 export default {
   name: "order-page",
   props: ['condition'],
@@ -264,8 +266,24 @@ export default {
         this.refreshing = false
       })
     },
+    cancelOrder(order) {
+      console.log(order)
+      cancelOrder({
+        orderId: order.order_id
+      }).then(() => {
+        Toast('成功取消订单')
+      })
+    },
+    checkDetail(order) {
+      this.$router.push({
+          name: "orderDetail",
+          params: {
+              id: order.order_id
+          }
+      });
+    }
   },
-  components: { BlurSearch }
+  components: { BlurSearch },
 }
 </script>
 

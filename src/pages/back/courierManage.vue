@@ -1,5 +1,5 @@
 <template>
-    <div class="main">
+    <div class="main" :style="{height: total_h+'px'}">
         
         <!-- 派送员管理 -->
         <div class="filter-box">
@@ -19,11 +19,13 @@
                     <div class="courierInfo" v-for="item in courierInfoS" :key="item.courier_id">
                     <div class="up">
                         <div @click="edit(item)" class="modify">
-                            <van-icon color="#2B5ACC" name="edit" size='24'/>
+                            <!-- <van-icon color="#2B5ACC" name="edit" size='24'/> -->
+                            <img src="@/assets/edit.png"/>
                         </div>
                         <div class="left">
                             <div class="up-img">
-                                <img :src="item.avatar_url" style="width: 60px; height: 60px; border-radius: 50%;"/>
+                                <!-- <img src="@/assets/back9.png" style="width: 60px; height: 60px; border-radius: 50%;"/> -->
+                                <img :src="item.avatar_url" :onerror="defaultAvatar" style="width: 60px; height: 60px; border-radius: 50%;"/>
                             </div>
                             <div :class="['status', 's' + item.courier_status]">
                                 {{{0: '正常接单', 1: '暂停接单'}[item.courier_status]}}
@@ -86,15 +88,15 @@
                 <div class="title">编辑</div>
                 <div class="item">
                     <div class="item-title">真实姓名</div>
-                    <input type="text" v-model="real_name"/>
+                    <input class="input" type="text" v-model="real_name"/>
                 </div>
                 <div class="item">
                     <div class="item-title">手机号</div>
-                    <input type="text" v-model="phone_number"/>
+                    <input class="input" type="text" v-model="phone_number"/>
                 </div>
                 <div class="item">
                     <div class="item-title">备注</div>
-                    <input type="text" v-model="remarks_at_register"/>
+                    <input class="input" type="text" v-model="remarks_at_register"/>
                 </div>
                 <div class="item">
                     <div class="item-title">接单状态</div>
@@ -125,6 +127,8 @@ import { Toast } from 'vant';
     export default {
     data() {
         return {
+            total_h: document.body.clientHeight,
+            defaultAvatar: `this.src="${require('@/assets/back9.png')}"`,
             status: "接单状态",
             conditions: [{
                 id: 0,
@@ -152,34 +156,35 @@ import { Toast } from 'vant';
             finished: false,
 
             // courierInfoS: [{
-            //         "complete_order_nums": 50,
-            //         "courier_id": "派送员的id",
-            //         "courier_status": 0,
-            //         "fanbook_nick_name": "派送员的 fanbook 昵称",
-            //         "money_could_withdraw": "派送员剩余可提现金额",
-            //         "money_earned": "派送员总收入",
-            //         "ongoing_order_nums": 100,
-            //         "phone_number": "13666666666",
-            //         "real_name": "张三",
-            //         "register_date": "派送员入驻时间，格式：yyyy-MM-dd",
-            //         "remarks_at_register": "派送员入驻时填写的备注",
-            //         "total_take_order_nums": 100
-            //     },{
-            //         "complete_order_nums": 50,
-            //         "courier_id": "派送员的id1",
-            //         "courier_status": 1,
-            //         "fanbook_nick_name": "派送员的 fanbook 昵称",
-            //         "money_could_withdraw": "派送员剩余可提现金额",
-            //         "money_earned": "派送员总收入",
-            //         "ongoing_order_nums": 100,
-            //         "phone_number": "派送员手机号",
-            //         "real_name": "派送员真名",
-            //         "register_date": "派送员入驻时间，格式：yyyy-MM-dd",
-            //         "remarks_at_register": "派送员入驻时填写的备注",
-            //         "total_take_order_nums": 100
-            //     }],
+            //     "avatar_url": "派送员的 fanbook 头像 url",
+            //     "complete_order_nums": "100",
+            //     "courier_id": "派送员的id",
+            //     "courier_status": 0,
+            //     "fanbook_nick_name": "派送员的 fanbook 昵称",
+            //     "money_could_withdraw": "派送员剩余可提现金额",
+            //     "money_earned": "派送员总收入",
+            //     "ongoing_order_nums": "0",
+            //     "phone_number": "派送员手机号",
+            //     "real_name": "派送员真名",
+            //     "register_date": "派送员入驻时间，格式：yyyy-MM-dd",
+            //     "remarks_at_register": "派送员入驻时填写的备注",
+            //     "total_take_order_nums": "100"
+            // }, {
+            //     "avatar_url": "派送员的 fanbook 头像 url",
+            //     "complete_order_nums": "派送员已完成订单数",
+            //     "courier_id": "派送员的id2",
+            //     "courier_status": 1,
+            //     "fanbook_nick_name": "派送员的 fanbook 昵称",
+            //     "money_could_withdraw": "派送员剩余可提现金额",
+            //     "money_earned": "派送员总收入",
+            //     "ongoing_order_nums": "派送员目前未完成的订单数",
+            //     "phone_number": "派送员手机号",
+            //     "real_name": "派送员真名",
+            //     "register_date": "派送员入驻时间，格式：yyyy-MM-dd",
+            //     "remarks_at_register": "派送员入驻时填写的备注",
+            //     "total_take_order_nums": "派送员接取订单总数"
+            // }],
             courierInfoS: [],
-
             courier_id: '',
             isEditing: false,
             
@@ -194,7 +199,7 @@ import { Toast } from 'vant';
         };
     },
     mounted() {
-
+        this.edit(this.courierInfoS[0])
     },
     methods: {
         onRefresh() {
@@ -289,9 +294,12 @@ import { Toast } from 'vant';
 </script>
 
 <style lang="less" scoped>
+* {
+    box-sizing: border-box;
+}
 .main {
-    font-family: Microsoft YaHei;
     color: rgba(88,74,72,1);
+    background-image: url("@/assets/bg1.png");
 }
 .filter-box {
     display: flex;
@@ -305,7 +313,7 @@ import { Toast } from 'vant';
     .status-filter {
         display: flex;
         align-items: center;
-        margin-left: 25px;
+        margin-left: 34px;
         font-size: 16px;
 
         .label {
@@ -408,16 +416,16 @@ import { Toast } from 'vant';
 }
 
 .list {
-    margin-top: 10px;
-    min-height: 900px;
+    margin-top: 15px;
     .courierInfo {
         display: flex;
         flex-direction: column;
         align-items: flex-start;
         position: relative;
-        width: 375px - 18px;
+        width: 410px;
         box-sizing: border-box;
         margin: 0 auto;
+        margin-top: 15px;
         background-color: rgba(255,255,255,0.8);
         border-radius: 5px 5px 0px 0px;
 
@@ -456,6 +464,7 @@ import { Toast } from 'vant';
                     height: 15px;
                     border: 1px solid #ddd;
                     border-radius: 3px;
+                    margin-top: 8px;
                     &.s0 {
                         color: rgba(49,218,34,1);
                         border-color: rgba(49,218,34,1);
@@ -471,14 +480,14 @@ import { Toast } from 'vant';
                 flex-direction: column;
                 .name {
                     margin-bottom: 5px;
-                    font-size: 16px;
+                    font-size: 18px;
                     font-weight: bold;
                     color: rgba(88,74,72,1);
                 }
                 .item {
                     height: 30px;
                     line-height: 30px;
-                    font-size: 14px;
+                    font-size: 15px;
                     color: rgba(125,124,123,1);
                 }
             }
@@ -488,7 +497,7 @@ import { Toast } from 'vant';
             display: flex;
             margin-top: 10px;
             .item {
-                font-size: 14px;
+                font-size: 16px;
                 color: rgba(125,124,123,1);
                 display: flex;
                 flex-direction: column;
@@ -506,7 +515,7 @@ import { Toast } from 'vant';
             border-radius: 5px 5px 0px 0px;
 
             .item {
-                font-size: 14px;
+                font-size: 16px;
                 color: rgba(88,74,72,1);
                 display: flex;
                 flex-direction: column;
@@ -523,7 +532,7 @@ import { Toast } from 'vant';
     flex-direction: column;
     align-items: center;
     width: 360px;
-    height: 390px;
+    height: 420px;
 
     * {
         box-sizing: border-box;
@@ -534,20 +543,24 @@ import { Toast } from 'vant';
     .title {
         margin-top: 20px;
         font-size: 20px;
-
         font-weight: bold;
     }
     .item {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        height: 48px;
-        margin: 10px 0;
+        height: 45px;
         width: 300px;
+        margin: 10px 0;
         border-bottom: 1px solid rgba(125,124,123,0.5);
+        font-size: 20px;
         .item-title {
-            font-size: 19px;
-            margin-right: 20px;
+            margin-right: 40px;
+        }
+
+        .input {
+            width: 160px;
+            text-align: right;
         }
         .courier-status {
             display: flex;
@@ -561,9 +574,11 @@ import { Toast } from 'vant';
         display: flex;
         align-items: center;
         width: 300px;
-        margin-top: 10px;
+        margin-top: 45px;
+        margin-bottom: 47px;
         justify-content: space-between;
         font-weight: bold;
+        font-size: 18px;
         .store {
             width: 110px;
             height: 44px;
