@@ -40,6 +40,9 @@ export default {
             typeOfUser: ''
         };
     },
+  mounted() {
+    this.isCouierSignupPopupShow = true
+  },
   methods: {
     async init() {
       authorize();

@@ -29,7 +29,7 @@
 </template>
 
 <script>
-import serviceAxios from '@/http';
+import serviceAxios from '@/http/api/back/httpForBack';
 import { Toast } from 'vant';
 export default {
     name: 'customer-manage',

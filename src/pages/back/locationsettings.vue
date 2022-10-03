@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import serviceAxios from '@/http';
+import serviceAxios from '@/http/api/back/httpForBack';
 import Sortable from 'sortablejs';
 import 'animate.css'
 export default {

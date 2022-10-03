@@ -23,7 +23,7 @@
 
 <script>
 import { Toast } from 'vant'
-import serviceAxios from '@/http';
+import serviceAxios from '@/http/api/back/httpForBack';
 export default {
     name: 'gen-newlocation',
 

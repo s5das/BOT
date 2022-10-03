@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import serviceAxios from '@/http';
+import serviceAxios from '@/http/api/back/httpForBack';
 import { Toast } from 'vant'
 import { Dialog } from 'vant';
 export default {
