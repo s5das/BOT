@@ -41,7 +41,7 @@ export default {
         };
     },
   mounted() {
-    this.isCouierSignupPopupShow = true
+
   },
   methods: {
     async init() {
