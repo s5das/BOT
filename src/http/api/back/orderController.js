@@ -1,4 +1,4 @@
-import serviceAxios from "@/http";
+import serviceAxios from "@/http/api/back";
 
 export const allocate = (params) => {
     return serviceAxios({
