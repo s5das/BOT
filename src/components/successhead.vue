@@ -40,7 +40,6 @@ export default {
     border-radius: 10px;
     margin-bottom: 10px;
     .top{
-    width: 100%;
     display: flex;
     justify-content: center;
     .ico{
@@ -53,6 +52,7 @@ export default {
         }
     }
     .content{
+      width: 81px;
       height: 33px;
       line-height: 29px;
       font-size: 20px;

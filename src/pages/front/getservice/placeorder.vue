@@ -1,5 +1,5 @@
 <template>
-  <div class="main" :style="{height:h+'px'}">
+  <div>
 <div class="head">
     <div class="box"></div>
     <div class="text">快递信息</div>
@@ -79,7 +79,6 @@
   label="起始时间"
   placeholder="点击选择送达起始时间"
   @click="showPicker4 = true"
-  style="margin-top:15px"
 />
 <van-popup v-model="showPicker4" position="bottom">
   <van-datetime-picker
@@ -149,8 +148,8 @@
 
   />
   </div>
-  <div style="margin: 30px 0; height: 58px;">
-    <van-button  block color="linear-gradient(119deg,#FD9448,#FF7A55)" native-type="submit">立即下单</van-button>
+  <div style="margin: 16px 0;">
+    <van-button  block color="#eb1d1d" native-type="submit">立即下单</van-button>
   </div>
 </van-form>
 
@@ -166,7 +165,6 @@ export default {
     name: 'place-order',
     data() {
       return {
-    h:document.body.clientHeight,
     orderId:-1,
     minDate:new Date(),
     // 快递规格
@@ -214,7 +212,9 @@ export default {
     },
      
     async upload(file) {
-        console.log(file);
+      console.log(file);
+
+        console.log(1);
         const formData = new FormData()
         formData.append('file', file)
         
@@ -260,12 +260,17 @@ export default {
         }).then(
           (res) => {
             console.log(res);
-            this.orderId = res.order_id
-            return this.upload(this.filelist[0].file)              
-          },
-          ()=>{throw('订单创建失败')}
+            this.orderId = res.data.order_id
+            if (res.code ==0) {
+               return this.upload(this.filelist[0].file)              
+            } else {
+              throw('err1')
+            }
+
+          }
         ).then(
-          () => {
+          (res) => {
+            if (res.code == '0') {
               let orderId = this.orderId
               this.$router.push({
               path: '/front/payfinish',
@@ -273,9 +278,11 @@ export default {
                 orderId
               }
             })
-          },
-          ()=>{throw('图片上传失败')}
-        ).catch((reason) => { Toast.fail(reason) })
+            } else {
+              throw('err2')
+            }
+
+          }).catch((reason)=>{Toast.fail(reason)})
       }
     },
 
@@ -293,8 +300,9 @@ export default {
           method: 'get',
           url:'/fanbook/deliverbot/general/order/get_specifications'
         }).then((response) => {
-          for (var i = 0; i < response.length; i++){
-            let temp = response[i]
+          console.log(response.data);
+          for (var i = 0; i < response.data.length; i++){
+            let temp = response.data[i]
             this.columns1.push(temp.spec_name)
             this.reward_per_package.push(temp.reward_per_package)
             this.royalty_rate.push(temp.royalty_rate)
@@ -308,9 +316,10 @@ export default {
           url:'/fanbook/deliverbot/general/pickup_station/get_all'
         }).then((response) => {
           
-          for (var i = 0; i < response.length; i++) {
-            let temp = response[i]
+          for (var i = 0; i < response.data.length; i++) {
+            let temp = response.data[i]
             this.columns3.push(temp.pickup_address)
+            console.log(1);
           }
         },(err)=>{console.log(err.message);})
       },
@@ -331,22 +340,15 @@ export default {
 </script>
 
 <style scoped>
-.main{
-  padding-top:10px ;
-  background: #fcf6f4;
-  box-sizing: border-box;
-  overflow: scroll;
-}
 .head{
   height: 45px;
   width:100%;
+  border-radius: 10px 10px 0 0 ;
+  border-bottom: 1px solid #BBBBBB;
+  background-color: #fff;
   display: flex;
   align-items: center;
-  font-weight: 600;
-  color: #000;
   position: relative;
-  margin-top: 15px;
-  margin-bottom: 10px;
 }
 .box{
     position: absolute;

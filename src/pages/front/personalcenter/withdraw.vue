@@ -1,5 +1,5 @@
 <template>
-  <div class="main" :style="{height:h+'px'}">
+  <div>
     <div class="box1">
       <div class="title">可提现金额 (元)</div>
       <div class="money">
@@ -16,7 +16,7 @@
         <div class="b3">
           <div class="b3_left">提现至</div>
           <div class="b3_right">
-          <div><img style='margin-right: 5px;' src="@/assets/wechat.png"></div>
+          <div><img src="@/assets/wechat.png"></div>
           <div>微信钱包</div>
         </div>
         </div>
@@ -28,20 +28,17 @@
     <div class="list_status">
     <div class="items" v-for="(item) in details" :key="item.id">
      <div class="head">
-      <div style="margin-left:20px">{{item.way}}</div>
-      <div style="margin-right:23px">{{item.date}}</div>
+      <div>{{item.way}}</div>
+      <div>{{item.date}}</div>
      </div>
    
     <div class="bottom">
       <div class="left">
-        <div style="margin-bottom:10px;font-size: 24px;color: #EA0C0C;font-weight: 600;">{{item.num}}</div>
+        <div style="margin-bottom:10px;font-size: 20px;">{{item.num}}</div>
         <div style="font-size:14px">提现金额（元）</div>
       </div>
-      <div class="status" v-if="item.status==='审核中'">
-          <img class="statusico" src="@/assets/shenhe.png">
-      </div>
-      <div class="status" v-if="item.status==='提现成功'">
-          <img class="statusico" src="@/assets/chengong.png">
+      <div :class="item.status==='审核中'?'right1':'right2'">
+          {{item.status}}
       </div>
     </div>
   </div>
@@ -54,7 +51,6 @@ export default {
     name: 'with-draw',
     data() {
         return {
-          h:document.body.clientHeight,
           num: '',
           max_num: 10000,
           details: [{
@@ -83,35 +79,34 @@ export default {
     serviceAxios({
       method: 'get',
       url: '/fanbook/deliverbot/front/withdraw_money/get_could_withdraw'
-    }).then((res) =>{this.max_num = res})
+    }).then((res) =>{this.max_num = res.data})
     }
 
 }
 </script>
 <style scoped lang="less">
-.main{
-background: url('@/assets/个人中心.png');
-}
+
 .box1{
 height: 170px;
+background-color: #eb2929;
 position: relative;
 margin-bottom: 280px;
 
 .title{
   position: absolute;
-  top: 50px;
-  left: 34px;
-  color: #000;
-  font-weight: 600;
+  top: 21px;
+  left: 11px;
+  color: #fff;
+  font-weight: 500;
   font-size:15px ;
 }
 .money{
-  font-size: 30px;
-  color: #E85F5F;
+  font-size: 25px;
+  color: #fff;
   position: relative;
-  font-weight: 600;
+  font-weight: 500;
   top: 80px;
-  left: 34px;
+  left: 11px;
   display: flex;
   .yuan1{
     font-size: 15px;
@@ -124,16 +119,15 @@ width: 360px;
 height: 250px;
 background-color: #fff;
 position: absolute;
-padding: 16px 20px 16px 20px;
+padding: 16px 10px 16px 10px;
 top: 145px;
 border-radius: 6px;
-left: 14px;
+left: 25px;
 
 .b1{
     height: 40px;
     line-height: 40px;
     font-size: 16px;
-    font-weight: 600;
     color: #000;
     margin-bottom: 10px;
     
@@ -143,7 +137,6 @@ display: flex;
 align-content: center;
 justify-content: space-around;
 margin-bottom: 10px;
-margin-left: 10px;
 .yuan2{
   font-size: 35px;
   color: #000;
@@ -161,7 +154,6 @@ display: flex;
 justify-content: space-between;
 color:#101010;
 margin-bottom: 30px;
-margin-left: 10px;
   .b3_right{
    display: flex;
   }
@@ -176,17 +168,16 @@ color: #fff;
 button{
   height: 100%;
   width: 100%;
-  border-radius: 20px;
-  background: linear-gradient(138deg,#FD9448,#FF7A55);
+  border-radius: 25px;
+  background: #ed4e4e;
 }
 }
 }}
 .list_status{
-  width: 400px;
+  width: 360px;
   margin: 0 auto;
 
   .items{
-     width: 380px;
      padding: 10px;
      border-radius: 10px;
      background-color: #fff;
@@ -196,25 +187,30 @@ button{
      display: flex;
      justify-content: space-between;
      line-height: 35px;
+     border-bottom: #bbb 1px solid;
     }
     .bottom{
        height: 90px;
        background-color: #fff;
        display: flex;
        justify-content: space-around;
-    .status{
-      display: flex;
-      align-items: center;
-    }
-    .statusico{
-      height: 60px;
-      width: 75px;
-    }
+
+       .right1{
+         color: #E99D42;
+         font-size: 20px;
+         line-height: 90px;
+
+        }
+       .right2{
+         color: #EA0C0C;
+         font-size: 20px;
+         line-height: 90px;
+       }
        .left{
           
           display: flex;
           flex-direction: column;
-          align-items: flex-start;
+          align-items: center;
           justify-content: center;
        }
     }

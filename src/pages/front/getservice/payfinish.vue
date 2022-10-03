@@ -29,11 +29,11 @@ export default {
     methods: {
 
   },
-  created() {
+  mounted() {
       serviceAxios({
         method: 'get',
         url:`/fanbook/deliverbot/general/order/get_details/${this.orderId}`
-      }).then((res) => { console.log(res); this.orderinfo = res})
+        }).then((res)=>{this.orderinfo = res.data})
       },
 }
 

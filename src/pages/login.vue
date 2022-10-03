@@ -1,71 +1,40 @@
 <template>
   <div class="main">
-
+    <button @click="close" class="btn">点击关闭登录界面</button>
   </div>
 </template>
 
 <script>
 
-import { login, login_back } from '@/http/api/user'
-import { Dialog } from 'vant';
+// import { login} from '@/http/api/user'
+// import { Dialog } from 'vant';
 export default {
   name: 'log-in',
-  props: ['code'],
-
+    props:['code'],
+    methods: {
+        close() {
+        window.close()
+        },
+    },
   mounted() {
-
-    let state = localStorage.getItem('state')
-    if (state === '1') {
-      login_back(this.code).then(
-        (res) => {
-          if (res.avatar_url) {
-            localStorage.setItem('avatar_url', res.avatar_url)
-            localStorage.setItem('fanbook_nick_name', res.fanbook_nick_name)
-            localStorage.setItem('token', res.jwt_token)
-            localStorage.setItem('user_id', res.user_id)
-          }
+        localStorage.setItem('code',this.code)
         }
-      )
-      setTimeout(() => {
-        if (localStorage.getItem('token')) {
-          localStorage.setItem('lastLoginTime',new Date().getTime())
-          this.$router.push({
-            path: '/back'
-          })
-        } else {
-          Dialog({ message: '权限不足' });
-        }
-      }, 2000)
-    } else {
-      login(this.code).then(
-        (res) => {
-          if (res.avatar_url) {
-            localStorage.setItem('avatar_url', res.avatar_url)
-            localStorage.setItem('fanbook_nick_name', res.fanbook_nick_name)
-            localStorage.setItem('token', res.jwt_token)
-            localStorage.setItem('user_id', res.user_id)
-          }
-        }
-      )
-      setTimeout(() => {
-
-        if (localStorage.getItem('token')) {
-          localStorage.setItem('lastLoginTime',new Date().getTime())
-          this.$router.push({
-            path: '/front'
-          })
-        } else {
-          Dialog({ message: '授权失败' });
-        }
-      }, 2000)
-    }
-  }
 }
 </script>
 
 <style scoped lang="less">
-.main {
-  height: 800px;
-  background: #fcf6f4;
+.main{
+    height: 800px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+      .btn{
+        width: 150px;
+        height: 50px;
+        font-size: 15px;
+        color: white;
+        background-color: orange;
+        border-radius: 15px;
+      }
 }
 </style>

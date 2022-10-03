@@ -25,12 +25,10 @@ import {
   Icon,
   PullRefresh,
   List,
-  Dialog,
-  Overlay
+  Dialog 
 } from "vant";
 
 Vue.use(Button);
-Vue.use(Overlay);
 Vue.use(Tabbar);
 Vue.use(TabbarItem);
 Vue.use(Uploader);

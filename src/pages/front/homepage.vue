@@ -3,11 +3,13 @@
   <div class="main">
     <div class="box1">
       <div v-for="(item,index) of pagedata" :key="index" class="box2">
-          <img class="pic" :src="item.src">
+        <div class="pic">
+          <img :src="item.src">
+        </div>
         <div class="text1">
           {{item.text1}}
         </div>
-        <button class="btn" @click="handle(index)">{{item.text2}}</button>
+        <van-button color="#EA0C0C" plain round size="mini" @click="handle(index)">{{item.text2}}</van-button>
       </div> 
 
     <SignupPopup :show="isCouierSignupPopupShow" @changeShow="changeShow"></SignupPopup>
@@ -22,6 +24,7 @@ import SignupPopup from '@/components/courier/signupPopup.vue';
 import { getUserType } from '@/http/api/common';
 import authorize from '@/utils/authorize'
 import { TYPE } from '@/http/const/const';
+import PubSub from 'pubsub-js';
 export default {
     name: "home-page",
     data() {
@@ -41,7 +44,8 @@ export default {
         };
     },
   mounted() {
-    this.isCouierSignupPopupShow = true
+    PubSub.publish('changetabbar',this.id)
+    // this.init();登录并缓存得到的结果
   },
   methods: {
     async init() {
@@ -77,43 +81,25 @@ export default {
 </script >
 
 <style scoped lang="less">
-.main{
-  padding-top: 100px;
-  display: flex;
-  justify-content: center
-}
+  .main{
+    padding: 15px;
+    height: 800px;
+    background-color: #EFEFEF ;
+  }
 .box1{
-  height: 568px;
-  width: 203px;
   display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  justify-content: space-around;
 }
 
 .box2{
-  height: 225px;
-  width: 203px;
+  height: 210px;
+  width: 170px;
+  background-color: #fff;
   display: flex;
   border-radius: 7px;
   flex-direction: column;
   justify-content: space-around;
   align-items: center;
-  font-size: 16px;
-  color: #251B19;
-  font-weight: 500;
-  .pic{
-    height: auto;
-    width: 152px;
-  }
-  .btn{
-    background: linear-gradient(#4F91E5,#697DFF);
-    border-radius: 10px;
-    height: 36px;
-    width: 96px;
-    color: #fff;
-    font-size: 16px;
-    font-weight: 500;
-  }
 }
 .text1{
   font-size: 14px;
