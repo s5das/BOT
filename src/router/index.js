@@ -8,7 +8,7 @@ export default new VueRouter({
             path: '/',
             component: () => import("@/pages/login2.vue"),
             props({query}){
-              return{state:query.state}
+              return{state:query.state,code:query.code}
             }
         },
         {

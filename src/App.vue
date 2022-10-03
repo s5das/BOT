@@ -10,10 +10,10 @@
 
 
 
+
 export default {
     name: "App",
-  methods: {},
-
+    methods: {},
 }
 
 </script>
@@ -22,4 +22,5 @@ export default {
 body{
 height: 100%;
 }
+
 </style>

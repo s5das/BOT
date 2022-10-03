@@ -2,6 +2,7 @@
     <div class="box" :style="{height:h +'px'}">
         <router-view></router-view>
         <Tabbar></Tabbar>
+        <div class="block"></div>
     </div>
 </template>
 
@@ -24,5 +25,9 @@ import Tabbar from '@/components/tabbar.vue';
 .box{
   user-select: none;
   background: #fcf6f4;
+}
+.block{
+  height: 70px;
+  width: 100%;
 }
 </style>

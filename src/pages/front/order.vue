@@ -49,7 +49,6 @@ import format from '@/utils/format';
 import { getOrderList as getOrdersOfUser } from '@/http/api/user';
 import { getTakenOrderList as getOrdersOfCourier } from '@/http/api/courier';
 import { ORDER } from '@/http/const/const';
-import PubSub from 'pubsub-js';
 import BlurSearch from '@/components/common/blurSearch.vue';
 export default {
   name: "order-page",
@@ -133,8 +132,6 @@ export default {
     };
   },
   mounted() {
-    PubSub.publish('changetabbar',this.id)
-    // console.log(this.$route.params)
     if (this.$route.params.mode === 'courier') {
       this.idOfModeActivated = 1
     }

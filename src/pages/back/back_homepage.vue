@@ -23,21 +23,18 @@ export default {
         {
           ico: require('@/assets/back1.png'),
           title: '入驻审核',
-          config: '',
           arrow: true,
           to:'/back/setdown'
         },
         {
           ico: require('@/assets/back2.png'),
           title: '提现审核',
-          config: '',
           arrow: true,
           to:'/back/moneymanage'
         },
         {
           ico: require('@/assets/back3.png'),
           title: '派送员管理',
-          config: '',
           arrow: true,
           to:'/back/courierManage'
         }
@@ -46,14 +43,12 @@ export default {
         {
           ico: require('@/assets/back3.png'),
           title: '客户管理',
-          config: '',
           arrow: true,
           to:'/back/customermanage'
         },
         {
           ico: require('@/assets/back4.png'),
           title: '订单管理',
-          config: '',
           arrow: true,
           to:'/back/orderManage'
         }
@@ -62,14 +57,12 @@ export default {
         {
           ico: require('@/assets/back2.png'),
           title: '价格配置',
-          config: '',
           arrow: true,
           to:'/back/sizesettings'
         },
         {
           ico: require('@/assets/back5.png'),
           title: '快递点配置',
-          config: '',
           arrow: true,
           to:'/back/locationsettings'
         }

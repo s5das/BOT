@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="main" :style="{height:h+'px'}">
 <div class="head">
     <div class="box"></div>
     <div class="text">快递信息</div>
@@ -79,6 +79,7 @@
   label="起始时间"
   placeholder="点击选择送达起始时间"
   @click="showPicker4 = true"
+  style="margin-top:15px"
 />
 <van-popup v-model="showPicker4" position="bottom">
   <van-datetime-picker
@@ -148,8 +149,8 @@
 
   />
   </div>
-  <div style="margin: 16px 0;">
-    <van-button  block color="#eb1d1d" native-type="submit">立即下单</van-button>
+  <div style="margin: 30px 0; height: 58px;">
+    <van-button  block color="linear-gradient(119deg,#FD9448,#FF7A55)" native-type="submit">立即下单</van-button>
   </div>
 </van-form>
 
@@ -165,6 +166,7 @@ export default {
     name: 'place-order',
     data() {
       return {
+    h:document.body.clientHeight,
     orderId:-1,
     minDate:new Date(),
     // 快递规格
@@ -261,7 +263,7 @@ export default {
             this.orderId = res.order_id
             return this.upload(this.filelist[0].file)              
           },
-          ()=>{throw('err1')}
+          ()=>{throw('订单创建失败')}
         ).then(
           () => {
               let orderId = this.orderId
@@ -272,7 +274,7 @@ export default {
               }
             })
           },
-          ()=>{throw('err2')}
+          ()=>{throw('图片上传失败')}
         ).catch((reason) => { Toast.fail(reason) })
       }
     },
@@ -329,15 +331,22 @@ export default {
 </script>
 
 <style scoped>
+.main{
+  padding-top:10px ;
+  background: #fcf6f4;
+  box-sizing: border-box;
+  overflow: scroll;
+}
 .head{
   height: 45px;
   width:100%;
-  border-radius: 10px 10px 0 0 ;
-  border-bottom: 1px solid #BBBBBB;
-  background-color: #fff;
   display: flex;
   align-items: center;
+  font-weight: 600;
+  color: #000;
   position: relative;
+  margin-top: 15px;
+  margin-bottom: 10px;
 }
 .box{
     position: absolute;

@@ -1,34 +1,85 @@
-<template>
-  <div class="tabbar">
-    <van-tabbar v-model="active" active-color="#ee0a24" inactive-color="#000" >
-    <van-tabbar-item  icon="home-o"  to="/front/homepage">首页</van-tabbar-item>
-    <van-tabbar-item  icon="label-o" to="/front/order">我的订单</van-tabbar-item>
-    <van-tabbar-item  icon="user-o" to="/front/personalcenter">个人中心</van-tabbar-item>
-    </van-tabbar>
-  </div>
+<template >
+    <div class="main">
+        <div class="item" @click="handel(1)">
+            <img class="ico" src="@/assets/f2.png">
+            <div class="title">主页</div>
+        </div>
+        <div class="item2" @click="handel(2)">
+            <div class="box">
+                <img class="ico2" src="@/assets/f3.png">
+            </div>
+            <div class="title">我的订单</div>
+        </div>
+        <div class="item" @click="handel(3)">
+            <img class="ico" src="@/assets/f1.png">
+            <div class="title">个人中心</div>
+        </div>
+    </div>
 </template>
-
 <script>
-import pubsub from 'pubsub-js'
 export default {
-    name: 'tab-bar',
-    data() {
-        return {
-            active:0
+    name:'tab-bar',
+    methods:{
+        handel(index){
+            if(index==1){
+                this.$router.push(
+                    {
+                        path:'/front/homepage'
+                    }
+                )
+            }else if(index==2){
+                this.$router.push(
+                    {
+                        path:'/front/order'
+                    }
+                )
+            }else{
+                this.$router.push(
+                    {
+                        path:'/front/personalcenter'
+                    }
+                )
+            }
         }
-    },
-    methods: {
-        
-        change(_, res) {
-            this.active = res
-        }
-    },
-    mounted() {
-        pubsub.subscribe('changetabbar', this.change)
     }
 }
-</script >
-
-<style scoped>
-
+</script>
+<style lang="less" scoped>
+    .main{
+        height: 70px;
+        width: 100%;
+        background-color: white;
+        position: fixed;
+        bottom: 0;
+        display: flex;
+        justify-content: space-around;
+        .item{
+            height: 70px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            .ico{
+                height: 45px;
+                width: 45px;
+            }
+        }
+        .item2{
+            height: 70px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            .box{
+                height: 45px;
+                width: 45px;
+                position: relative;
+            }
+            .ico2{
+                position: absolute;
+                height: 55px;
+                width: 55px;
+                top: -15px;
+                right: -5px;
+            }
+        }
+    }
 </style>
