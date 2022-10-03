@@ -1,4 +1,4 @@
-import serviceAxios from "@/http/api/back";
+import serviceAxios from "@/http/api/back/httpForBack";
 
 export const getCouriers = (data) => {
     return serviceAxios({
