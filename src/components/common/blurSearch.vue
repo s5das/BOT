@@ -1,7 +1,8 @@
 <template>
     <div>
         <div class="search-area">
-            <van-icon @click="isInputingKey = true" name="search" size="20px"/>
+            <!-- <van-icon @click="isInputingKey = true" name="search" size="20px"/> -->
+            <img src="@/assets/screach.png" @click="isInputingKey = true"/>
             <slot name="prompt" v-if="blur_search_context === ''"></slot>
             <div class="search-prompt" v-if="blur_search_context !== ''">
                 <div class="text">
@@ -26,7 +27,8 @@
         <van-popup v-model="isInputingKey" position="top">
             <div class="blur-search-box">
                 <div class="enter-box">
-                    <van-icon class="icon" name="search" size="22px"></van-icon>
+                    <!-- <van-icon class="icon" name="search" size="22px"></van-icon> -->
+                    <img src="@/assets/screach.png">
                     <input type="text" v-model="blur_search_context_BUF" placeholder="请输入关键词"/>
                 </div>
                 <div class="confirm" @click="confirmKey">搜索</div>
