@@ -23,6 +23,11 @@ export default new VueRouter({
             redirect:'/front/homepage',
             component: () => import("@/pages/front/frontIndex.vue"),
             children: [
+                // 支付
+                {
+                    path:'payjudge',
+                    component:()=>import('@/pages/front/getservice/payjudge.vue')
+                },
                 {
                     path: 'homepage',
                     component: () => import("@/pages/front/homepage.vue")
@@ -32,7 +37,7 @@ export default new VueRouter({
                     component:() => import('@/pages/front/getservice/placeorder.vue')
                 },
                 {
-                    path: 'order:mode?',
+                    path: 'order/:mode?',
                     component: () => import("@/pages/front/order.vue"),
                     props({ query }) {
                         console.log(query);

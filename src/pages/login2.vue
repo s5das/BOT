@@ -1,7 +1,7 @@
 <template>
     <div class="main" :style="{height:h+'px'}">
-        <div class="head">登录界面</div>
-        <div class="btn" >
+        <div class="head" ref="title">登录界面</div>
+        <div class="btn">
             <div class="customer" @click="handdlecommand" ref="btn"><button>点击登录</button></div>
         </div>
 
@@ -9,8 +9,6 @@
 </template>
 
 <script>
-// import {Toast } from 'vant';
-// import { login } from '@/http/api/user'
 import loginStatus from '@/utils/loginStatus'
 export default {
     name: 'log-in2',
@@ -20,32 +18,32 @@ export default {
             window.fb.init({
                 success: () => {
                     window.fb.oAuth({ 'oAuthUrl': 'http://124.220.9.212:9098/fanbook/deliverbot/general/redirect' })
-            //         .then(
-            //             (res) => {
-            //                 console.log(res);
-            //                 login(localStorage.getItem('code')).then(
-            //                     (res) => {
-            //                         if (res.avatar_url) {
-            //                             localStorage.setItem('avatar_url', res.avatar_url)
-            //                             localStorage.setItem('fanbook_nick_name', res.fanbook_nick_name)
-            //                             localStorage.setItem('token', res.jwt_token)
-            //                             localStorage.setItem('user_id', res.user_id)
-            //                         }
-            //                     }
-            //                 )
-            //                 setTimeout(() => {
+                    //         .then(
+                    //             (res) => {
+                    //                 console.log(res);
+                    //                 login(localStorage.getItem('code')).then(
+                    //                     (res) => {
+                    //                         if (res.avatar_url) {
+                    //                             localStorage.setItem('avatar_url', res.avatar_url)
+                    //                             localStorage.setItem('fanbook_nick_name', res.fanbook_nick_name)
+                    //                             localStorage.setItem('token', res.jwt_token)
+                    //                             localStorage.setItem('user_id', res.user_id)
+                    //                         }
+                    //                     }
+                    //                 )
+                    //                 setTimeout(() => {
 
-            //                     if (localStorage.getItem('token')) {
-            //                         localStorage.setItem('id', "customer")
-            //                         this.$router.push({
-            //                             path: '/front'
-            //                         })
-            //                     } else {
-            //                         Dialog({ message: '授权失败' });
-            //                     }
-            //                 }, 4000)
-            //             },
-            //         )
+                    //                     if (localStorage.getItem('token')) {
+                    //                         localStorage.setItem('id', "customer")
+                    //                         this.$router.push({
+                    //                             path: '/front'
+                    //                         })
+                    //                     } else {
+                    //                         Dialog({ message: '授权失败' });
+                    //                     }
+                    //                 }, 4000)
+                    //             },
+                    //         )
                 }
             });
         },
@@ -84,7 +82,7 @@ export default {
                     //                 Dialog({ message: '权限不足' });
                     //             }
                     //         }, 2000)
-                        // },
+                    // },
                     // )
                 }
             });
@@ -105,11 +103,11 @@ export default {
         }
     },
     mounted() {
-        console.log(loginStatus());
+
         // 判断有无过期或更改登录状态
-        if(loginStatus()&&this.state == localStorage.getItem('state')){
-        // 跳过登录
-            if (this.state==0) {
+        if (loginStatus() && this.state == localStorage.getItem('state')) {
+            // 跳过登录
+            if (this.state == 0) {
                 this.$router.push({
                     path: '/front'
                 })
@@ -119,11 +117,12 @@ export default {
                 })
             }
 
-    }else{
-        localStorage.clear()
-        localStorage.setItem('state', this.state)
+        } else {
+            localStorage.clear()
+            localStorage.setItem('state', this.state)
+        }
     }
-}}
+}
 </script>
 
 <style scoped lang="less">

@@ -10,6 +10,7 @@ import router from "./router/index.js";
 import "./assets/css/base.css";
 
 import {
+  Loading,
   Button,
   Tabbar,
   TabbarItem,
@@ -45,6 +46,7 @@ Vue.use(Calendar);
 Vue.use(Icon);
 Vue.use(PullRefresh);
 Vue.use(List)
+Vue.use(Loading)
 Vue.use(Dialog);
 
 

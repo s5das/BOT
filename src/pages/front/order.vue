@@ -52,8 +52,7 @@
                     </div>
                     <div class="item highlight">
                         <div class="item-name">付款金额:</div>
-                        <img style="width: 12px; height: 15px; margin-right: 3px;" :src="require('@/assets/price.png')"/>
-                        <div class="item-value">{{order.reward}}</div>
+                        <div class="item-value">¥{{order.reward}}</div>
                     </div>
                 </div>
                 <div class="down">
@@ -271,6 +270,7 @@ export default {
       cancelOrder({
         orderId: order.order_id
       }).then(() => {
+        this.onRefresh()
         Toast('成功取消订单')
       })
     },

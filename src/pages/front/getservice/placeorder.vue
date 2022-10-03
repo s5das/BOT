@@ -75,6 +75,7 @@
 <script>
 import fmt from '@/utils/format'
 import { Toast } from 'vant'
+// import {wxpay} from '@/http/api/wx/wxpay'
 import serviceAxios from '@/http'
 export default {
 
@@ -168,6 +169,7 @@ export default {
       data['num_of_packages'] = Number(data['num_of_packages'].replace('件', ''))
       console.log(data);
       if (this.check_info(data)) {
+        // 创建订单
         serviceAxios({
           method: 'post',
           url: '/fanbook/deliverbot/front/order/client/create_order',
@@ -180,32 +182,25 @@ export default {
           },
           (err) => {
             console.log(err.message);
-            Toast.fail(err.message)
+            Toast.fail(err.message.replace(/[^\u4E00-\u9FA5]/g,''))
             return new Promise(() => { })
           }
         ).then(
           () => {
-            let orderId = this.orderId
-            this.$router.push({
-              path: '/front/payfinish',
-              query: {
-                orderId
+            // wxpay(this.jine,this.orderId)
+            this.$router.replace({
+              path:'/front/payfinish',
+              query:{
+                orderId:this.orderId
               }
             })
           },
           (err) => { 
-            Toast.fail(err.message);     
+            Toast.fail(err.message.replace(/[^\u4E00-\u9FA5]/g,''));   
           }
         )
       }
     },
-
-
-    async pay() {
-      let orderId = 0;
-      return orderId
-    },
-
 
   },
   // 动态申请规格、单价、利率、地点

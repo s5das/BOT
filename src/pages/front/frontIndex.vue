@@ -1,9 +1,12 @@
 <template>
+
     <div class="box" :style="{height:h +'px'}">
         <router-view></router-view>
         <Tabbar></Tabbar>
         <div class="block"></div>
     </div>
+
+
 </template>
 
 <script>
@@ -12,12 +15,9 @@ import Tabbar from '@/components/tabbar.vue';
     components: { Tabbar },
     data() {
         return {
-            h: 0
+            h: document.body.clientHeight
         }
-      },
-    mounted() {
-    this.h = document.body.clientHeight
-    }
+      }
 }
 </script>
 

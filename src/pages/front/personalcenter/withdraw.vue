@@ -153,6 +153,7 @@ margin-left: 10px;
     color: #000;
     font-size: 20px;
     margin-left: 30px;
+    width: 200px;
   }
 }
 
@@ -211,7 +212,6 @@ button{
       width: 75px;
     }
        .left{
-          
           display: flex;
           flex-direction: column;
           align-items: flex-start;

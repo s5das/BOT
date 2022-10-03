@@ -30,8 +30,12 @@
     <div class="title">备注</div>
     <div class="content">{{orderinfo.remarks}}</div>
   </div>
-  <div class="status">
-    {{orderinfo.order_status}}
+  <div class="status" v-if="orderinfo.order_status=='待接单'">
+    <img src="@/assets/daijiedan.png" alt="">
+  </div>
+  <div class="status" v-if="orderinfo.order_status=='派送中'">
+    <img src="@/assets/paisongzhong.png" alt="">
+
   </div>
   </div>
 </template>
@@ -50,13 +54,13 @@ export default {
 
 <style scoped lang="less">
 .box{
-    
+    width: 386px;
     background-color: #fff;
     border-radius: 10px 10px 0 0;
     border-bottom: dashed 2px #BBB;
     padding: 42px 0 0 34px;
     position: relative;
-    margin: 5px 5px 0 5px;
+    margin: 0 auto;
 .location,
 .kuaididian,
 .size,
@@ -90,7 +94,7 @@ export default {
     .content{
        font-size: 38px;
        font-weight: 600;
-       color: red;
+       color: #F19940;
     }
 }
 .size_num{
@@ -102,10 +106,14 @@ justify-content: flex-start;
 }
 .status{
 position: absolute;
-top: 40px;
-right: 26px;
-font-size: 22px;
-color: #E99D42 ;
+height: 90px;
+width: 90px;
+top: 0;
+right: 0;
+img{
+  height: 100%;
+  width: 100%;
+}
 }
 }
 

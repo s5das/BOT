@@ -207,13 +207,13 @@ import { Toast } from 'vant';
 <style lang="less" scoped>
 .buttons {
     background-color: #FFFFFF;
-    width: 366px;
+    width: 418px;
     margin: 0 auto;
     min-height: 140px;
-    
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content:center;
     // margin-bottom: 50px;
     transform: translateY(-50px);
     .button {

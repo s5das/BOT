@@ -18,8 +18,8 @@
       <div class="content">
 
         <Cellgroup :items="items" 
-        :config="[statistics.money_earned,
-                  statistics.money_could_withdraw,
+        :config="[statistics.money_earned+'元',
+                  statistics.money_could_withdraw+'元',
                   statistics.total_take_order_nums,
                   statistics.finished_order_nums,
                   statistics.ongoing_order_nums]"
@@ -74,16 +74,19 @@ export default {
         },        {
           ico: require('@/assets/back2.png'),
           title: '全部订单数',
+          to:'/front/order/courier?condition=0',
           arrow: true,
           cancelborder:true
         },        {
           ico: require('@/assets/front4.png'),
           title: '已完成订单数',
+          to:'/front/order/courier?condition=3',
           arrow: true,
           cancelborder:true
         },        {
           ico: require('@/assets/front3.png'),
           title: '未完成订单数',
+          to:'/front/order/courier?condition=1',
           arrow: true,
           cancelborder:true
         },
