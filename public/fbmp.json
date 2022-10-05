@@ -1,0 +1,53 @@
+{
+
+    "pages": {
+
+        "/**": {
+
+            "showNavigationBar": true,
+
+            "navigationBarBackgroundColor": "#ffffff",
+
+            "navigationBarTextColor": "#000000",
+
+            "navigationBarTitleText": "快递代拿"
+
+        },
+        "/front/order/**": {
+
+            "showNavigationBar": true,
+
+            "navigationBarBackgroundColor": "#ffffff",
+
+            "navigationBarTextColor": "#000000",
+
+            "navigationBarTitleText": "我的订单"
+
+        },
+        "/front/personalcenter/**": {
+
+            "showNavigationBar": true,
+
+            "navigationBarBackgroundColor": "#ffffff",
+
+            "navigationBarTextColor": "#000000",
+
+            "navigationBarTitleText": "个人中心"
+
+        },
+        "/back/**": {
+
+            "showNavigationBar": true,
+
+            "navigationBarBackgroundColor": "#ffffff",
+
+            "navigationBarTextColor": "#000000",
+
+            "navigationBarTitleText": "管理后台"
+
+        }
+
+
+    }
+
+}

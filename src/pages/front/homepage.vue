@@ -20,7 +20,6 @@
 import SignupPopup from '@/components/courier/signupPopup.vue';
 // import { Toast } from 'vant';
 import { getUserType } from '@/http/api/common';
-import authorize from '@/utils/authorize'
 import { TYPE } from '@/http/const/const';
 export default {
     name: "home-page",
@@ -44,9 +43,7 @@ export default {
 
   },
   methods: {
-    async init() {
-      authorize();
-    },
+
     handle(type) {
       // Toast(type)
       if (type === 1) {

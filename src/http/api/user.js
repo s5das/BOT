@@ -32,17 +32,19 @@ export const cancelOrder = (params) => {
 };
 
 export const login = (code) => {
+  const guildId = parseInt(localStorage.getItem('guildid'))
   return serviceAxios({
     methods: "get",
       url: `/fanbook/deliverbot/general/login/front`,
-    params:{code,guildId:413298633736192000}
+    params:{code,guildId}
   });
 };
 
 export const login_back = (code) => {
+  const guildId = parseInt(localStorage.getItem('guildid'))
   return serviceAxios({
     methods: "get",
       url: `/fanbook/deliverbot/general/login/back`,
-      params:{code,guildId:413298633736192000}
+      params:{code,guildId}
   });
 };
