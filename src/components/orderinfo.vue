@@ -55,10 +55,12 @@ export default {
 <style scoped lang="less">
 .box{
     width: 386px;
-    background-color: #fff;
+    background-color: rgba(255,255,255,0.8);
     border-radius: 10px 10px 0 0;
-    border-bottom: dashed 2px #BBB;
+
     padding: 42px 0 0 34px;
+    padding-bottom: 2px;
+    
     position: relative;
     margin: 0 auto;
 .location,

@@ -1,6 +1,72 @@
 <!-- 抢单详情页 -->
 <template>
     <div>
+        <van-popup v-model="isConfirmingSent">
+            <div class="confirm-box">
+                <div class="top">
+                    <img :src="require('@/assets/alert.png')"/>
+                    <div class="title">确认送达</div>
+                </div>
+                <div class="prompt">
+                    <div class="line">若该订单已送达, 请点击确定</div>
+                </div>
+                <div class="buttons-box">
+                    <div @click="confirmSent" class="button highlight">确定</div>
+                    <div @click="isConfirmingSent= false" class="button">取消</div>
+                </div>
+            </div>
+        </van-popup>
+
+        <van-popup v-model="isConfirmingReceived">
+            <div class="confirm-box">
+                <div class="top">
+                    <img :src="require('@/assets/alert.png')"/>
+                    <div class="title">确认收货</div>
+                </div>
+                <div class="prompt">
+                    <div class="line">若以成功收货, 请点击确定</div>
+                </div>
+                <div class="buttons-box">
+                    <div @click="confirmReceived" class="button highlight">确定</div>
+                    <div @click="isConfirmingReceived = false" class="button">取消</div>
+                </div>
+            </div>
+        </van-popup>
+
+        <van-popup v-model="isConfirmingContact">
+            <div class="confirm-box">
+                <div class="top">
+                    <img :src="require('@/assets/alert.png')"/>
+                    <div class="title">提示</div>
+                </div>
+                <div class="prompt">
+                    <div class="line">将为您创建私密频道</div>
+                    <div class="line">需退出后从首页频道进入与对方沟通</div>
+                </div>
+                <div class="buttons-box">
+                    <div @click="contact" class="button highlight">确定</div>
+                    <div @click="isConfirmingContact = false" class="button">取消</div>
+                </div>
+            </div>
+        </van-popup>
+
+        <van-popup v-model="isConfirmingExit">
+            <div class="confirm-box">
+                <div class="top">
+                    <img :src="require('@/assets/alert.png')"/>
+                    <div class="title">提示</div>
+                </div>
+                <div class="prompt">
+                    <div class="line">成功创建私密频道{{}}</div>
+                    <div class="line">是否为您退出小程序</div>
+                </div>
+                <div class="buttons-box">
+                    <div @click="exit" class="button highlight">退出</div>
+                    <div @click="isConfirmingExit = false" class="button">取消</div>
+                </div>
+            </div>
+        </van-popup>
+
         <!-- 1 待接单 -->
         <div v-if="orderInfo.order_status === '待接单'">
             <Orderinfo :orderinfo="orderInfo"/>
@@ -18,38 +84,13 @@
                     </div>
                 </template>
             </Successhead>
-            <Orderinfo :orderinfo="orderInfo"/>
-            <Userinfo :orderinfo="orderInfo"/>
+            <Orderinfo class="margin-bottom-12px" :orderinfo="orderInfo"/>
+            <Userinfo class="margin-bottom-12px" :orderinfo="orderInfo"/>
+            <CourierInfo :order="orderInfo"></CourierInfo>
             <div class="buttons">
-                <div @click="isContactChoicesShow = true" class="button">联系Ta</div>
-                <div @click="showConfirmBox" class="button highlight">确认送达</div>
+                <div @click="isConfirmingContact = true" class="button">联系Ta</div>
+                <div @click="isConfirmingSent = true" class="button highlight">确认送达</div>
             </div>
-            <van-popup v-model="isConfirmBoxShow">
-                <div class="confirm-box">
-                    <div class="title">
-                        确认送达
-                    </div>
-                    <div class="content">
-                        若该订单已送达, 请点击提交
-                    </div>
-                    <div class="pop-buttons">
-                        <div @click="confirmSent" class="button">提交</div>
-                        <div @click="cancel" class="button">取消</div>
-                    </div>
-                </div>
-            </van-popup>
-            <van-popup v-model="isContactChoicesShow">
-                <div class="contact-choices">
-                    <div class="top">
-                        <div @click="isContactChoicesShow = false" class="button">取消</div>
-                        <div class="title">联系收件人</div>
-                        <div @click="contact" class="button">确认</div>
-                    </div>
-                    <div class="choices-box">
-                        <div @click="indexOfContactChoicesChosen = i" v-for="(item, i) in contactChoices" :key="i" :class="['choice', i === indexOfContactChoicesChosen ? 'chosen' : '']">{{item}}</div>
-                    </div>
-                </div>
-            </van-popup>
         </div>
 
         <!-- 3 已送达 -->
@@ -60,26 +101,12 @@
                     快递已送达, 待确认收货, 24小时后自动确认送货
                 </div>
             </div>
-            <Orderinfo :orderinfo="orderInfo"/>
+            <Orderinfo class="margin-bottom-12px" :orderinfo="orderInfo"/>
             <Userinfo :orderinfo="orderInfo"/>
             <div class="buttons">
-                <div @click="isContactChoicesShow = true" class="button">联系Ta</div>
-                <div @click="showConfirmBox" class="button highlight">确认收货</div>
+                <div @click="isConfirmingContact = true" class="button">联系Ta</div>
+                <div @click="isConfirmingReceived = true" class="button highlight">确认收货</div>
             </div>
-            <van-popup v-model="isConfirmBoxShow">
-                <div class="confirm-box">
-                    <div class="title">
-                        确认收货
-                    </div>
-                    <div class="content">
-                        若已成功收货, 请点击确认
-                    </div>
-                    <div class="pop-buttons">
-                        <div @click="confirmReceived" class="button">确认</div>
-                        <div @click="cancel" class="button">取消</div>
-                    </div>
-                </div>
-            </van-popup>
         </div>
 
         <!-- 4 已完成 -->
@@ -87,10 +114,10 @@
             <div class="completed-prompt">
                 <!-- 2022-08-07 16：00 确认收货 -->
             </div>
-            <Orderinfo :orderinfo="orderInfo"/>
+            <Orderinfo class="margin-bottom-12px" :orderinfo="orderInfo"/>
             <Userinfo :orderinfo="orderInfo"/>
             <div class="buttons">
-                <div @click="isContactChoicesShow = true" class="button">联系Ta</div>
+                <div @click="isConfirmingContact = true" class="button">联系Ta</div>
             </div>
         </div>
 
@@ -109,6 +136,8 @@ import { takeOrder, turnDelivered } from '@/http/api/courier';
 import { completeOrder } from '@/http/api/user';
 import { getDetails } from '@/http/api/general/generalOrderController';
 import { Toast } from 'vant';
+import CourierInfo from '../../../components/courierInfo.vue';
+import { getPrivateChannelName } from '@/http/api/general/generalOrderController'
     
     export default {
     mounted() {
@@ -128,12 +157,10 @@ import { Toast } from 'vant';
             // status: '派送中',
             // status: '已送达',
             status: '已完成',
-            isConfirmBoxShow: false,
-            isContactChoicesShow: false,
-            contactChoices: [
-                "打电话",
-                "私聊"
-            ],
+            isConfirmingSent: false,
+            isConfirmingReceived: false,
+            isConfirmingContact: false,
+            isConfirmingExit: false,
             indexOfContactChoicesChosen: 0,
             type: [],
             orderInfo: {
@@ -153,7 +180,8 @@ import { Toast } from 'vant';
                 "remarks": "客户备注",
                 "reward": "付款金额",
                 "spec_name": "规格名称"
-            }
+            },
+            private_channel_name: ''
         };
     },
     methods: {
@@ -165,48 +193,48 @@ import { Toast } from 'vant';
             })
         },
         contact() {
-            let method = this.contactChoices[this.indexOfContactChoicesChosen]
-            if(method === "打电话") {
-                //
-            } else if(method === "私聊") {
-                //
-            }
-            this.isContactChoicesShow = false
+            getPrivateChannelName({
+                orderId: this.orderId
+            }).then(data => {
+                this.isConfirmingContact = false
+                this.private_channel_name = data.private_channel_name
+                this.isConfirmingExit = true
+            })
         },
-        showConfirmBox() {
-            this.isConfirmBoxShow = true
-        }, 
+        exit() {
+            window.fb.closewindow()
+        },
         confirmSent() {
-            this.isConfirmBoxShow = false
             // 发送变更状态请求
             turnDelivered({
                 orderId: this.orderId
             }).then(() => {
                 this.orderInfo.order_status = '已送达'
                 Toast('操作成功')
+                this.isConfirmingSent = false
             })
         },
-        cancel() {
-            this.isConfirmBoxShow = false
-        },
         confirmReceived() {
-            this.isConfirmBoxShow = false
             // 发送变更状态请求
             completeOrder({
                 orderId: this.orderId,
             }).then(() => {
                 this.orderInfo.order_status = '已完成'
                 Toast('操作成功')
+                this.isConfirmingReceived = true
             })
         }
     },
-    components: { Orderinfo, Successhead, Userinfo }
+    components: { Orderinfo, Successhead, Userinfo, CourierInfo }
 }
 </script>
 
 <style lang="less" scoped>
+.margin-bottom-12px {
+    margin-bottom: 12px;
+}
 .buttons {
-    background-color: #FFFFFF;
+    background-color: rgba(255,255,255,0.8);
     width: 418px;
     margin: 0 auto;
     min-height: 140px;
@@ -215,22 +243,23 @@ import { Toast } from 'vant';
     align-items: center;
     justify-content:center;
     // margin-bottom: 50px;
-    transform: translateY(-50px);
+    // transform: translateY(-50px);
     .button {
-        width: 289px;
-        height: 40px;
+        width: 108px;
+        height: 32px;
         margin: 18px 0;
         margin-bottom: 5px;
-        line-height: 40px;
+        line-height: 32px;
         text-align: center;
-        color: rgba(233, 157, 66, 100);
-        border: 1px solid rgba(233, 157, 66, 100);
-        border-radius: 22px;
-
-        &.highlight {
-            color: #FFF;
-            background-color: rgba(233, 157, 66, 100);
-        }
+        color: #FFF;
+        // border: 1px solid rgba(233, 157, 66, 100);
+        border-radius: 20px;
+        background-color: rgba(233, 157, 66, 100);
+        box-shadow: 0px 1px 1px 0px rgba(0,0,0,0.25) inset; 
+        // &.highlight {
+        //     color: #FFF;
+        //     background-color: rgba(233, 157, 66, 100);
+        // }
     }
 }
 
@@ -259,42 +288,6 @@ import { Toast } from 'vant';
             font-size: 20px;
             &:first-of-type {
                 color: rgba(234, 12, 12, 87);
-            }
-        }
-    }
-}
-
-.contact-choices {
-    width: 366px;
-    .top {
-        display: flex;
-        justify-content: space-between;
-        margin: 5px 10px;
-        font-size: 16px;
-
-        .button {
-            color: rgba(234, 12, 12, 73);
-        }
-
-        .title {
-            color: rgb(234, 12, 12) 73%;
-        }
-    }
-    .choices-box {
-        display: flex;
-        flex-direction: column;
-        justify-content: space-evenly;
-        box-sizing: border-box;
-        // height: 164px;
-        padding: 20px;
-        .choice {
-            margin: 10px 0;
-            text-align: center;
-            font-size: 16px;
-            color: rgba(16, 16, 16, 100);
-            &.chosen {
-                color: rgba(16, 16, 16, 100);
-                font-weight: 600;
             }
         }
     }
@@ -334,6 +327,53 @@ import { Toast } from 'vant';
         line-height: 23px;
         color: rgba(79, 79, 79, 64);
         font-size: 13px;
+    }
+}
+
+.confirm-box {
+    width: 380px;
+    height: auto;
+    .top {
+        display: flex;
+        align-items: center;
+        margin-top: 10px;
+        margin-left: 10px;
+        img {
+            width: 25px;
+            height: 25px;
+        }
+        .title {
+            margin-left: 1px;
+            color: rgba(88,74,72,1);
+            font-size: 20px;
+        }
+    }
+    .prompt {
+        margin: 0 46px;
+        margin-top: 22px;
+        margin-bottom: 36px;
+        .line {
+            font-size: 18px;
+            color: rgba(88,74,72,1);
+        }
+    }
+    .buttons-box {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-top: 1px solid rgba(118,118,118,1);
+        .button {
+            width: 50%;
+            height: 49px;
+            line-height: 49px;
+            color: rgba(125,124,123,1);
+            font-size: 20px;
+            font-weight: bold;
+        }
+        .highlight {
+            color: rgba(239,124,38,1);
+            border-right: 1px solid rgba(118,118,118,1);
+        }
     }
 }
 </style>

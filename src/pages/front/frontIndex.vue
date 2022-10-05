@@ -25,6 +25,7 @@ import Tabbar from '@/components/tabbar.vue';
 .box{
   user-select: none;
   background: #fcf6f4;
+  overflow-y: scroll;
 }
 .block{
   height: 70px;

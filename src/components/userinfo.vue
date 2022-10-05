@@ -66,17 +66,19 @@ export default {
 }
 
 .box {
-  margin: 0 5px 5px 5px;
-  background-color: #fff;
-  padding: 20px 0 70px 15px;
+  width: 418px;
+  height: 232px;
+  margin: 0 auto;
+  background-color: rgba(255,255,255,0.8);
+
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
 
   .head {
-    font-size: 16px;
+    font-size: 18px;
     display: flex;
-    margin-bottom: 10px;
+    padding-top: 30px;
+    padding-left: 33px;
 
     .left {
       font-weight: 600;
@@ -84,47 +86,49 @@ export default {
     }
 
     .right {
-      color: #BBB;
+      font-size: 15px;
+      color: rgba(125,124,123,1);
     }
   }
 
   .info {
-    margin-left: 20px;
-
+    margin-top: 14px;
     .name_phone {
-
+      padding: 0 36px;
       display: flex;
-      justify-content: flex-start;
+      justify-content: space-between;
 
       .name,
       .phone {
-        height: 62px;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
         margin-bottom: 16px;
 
         .title {
-          color: #BBB;
-          font-size: 16px;
+          margin-bottom: 3px;
+          color: rgba(125,124,123,1);
+          font-size: 14px;
         }
 
         .content {
+          color: rgba(88,74,72,1);
           font-size: 16px;
         }
       }
-
-      .name {
-        margin-right: 80px;
+      .phone {
+        padding-right: 92px;
       }
     }
 
     .pic {
+      margin-top: 5px;
+      padding-left: 28px;
       width: 98px;
 
       img {
-        width: 100%;
-        height: auto;
+        width: 100px;
+        height: 66px;
       }
     }
   }
