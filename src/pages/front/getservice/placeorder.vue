@@ -65,7 +65,7 @@
         <van-field v-model="user_phone" name="recipient_phone_number" label="手机号" placeholder="请输入手机号" />
       </div>
       <div style="margin: 30px 0; height: 58px;">
-        <van-button block color="linear-gradient(119deg,#FD9448,#FF7A55)" native-type="submit">立即下单</van-button>
+        <van-button :disabled="issubmitting" block color="linear-gradient(119deg,#FD9448,#FF7A55)" native-type="submit">立即下单</van-button>
       </div>
     </van-form>
 
@@ -82,6 +82,7 @@ export default {
   name: 'place-order',
   data() {
     return {
+      issubmitting:false,
       h: document.body.clientHeight,
       orderId: -1,
       minDate: new Date(),
@@ -163,11 +164,13 @@ export default {
       }
     },
     onSubmit(data) {
+      this.issubmitting = true
       data['reward'] = this.jine;
       delete data['pic'];
       data['pic_nums'] = this.filelist.length
       data['num_of_packages'] = Number(data['num_of_packages'].replace('件', ''))
       console.log(data);
+
       if (this.check_info(data)) {
         // 创建订单
         serviceAxios({
@@ -181,7 +184,7 @@ export default {
             return this.upload(this.filelist[0].file)
           },
           (err) => {
-            console.log(err.message);
+            this.issubmitting = false
             Toast.fail(err.message.replace(/[^\u4E00-\u9FA5]/g,''))
             return new Promise(() => { })
           }
@@ -196,7 +199,8 @@ export default {
             })
           },
           (err) => { 
-            Toast.fail(err.message.replace(/[^\u4E00-\u9FA5]/g,''));   
+            this.issubmitting = false
+            Toast.fail(err.message);   
           }
         )
       }

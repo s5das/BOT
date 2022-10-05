@@ -21,7 +21,7 @@ export default {
   methods: {
     jump() {
       this.$router.push({
-                path: '/front/order/courier',
+                path: '/front/order',
             });
     }
   }

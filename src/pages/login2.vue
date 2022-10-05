@@ -10,6 +10,7 @@
 
 <script>
 import loginStatus from '@/utils/loginStatus'
+import { Toast } from 'vant';
 export default {
     name: 'log-in2',
     props: ['state'],
@@ -51,13 +52,19 @@ export default {
 
             window.fb.init({
                 success: () => {
-                    // try{
-                    //     window.fb.getCurrentGuild()
-                    // }
-                    // catch(error){
-                    //     Toast.fail(error.message);
-                    // }
-                    window.fb.oAuth({ 'oAuthUrl': 'http://124.220.9.212:9098/fanbook/deliverbot/general/redirect' })
+                    console.log(window.fb);
+                    Toast.success(window.fb.getPlatform())
+                    console.log(this.$route.query);
+                    setTimeout(() => {
+                        try {
+                            window.fb.getCurrentGuild()
+                        }
+                        catch (error) {
+                            console.log('error');
+                            Toast.fail(error.message);
+                        }
+                    }, 3000);
+                    // window.fb.oAuth({ 'oAuthUrl': 'http://124.220.9.212:9098/fanbook/deliverbot/general/redirect' })
                     // .then(
                     //     (res) => {
                     //         let code = res.data.code
