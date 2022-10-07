@@ -69,8 +69,11 @@
 
         <!-- 1 待接单 -->
         <div v-if="orderInfo.order_status === '待接单'">
-            <Orderinfo :orderinfo="orderInfo"/>
-            <div class="buttons">
+            <Orderinfo class="margin-bottom-12px" :orderinfo="orderInfo"/>
+            <Userinfo v-if="user_id != undefined && user_id == orderInfo.recipient_id
+" :orderinfo="orderInfo"/>
+            <div class="buttons" v-if="user_id != undefined && user_id != orderInfo.recipient_id
+">
                 <div @click="grab" class="button">我要抢单</div>
             </div>
         </div>
@@ -148,7 +151,9 @@ import { getPrivateChannelName } from '@/http/api/general/generalOrderController
         }).then(res => {
             this.orderInfo = res
             console.log(res)
-        })
+        }),
+
+        this.user_id = localStorage.getItem('user_id')
     },
     data() {
         return {
@@ -181,7 +186,8 @@ import { getPrivateChannelName } from '@/http/api/general/generalOrderController
                 "reward": "付款金额",
                 "spec_name": "规格名称"
             },
-            private_channel_name: ''
+            private_channel_name: '',
+            user_id: '',
         };
     },
     methods: {
