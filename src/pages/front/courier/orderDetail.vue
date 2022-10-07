@@ -57,7 +57,7 @@
                     <div class="title">提示</div>
                 </div>
                 <div class="prompt">
-                    <div class="line">成功创建私密频道{{}}</div>
+                    <div class="line">成功创建私密频道{{private_channel_name}}</div>
                     <div class="line">是否为您退出小程序</div>
                 </div>
                 <div class="buttons-box">

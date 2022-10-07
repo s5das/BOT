@@ -51,7 +51,7 @@
         display: flex;
         flex-direction: column;
         width: 362px;
-        height: 187px;
+        // height: 187px;
         margin: 0 auto;
         margin-top: 14px;
         padding: 1px;
@@ -97,14 +97,20 @@
             flex-direction: column;
             justify-content: space-evenly;
             .item {
-                margin-top: 0;
+                display: flex;
+                align-items: center;
+                margin-top: 5px;
                 .item-name {
+                    display: flex;
+                    align-items: center;
                     font-size: 14px;
-                    width: 60px;
+                    width: 5.5rem;
                     margin-right: 5px;
                     color: rgba(16, 16, 16, 100);
                 }
                 .item-value {
+                    display: flex;
+                    align-items: center;
                     font-size: 16px;
                     color:  rgba(16, 16, 16, 100);
                 }
