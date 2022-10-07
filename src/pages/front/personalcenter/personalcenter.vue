@@ -18,11 +18,11 @@
       <div class="content">
 
         <Cellgroup :items="items" 
-        :config="[statistics.money_earned+'元',
-                  statistics.money_could_withdraw+'元',
-                  statistics.total_take_order_nums,
-                  statistics.finished_order_nums,
-                  statistics.ongoing_order_nums]"
+        :config="[statistics.money_earned||'0'+'元',
+                  statistics.money_could_withdraw||'0'+'元',
+                  statistics.total_take_order_nums||'0',
+                  statistics.finished_order_nums||'0',
+                  statistics.ongoing_order_nums||'0']"
         ></Cellgroup>
       </div>
     </div>

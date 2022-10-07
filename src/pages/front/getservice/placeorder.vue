@@ -29,7 +29,7 @@
           <van-picker show-toolbar :columns="columns3" @confirm="onConfirm3" @cancel="showPicker3 = false" />
         </van-popup>
 
-        <van-field name="pic" label="上传图片">
+        <van-field name="pic" label="取件码截图">
           <template #input>
             <van-uploader v-model="filelist" :max-count="5" />
           </template>
@@ -143,7 +143,7 @@ export default {
                   data: formData
                 })                 
             }catch{
-                return Promise.reject('上传图片失败')
+                return Promise.reject(Error('请保证上传的取件码截图不超过2MB'))
             }
 
       }
