@@ -1,6 +1,6 @@
 <!-- 抢单列表页 -->
 <template>
-    <div class="main">
+    <div class="main" :style="{height: total_h + 'px'}">
         <div class="condition">
             <div v-for="item in conditions" :key="item.id" :class="['item', item.id === idOfActivated ? 'isActivated' : '']" @click="conditionClickHandler(item)">
                 <div class="item-name">{{item.name}}</div>
@@ -40,6 +40,7 @@ import { getAllSite } from '@/http/api/common'
     name: "grabOrder",
     data() {
         return {
+            total_h: document.body.clientHeight,
             conditions: [
                 {
                     // 这里id才起标识作用
@@ -255,6 +256,7 @@ import { getAllSite } from '@/http/api/common'
 .main {
     background: url("@/assets/background/front.png");
     background-color: #EFEFEF;
+    overflow-y: scroll;
 
     .condition {
         position: fixed;
