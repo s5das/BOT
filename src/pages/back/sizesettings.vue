@@ -23,6 +23,9 @@
           <div class="left" @click="handle1">{{box_text[status][0]}}</div>
           <div class="right" @click="handle2">{{box_text[status][1]}}</div>
       </div>
+      <div class="delete-prompt">
+        点击左侧圆圈, 选择要删除的项目
+      </div>
     </div>
   </template>
   
@@ -288,4 +291,11 @@ import { Toast } from 'vant';
           }
       }
   }
+
+.delete-prompt {
+  margin: 0 auto;
+  width: 18rem;
+  text-align: center;
+  color: #BBB;
+}
   </style>

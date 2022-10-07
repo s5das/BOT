@@ -92,7 +92,7 @@
             <CourierInfo :order="orderInfo"></CourierInfo>
             <div class="buttons">
                 <div @click="isConfirmingContact = true" class="button">联系Ta</div>
-                <div @click="isConfirmingSent = true" class="button highlight">确认送达</div>
+                <div v-if="user_id != undefined && user_id != orderInfo.recipient_id" @click="isConfirmingSent = true" class="button highlight">确认送达</div>
             </div>
         </div>
 
@@ -108,7 +108,7 @@
             <Userinfo :orderinfo="orderInfo"/>
             <div class="buttons">
                 <div @click="isConfirmingContact = true" class="button">联系Ta</div>
-                <div @click="isConfirmingReceived = true" class="button highlight">确认收货</div>
+                <div v-if="user_id != undefined && user_id == orderInfo.recipient_id" @click="isConfirmingReceived = true" class="button highlight">确认收货</div>
             </div>
         </div>
 
@@ -151,9 +151,11 @@ import { getPrivateChannelName } from '@/http/api/general/generalOrderController
         }).then(res => {
             this.orderInfo = res
             console.log(res)
+            // Toast(res.courier_id)
         }),
-
+        // Toast(this.user_id)
         this.user_id = localStorage.getItem('user_id')
+        // Toast(this.user_id)
     },
     data() {
         return {
@@ -227,7 +229,7 @@ import { getPrivateChannelName } from '@/http/api/general/generalOrderController
             }).then(() => {
                 this.orderInfo.order_status = '已完成'
                 Toast('操作成功')
-                this.isConfirmingReceived = true
+                this.isConfirmingReceived = false
             })
         }
     },

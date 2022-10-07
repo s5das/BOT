@@ -17,7 +17,7 @@
             <div>手机号：{{phone[index]}}</div>
             <div>fanbook昵称：{{nick_name[index]}}</div>
           </div>
-          <div class="bottom">
+          <div class="bottom" v-if="audit[index] === 0">
             <button class="btn1" @click="pass(id[index])">通过</button>
             <button class="btn2" @click="reject(id[index])">拒绝</button>
           </div>
@@ -55,6 +55,7 @@ export default {
       phone: [],
       real_name: [],
       money: [],
+      audit: [],
       reject_reason: '',
       reject_id: '',
       h: document.body.clientHeight
@@ -82,6 +83,7 @@ export default {
           this.phone = []
           this.real_name = []
           this.money = []
+          this.audit = []
           this.refreshing = false
         }
 
@@ -98,6 +100,7 @@ export default {
             this.phone.push(temp.courier_phone_number)
             this.real_name.push(temp.courier_real_name)
             this.money.push(temp.money_to_withdraw)
+            this.audit.push(temp.audit_status)
           }
 
           if (res.length < 10) {
@@ -107,7 +110,7 @@ export default {
           this.serialnumber++
         },
           () => {
-            Toast.fail('请求失败');
+            // Toast.fail('请求失败');
             this.loading = false
             this.finished = true
           }
@@ -126,7 +129,7 @@ export default {
           serviceAxios({
             method: 'get',
             url: `/fanbook/deliverbot/back/admin/audit/pass_withdraw_money_application/${id}`
-          }).then(() => { Toast.success('操作成功'); this.refreshing=true;this.onRefresh() }, () => { Toast.fail('操作失败') })
+          }).then(() => { Toast.success('操作成功'); this.refreshing=true;this.onRefresh() }, () => {  })
         }
       )
 

@@ -24,6 +24,9 @@
             <div  class="in1"><input type="text" placeholder="请输入快递柜名称" v-model="location_name"></div>
         </div>
     </van-dialog>
+    <div class="delete-prompt">
+        点击左侧圆圈, 选择要删除的项目
+      </div>
   </div>
 </template>
 
@@ -271,5 +274,12 @@ export default {
            }
         }
     }
+}
+
+.delete-prompt {
+  margin: 0 auto;
+  width: 18rem;
+  text-align: center;
+  color: #BBB;
 }
 </style>

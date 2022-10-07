@@ -300,6 +300,7 @@ import { Toast } from 'vant';
 .main {
     color: rgba(88,74,72,1);
     background-image: url("@/assets/bg1.png");
+    overflow-y: scroll;
 }
 .filter-box {
     display: flex;

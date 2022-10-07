@@ -78,9 +78,7 @@
                     <div @click="confirmingCancel(order.order_id)" class="button" v-if="order.order_status in {'待接单': 0, '派送中': 1} && modes[idOfModeActivated].name === '我发布的'">取消订单</div>
                     <!-- <div @click="changeCourier(order)" class="button" v-if="order.order_status in {'待接单': 0, '派送中': 1}">{{order.order_status === '待接单' ? '选派送员' : '换派送员' }}</div> -->
                     <div @click="checkDetail(order)" class="button">查看详情</div>
-                </div>
-
-            
+                </div>            
         </div>
       </van-list>
     </van-pull-refresh>

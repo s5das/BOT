@@ -64,14 +64,14 @@ export default {
                             localStorage.clear()
                             localStorage.setItem('state', this.state)
                             localStorage.setItem('guildid', v.id)
-                            window.location.href = 'http://124.220.9.212:9098/fanbook/deliverbot/general/redirect'
+                            window.location.href = 'http://124.220.9.212:9099/fanbook/deliverbot/general/redirect'
                         }
                     } else {
                         // 不同服务器登录
                         localStorage.clear()
                         localStorage.setItem('state', this.state)
                         localStorage.setItem('guildid',v.id)
-                        window.location.href = 'http://124.220.9.212:9098/fanbook/deliverbot/general/redirect'
+                        window.location.href = 'http://124.220.9.212:9099/fanbook/deliverbot/general/redirect'
                     }
 
                 }

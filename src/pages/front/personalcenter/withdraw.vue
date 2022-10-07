@@ -14,10 +14,10 @@
           <div style="color:#EA0C0C;line-height: 40px;" @click="getmax">全部提现</div>
         </div>
         <div class="b3">
-          <div class="b3_left">提现至</div>
+          <div class="b3_left"></div>
           <div class="b3_right">
             <div><img style='margin-right: 5px;' src="@/assets/wechat.png"></div>
-            <div>微信钱包</div>
+            <div>线下提现</div>
           </div>
         </div>
         <div class="b4">
@@ -83,15 +83,27 @@ export default {
     getmaxnum() {
       getCouldWithdraw().then((res) => { this.max_num = res.money_could_withdraw })
     },
-    withdrawmoney() {
-      if (this.num > this.max_num) {
-        Toast.fail('请输入正确金额')
+    isNum(num) {
+      if (num.match(/^\d+\b/) == null) {
+        return false;
       } else {
-        sendrequest(this.num).then(
-          () => { Toast.success('已成功发起请求请联系管理员处理') ;this.onRefresh();this.num = ''},
-          (err) => { Toast.fail(err.message) }
-        )
+        return true;
       }
+    },
+    withdrawmoney() {
+      if (!this.isNum(this.num)) {
+        Toast.fail(this.num + '不是数字')
+      } else {
+        if (this.num > this.max_num) {
+          Toast.fail('请输入正确金额')
+        } else {
+          sendrequest(this.num).then(
+            () => { Toast.success('已成功发起请求请联系管理员处理'); this.onRefresh(); this.num = '' },
+            (err) => { Toast.fail(err.message) }
+          )
+        }
+      }
+
 
     },
     onLoad() {
@@ -140,6 +152,7 @@ export default {
   position: relative;
   margin-bottom: 280px;
   width: 428px;
+
   .title {
     position: absolute;
     top: 50px;

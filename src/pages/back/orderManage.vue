@@ -516,6 +516,7 @@ import { Toast } from 'vant'
 
 .main {
     background-image: url("@/assets/bg1.png");
+    overflow-y: scroll;
 }
 .nums-box {
     display: flex;

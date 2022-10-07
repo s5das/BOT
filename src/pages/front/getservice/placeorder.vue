@@ -38,15 +38,15 @@
         <van-field readonly clickable name="starting_time" :value="value4" label="起始时间" placeholder="点击选择送达起始时间"
           @click="showPicker4 = true" style="margin-top:15px" />
         <van-popup v-model="showPicker4" position="bottom">
-          <van-datetime-picker type="datetime" :min-date="minDate" @confirm="onConfirm4"
-            @cancel="showPicker4 = false"  title="选择送达起始时间"/>
+          <van-datetime-picker type="datetime" :min-date="minDate" @confirm="onConfirm4" @cancel="showPicker4 = false"
+            title="选择送达起始时间" />
         </van-popup>
 
         <van-field readonly clickable name="cut_off_time" :value="value5" label="送达时间" placeholder="点击选择送达截止时间"
           @click="showPicker5 = true" />
         <van-popup v-model="showPicker5" position="bottom">
-          <van-datetime-picker type="datetime" :min-date="minDate" @confirm="onConfirm5"
-            @cancel="showPicker5 = false" title="选择送达截至时间"/>
+          <van-datetime-picker type="datetime" :min-date="minDate" @confirm="onConfirm5" @cancel="showPicker5 = false"
+            title="选择送达截至时间" />
         </van-popup>
 
         <van-field v-model="message" name="remarks" rows="2" autosize label="备注" type="textarea" maxlength="50"
@@ -134,17 +134,24 @@ export default {
     async upload() {
 
       for (let i = 0; i < this.filelist.length; i++) {
-            const formData = new FormData()
-            formData.append('file', this.filelist[i].file)
-            try{
-                await serviceAxios({
-                  method: 'post',
-                  url: '/fanbook/deliverbot/front/order/client/upload_order_pic',
-                  data: formData
-                })                 
-            }catch{
-                return Promise.reject(Error('请保证上传的取件码截图不超过2MB'))
-            }
+        // console.log('sdaf',this.filelist[i].file);
+        // Toast(this.filelist[i].file.size + ',' + 6*1024*1024)
+        if (this.filelist[i].file.size<6*1024*1024) {
+          const orderPic = new FormData()
+          orderPic.append('file', this.filelist[i].file)
+          try {
+            await serviceAxios({
+              method: 'post',
+              url: '/fanbook/deliverbot/front/order/client/upload_order_pic',
+              data: orderPic
+            })
+          } catch {
+            return Promise.reject()
+          }
+        }else{
+          return Promise.reject(Error('请保证上传的取件码截图不超过6MB'))
+        }
+
 
       }
     },
@@ -167,11 +174,17 @@ export default {
           return false;
         }
       }
+      for(var i =0;i<this.filelist.length;i++){
+        if(this.filelist[i].file.size>6*1024*1024){
+          Toast.fail('不能选择超过6MB的图片');
+           return false
+        }
+      }
       return true;
     },
     onSubmit(data) {
-      this.issubmitting = true
 
+      this.issubmitting = true
       data['reward'] = this.jine;
       delete data['pic'];
       data['pic_nums'] = this.filelist.length
