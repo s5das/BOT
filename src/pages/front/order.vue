@@ -1,6 +1,6 @@
 <!-- 订单列表页 -->
 <template>
-  <div class="main">
+  <div class="main" :style="{height: total_h + 'px'}">
     <div class="modes-box">
       <div @click="changeMode(i)" v-for="(item, i) in modes" :key="i"
         :class="['mode', i === idOfModeActivated ? 'isActivated' : '']">
@@ -16,8 +16,25 @@
 
 
     <!-- 弹出层 - 日历 -->
-    <van-calendar type="range" v-model="isChoosingTime" @confirm="chooseTimeConfirm" />
+    <van-calendar type="range" v-model="isChoosingTime"  @confirm="chooseTimeConfirm"/>
 
+    <!-- 弹出层 - 取消订单 -->
+    <van-popup v-model="isConfirmingCancel">
+            <div class="confirm-box">
+                <div class="top">
+                    <img :src="require('@/assets/alert.png')"/>
+                    <div class="title">确认取消</div>
+                </div>
+                <div class="prompt">
+                    <div class="line">若确认取消订单, 请点击确定</div>
+                </div>
+                <div class="buttons-box">
+                    <div @click="cancelOrder" class="button highlight">确定</div>
+                    <div @click="isConfirmingCancel = false" class="button">再考虑考虑</div>
+                </div>
+            </div>
+        </van-popup>
+  
 
     <!-- 订单 -->
     <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
@@ -34,11 +51,38 @@
           <div class="status-label">
             <img :src="require(`@/assets/orderStatus/${order.order_status}.png`)" />
           </div>
-          <div class="up">{{order.create_time_string}}</div>
-          <div class="middle">
-            <div class="item">
-              <div class="item-name">快递点:</div>
-              <div class="item-value">{{order.pickup_address}}</div>
+          <div class="order" v-for="order in orderList" :key="order.order_id">
+                <div class="status-label">
+                    <img :src="require(`@/assets/orderStatus/${order.order_status}.png`)"/>
+                </div>
+                <div class="up">{{order.create_time_string}}</div>
+                <div class="middle">
+                    <div class="item">
+                        <div class="item-name">快递点:</div>
+                        <div class="item-value">{{order.pickup_address}}</div>
+                    </div>
+                    <div class="item">
+                        <div class="item-name">快递件数:</div>
+                        <div class="item-value">{{order.num_of_packages}}</div>
+                    </div>
+                    <div class="item">
+                        <div class="item-name">送达时间</div>
+                        <div class="item-value">{{order.deliver_time_period_string}}</div>
+                    </div>
+                    <div class="item">
+                        <div class="item-name">快递备注:</div>
+                        <div class="item-value">{{order.remarks}}</div>
+                    </div>
+                    <div class="item highlight">
+                        <div class="item-name">付款金额:</div>
+                        <div class="item-value">¥{{order.reward}}</div>
+                    </div>
+                </div>
+                <div class="down">
+                    <div @click="confirmingCancel(order.order_id)" class="button" v-if="order.order_status in {'待接单': 0, '派送中': 1} && modes[idOfModeActivated].name === '我发布的'">取消订单</div>
+                    <!-- <div @click="changeCourier(order)" class="button" v-if="order.order_status in {'待接单': 0, '派送中': 1}">{{order.order_status === '待接单' ? '选派送员' : '换派送员' }}</div> -->
+                    <div @click="checkDetail(order)" class="button">查看详情</div>
+                </div>
             </div>
             <div class="item">
               <div class="item-name">快递件数:</div>
@@ -63,7 +107,6 @@
             <!-- <div @click="changeCourier(order)" class="button" v-if="order.order_status in {'待接单': 0, '派送中': 1}">{{order.order_status === '待接单' ? '选派送员' : '换派送员' }}</div> -->
             <div @click="checkDetail(order)" class="button">查看详情</div>
           </div>
-        </div>
       </van-list>
     </van-pull-refresh>
   </div>
@@ -83,7 +126,7 @@ export default {
   props: ['condition'],
   data() {
     return {
-      // tabbar id
+      total_h: document.body.clientHeight,
       id: 1,
 
       modes: [
@@ -156,6 +199,8 @@ export default {
       loading: false,
       finished: false,
       pageNum: 1,
+      isConfirmingCancel: false,
+      cancelingOrderId: '',
     };
   },
   mounted() {
@@ -165,7 +210,6 @@ export default {
     if (this.condition !== undefined) {
       this.changeCondition(this.condition);
     }
-
   },
   methods: {
     changeMode(i) {
@@ -268,12 +312,17 @@ export default {
         this.refreshing = false
       })
     },
-    cancelOrder(order) {
-      console.log(order)
+    confirmingCancel(order_id) {
+      console.log(order_id)
+      this.cancelingOrderId = order_id
+      this.isConfirmingCancel = true
+    },
+    cancelOrder() {
       cancelOrder({
-        orderId: order.order_id
+        orderId: this.cancelingOrderId
       }).then(() => {
         this.onRefresh()
+        this.isConfirmingCancel = false
         Toast('成功取消订单')
       })
     },
@@ -520,5 +569,56 @@ export default {
     border: 1px solid #ddd;
     border-radius: 10px;
   }
+}
+
+
+.confirm-box {
+    box-sizing: border-box;
+    width: 380px;
+    height: auto;
+    .top {
+        display: flex;
+        align-items: center;
+        margin-top: 10px;
+        margin-left: 10px;
+        img {
+            width: 25px;
+            height: 25px;
+        }
+        .title {
+            margin-left: 1px;
+            color: rgba(88,74,72,1);
+            font-size: 20px;
+        }
+    }
+    .prompt {
+      text-align: center;
+        margin: 0 46px;
+        margin-top: 22px;
+        margin-bottom: 30px;
+        .line {
+            font-size: 18px;
+            color: rgba(88,74,72,1);
+        }
+    }
+    .buttons-box {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-top: 1px solid rgba(118,118,118,1);
+        .button {
+            width: 50%;
+            height: 49px;
+            line-height: 49px;
+            color: rgba(125,124,123,1);
+            font-size: 20px;
+            font-weight: bold;
+            text-align: center;
+        }
+        .highlight {
+            color: rgba(239,124,38,1);
+            border-right: 1px solid rgba(118,118,118,1);
+        }
+    }
 }
 </style>
