@@ -57,7 +57,8 @@
                     <div class="title">提示</div>
                 </div>
                 <div class="prompt">
-                    <div class="line">成功创建私密频道{{private_channel_name}}</div>
+                    <div class="line">成功创建私密频道:</div>
+                    <div class="line">{{private_channel_name}}</div>
                     <div class="line">是否为您退出小程序</div>
                 </div>
                 <div class="buttons-box">
@@ -91,7 +92,7 @@
             <Userinfo class="margin-bottom-12px" :orderinfo="orderInfo"/>
             <CourierInfo :order="orderInfo"></CourierInfo>
             <div class="buttons">
-                <div @click="isConfirmingContact = true" class="button">联系Ta</div>
+                <div @click="isConfirmingExit = true && contact()" class="button">联系Ta</div>
                 <div v-if="user_id != undefined && user_id != orderInfo.recipient_id" @click="isConfirmingSent = true" class="button highlight">确认送达</div>
             </div>
         </div>
@@ -107,7 +108,7 @@
             <Orderinfo class="margin-bottom-12px" :orderinfo="orderInfo"/>
             <Userinfo :orderinfo="orderInfo"/>
             <div class="buttons">
-                <div @click="isConfirmingContact = true" class="button">联系Ta</div>
+                <div @click="isConfirmingExit = true && contact()" class="button">联系Ta</div>
                 <div v-if="user_id != undefined && user_id == orderInfo.recipient_id" @click="isConfirmingReceived = true" class="button highlight">确认收货</div>
             </div>
         </div>
@@ -120,7 +121,7 @@
             <Orderinfo class="margin-bottom-12px" :orderinfo="orderInfo"/>
             <Userinfo :orderinfo="orderInfo"/>
             <div class="buttons">
-                <div @click="isConfirmingContact = true" class="button">联系Ta</div>
+                <div @click="isConfirmingExit = true && contact()" class="button">联系Ta</div>
             </div>
         </div>
 
