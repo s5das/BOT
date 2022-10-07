@@ -37,11 +37,11 @@ export default {
 
     data() {
         return {
-            items: ['深大一区18546354','深大二区18546354','深大三区18546354' ], 
+            items: [], 
             show: false,
             location_name: '',
             status: 0,
-            box_text: [['新建', '管理'], ['返回', '确定']],
+            box_text: [['新建', '管理'], ['返回', '删除']],
             selected: [],
             arr_aftermove: [],
             sortable:''           

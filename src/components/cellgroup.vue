@@ -57,7 +57,10 @@ export default {
             color: #000;
             .ico{
 
-             height: 18px;
+             height: 30px;
+             display: flex;
+             flex-direction: column;
+             justify-content: center;
              width: 19px;
              img{
                 width: 100%;
@@ -66,10 +69,9 @@ export default {
              }
             }
             .title{
-            margin-left: 18px;
-            
+             margin-left: 18px;
              height: 30px;
-             line-height: 22px;
+             line-height: 30px;
             }
         }
      .right{

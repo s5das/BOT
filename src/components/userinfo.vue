@@ -19,14 +19,14 @@
           <div class="content">{{orderinfo.recipient_phone_number}}</div>
         </div>
       </div>
-      <div class="pic" @click="show = true">
-        <img :src="orderinfo.order_pic_urls[0]">
+      <div class="pic">
+        <div class="img1" v-for="(item,index) in orderinfo.order_pic_urls" :key="item" @click="showpic(index)"> <img :src="item" ></div>
       </div>
     </div>
     <van-overlay :show="show" >
       <div class="wrapper" @click.stop="show=false">
         <div class="block">
-          <img class="big" :src="orderinfo.order_pic_urls[0]">
+          <img class="big" :src="big_pic_url">
         </div>
       </div>
     </van-overlay>
@@ -40,11 +40,18 @@ export default {
   props: ['orderinfo'],
   data() {
     return {
-      show: false
+      show: false,
+      big_pic_url : ''
     }
   },
   mounted() {
     console.log(this.orderinfo);
+  },
+  methods:{
+    showpic(index){
+      this.big_pic_url = this.orderinfo.order_pic_urls[index]
+      this.show = true
+    }
   }
 }
 </script>
@@ -124,12 +131,19 @@ export default {
     .pic {
       margin-top: 5px;
       padding-left: 28px;
-      width: 98px;
-
+      width: 382px;
+      display: flex;
+    .img1{
+      width: 100px;
+      height: 66px;
+      margin-right: 5px;
       img {
-        width: 100px;
-        height: 66px;
+        width: 100%;
+        height: 100%;
       }
+    
+    }
+
     }
   }
 }

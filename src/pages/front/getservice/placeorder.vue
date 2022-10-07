@@ -31,7 +31,7 @@
 
         <van-field name="pic" label="上传图片">
           <template #input>
-            <van-uploader v-model="filelist" :max-count="1" />
+            <van-uploader v-model="filelist" :max-count="5" />
           </template>
         </van-field>
 
@@ -39,14 +39,14 @@
           @click="showPicker4 = true" style="margin-top:15px" />
         <van-popup v-model="showPicker4" position="bottom">
           <van-datetime-picker type="datetime" :min-date="minDate" @confirm="onConfirm4"
-            @cancel="showPicker4 = false" />
+            @cancel="showPicker4 = false"  title="选择送达起始时间"/>
         </van-popup>
 
         <van-field readonly clickable name="cut_off_time" :value="value5" label="送达时间" placeholder="点击选择送达截止时间"
           @click="showPicker5 = true" />
         <van-popup v-model="showPicker5" position="bottom">
           <van-datetime-picker type="datetime" :min-date="minDate" @confirm="onConfirm5"
-            @cancel="showPicker5 = false" />
+            @cancel="showPicker5 = false" title="选择送达截至时间"/>
         </van-popup>
 
         <van-field v-model="message" name="remarks" rows="2" autosize label="备注" type="textarea" maxlength="50"
@@ -65,7 +65,8 @@
         <van-field v-model="user_phone" name="recipient_phone_number" label="手机号" placeholder="请输入手机号" />
       </div>
       <div style="margin: 30px 0; height: 58px;">
-        <van-button :disabled="issubmitting" block color="linear-gradient(119deg,#FD9448,#FF7A55)" native-type="submit">立即下单</van-button>
+        <van-button :disabled="issubmitting" block color="linear-gradient(119deg,#FD9448,#FF7A55)" native-type="submit">
+          立即下单</van-button>
       </div>
     </van-form>
 
@@ -82,7 +83,7 @@ export default {
   name: 'place-order',
   data() {
     return {
-      issubmitting:false,
+      issubmitting: false,
       h: document.body.clientHeight,
       orderId: -1,
       minDate: new Date(),
@@ -130,17 +131,22 @@ export default {
       this.showPicker3 = false;
     },
 
-    async upload(file) {
-      console.log(file);
-      const formData = new FormData()
-      formData.append('file', file)
+    async upload() {
 
-      return serviceAxios({
-        method: 'post',
-        url: '/fanbook/deliverbot/front/order/client/upload_order_pic',
-        data: formData
-      })
+      for (let i = 0; i < this.filelist.length; i++) {
+            const formData = new FormData()
+            formData.append('file', this.filelist[i].file)
+            try{
+                await serviceAxios({
+                  method: 'post',
+                  url: '/fanbook/deliverbot/front/order/client/upload_order_pic',
+                  data: formData
+                })                 
+            }catch{
+                return Promise.reject('上传图片失败')
+            }
 
+      }
     },
 
 
@@ -160,17 +166,18 @@ export default {
           Toast.fail('请输入完整信息');
           return false;
         }
-        return true;
       }
+      return true;
     },
     onSubmit(data) {
       this.issubmitting = true
+
       data['reward'] = this.jine;
       delete data['pic'];
       data['pic_nums'] = this.filelist.length
       data['num_of_packages'] = Number(data['num_of_packages'].replace('件', ''))
-      console.log(data);
 
+      console.log(data);
       if (this.check_info(data)) {
         // 创建订单
         serviceAxios({
@@ -179,30 +186,32 @@ export default {
           data
         }).then(
           (res) => {
-            console.log(res);
             this.orderId = res.order_id
-            return this.upload(this.filelist[0].file)
+            // 上传图片
+            return this.upload()
           },
           (err) => {
             this.issubmitting = false
-            Toast.fail(err.message.replace(/[^\u4E00-\u9FA5]/g,''))
+            Toast.fail(err.message.replace(/[^\u4E00-\u9FA5\u0030-\u0039]/g, ''))
             return new Promise(() => { })
           }
         ).then(
           () => {
             // wxpay(this.jine,this.orderId)
             this.$router.replace({
-              path:'/front/payfinish',
-              query:{
-                orderId:this.orderId
+              path: '/front/payfinish',
+              query: {
+                orderId: this.orderId
               }
             })
           },
-          (err) => { 
+          (err) => {
             this.issubmitting = false
-            Toast.fail(err.message);   
+            Toast.fail(err.message);
           }
         )
+      } else {
+        this.issubmitting = false
       }
     },
 
@@ -296,7 +305,7 @@ export default {
 
 .jine-num {
   position: absolute;
-  left: 150px;
+  left: 118px;
   color: #BBBBBB;
 
 }

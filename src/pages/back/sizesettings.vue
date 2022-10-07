@@ -43,7 +43,7 @@ import { Toast } from 'vant';
               
               location_name: '',
               status: 0,
-              box_text: [['新建', '管理'], ['返回', '确定']],
+              box_text: [['新建', '管理'], ['返回', '删除']],
               selected: [],
               arr_aftermove: [],
               sortable:''           
@@ -69,7 +69,7 @@ import { Toast } from 'vant';
                       }
                           
               },
-             ()=>{Toast.fail('请求频繁')}
+             ()=>{Toast.fail('请求失败')}
               )
           },
   

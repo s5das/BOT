@@ -26,7 +26,7 @@ export default {
           localStorage.setItem('token', res.jwt_token)
           localStorage.setItem('user_id', res.user_id)
           localStorage.setItem('lastLoginTime', new Date().getTime())
-          this.$router.push({
+          this.$router.replace({
             path: '/back'
           })
 
@@ -51,7 +51,7 @@ export default {
           localStorage.setItem('token', res.jwt_token)
           localStorage.setItem('user_id', res.user_id)
           localStorage.setItem('lastLoginTime', new Date().getTime())
-          this.$router.push({
+          this.$router.replace({
             path: '/front'
           })
         },

@@ -11,7 +11,7 @@ export  function wxpay(jine, orderid) {
         }
     }).then(
         (url) => {
-            window.fb.oAuth({ 'oAuthUrl': url });
+            window.location.href = url
         })
 }
 

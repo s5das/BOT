@@ -202,7 +202,7 @@ import { getPrivateChannelName } from '@/http/api/general/generalOrderController
             })
         },
         exit() {
-            window.fb.closewindow()
+            window.fb.closeWindow()
         },
         confirmSent() {
             // 发送变更状态请求

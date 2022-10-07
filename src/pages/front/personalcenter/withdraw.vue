@@ -16,207 +16,266 @@
         <div class="b3">
           <div class="b3_left">提现至</div>
           <div class="b3_right">
-          <div><img style='margin-right: 5px;' src="@/assets/wechat.png"></div>
-          <div>微信钱包</div>
-        </div>
+            <div><img style='margin-right: 5px;' src="@/assets/wechat.png"></div>
+            <div>微信钱包</div>
+          </div>
         </div>
         <div class="b4">
-          <button>申请提现</button>
+          <button @click="withdrawmoney">申请提现</button>
         </div>
       </div>
     </div>
     <div class="list_status">
-    <div class="items" v-for="(item) in details" :key="item.id">
-     <div class="head">
-      <div style="margin-left:20px">{{item.way}}</div>
-      <div style="margin-right:23px">{{item.date}}</div>
-     </div>
-   
-    <div class="bottom">
-      <div class="left">
-        <div style="margin-bottom:10px;font-size: 24px;color: #EA0C0C;font-weight: 600;">{{item.num}}</div>
-        <div style="font-size:14px">提现金额（元）</div>
-      </div>
-      <div class="status" v-if="item.status==='审核中'">
-          <img class="statusico" src="@/assets/shenhe.png">
-      </div>
-      <div class="status" v-if="item.status==='提现成功'">
-          <img class="statusico" src="@/assets/chengong.png">
-      </div>
+      <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
+        <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
+          <div class="items" v-for="(item) in details" :key="item.id">
+            <div class="head">
+              <div style="margin-left:20px">线下方式</div>
+              <div style="margin-right:23px">{{item.apply_create_time}}</div>
+            </div>
+
+            <div class="bottom">
+              <div class="left">
+                <div style="margin-bottom:10px;font-size: 24px;color: #EA0C0C;font-weight: 600;">
+                  {{item.money_to_withdraw}}</div>
+                <div style="font-size:14px">提现金额（元）</div>
+              </div>
+              <div class="status" v-if="item.audit_status===0">
+                <img class="statusico" src="@/assets/shenhe.png">
+              </div>
+              <div class="status" v-if="item.audit_status===1">
+                <img class="statusico" src="@/assets/chengong.png">
+              </div>
+              <div class="status" v-if="item.audit_status===2">
+                <img class="statusico" src="@/assets/chengong.png">
+              </div>
+            </div>
+          </div>
+        </van-list>
+      </van-pull-refresh>
+
     </div>
   </div>
-  </div> </div>
 </template>
 
 <script>
-import serviceAxios from '@/http'
+
+import { sendrequest, getCouldWithdraw, getwithdrawinfo } from '@/http/api/courier'
+import { Toast } from 'vant'
 export default {
-    name: 'with-draw',
-    data() {
-        return {
-          h:document.body.clientHeight,
-          num: '',
-          max_num: 10000,
-          details: [{
-            id: '1321324',
-            date: '2020-4-12 16:12:41',
-            way:'中国工商银行',
-            num: 300,
-            status: '审核中'
-          },
-          {
-            id: '1534654',
-            date: '2020-4-12 16:12:41',
-            way:'中国工商银行',
-            num: 300,
-            status: '提现成功'
-          },
-          ]
-      }
+  name: 'with-draw',
+  data() {
+    return {
+      finished: false,
+      loading: false,
+      refreshing: false,
+      serialnumber: 1,
+      h: document.body.clientHeight,
+      num: '',
+      max_num: 0,
+      details: []
+    }
   },
   methods: {
-        getmax(){
-          this.num = this.max_num
+    getmax() {
+      this.num = this.max_num
+    },
+    getmaxnum() {
+      getCouldWithdraw().then((res) => { this.max_num = res.money_could_withdraw })
+    },
+    withdrawmoney() {
+      if (this.num > this.max_num) {
+        Toast.fail('请输入正确金额')
+      } else {
+        sendrequest(this.num).then(
+          () => { Toast.success('已成功发起请求请联系管理员处理') ;this.onRefresh();this.num = ''},
+          (err) => { Toast.fail(err.message) }
+        )
       }
+
+    },
+    onLoad() {
+      setTimeout(() => {
+        if (this.refreshing) {
+          this.details = []
+          this.refreshing = false
+        }
+
+        getwithdrawinfo(this.serialnumber).then(
+          (res) => {
+            this.details = this.details.concat(res)
+            this.loading = false
+            if (res.length < 10) {
+              this.finished = true
+            }
+          },
+          () => {
+            this.loading = false
+            this.finished = true
+          }
+        )
+      }, 1000);
+
+    },
+    onRefresh() {
+      this.loading = true
+      this.refreshing = true
+      this.finished = false
+      this.serialnumber = 1
+      this.onLoad()
+    }
   },
   mounted() {
-    serviceAxios({
-      method: 'get',
-      url: '/fanbook/deliverbot/front/withdraw_money/get_could_withdraw'
-    }).then((res) =>{this.max_num = res})
-    }
-
+    this.getmaxnum()
+  }
 }
 </script>
 <style scoped lang="less">
-.main{
-background: url('@/assets/个人中心.png');
+.main {
+  background: url('@/assets/个人中心.png');
 }
-.box1{
-height: 170px;
-position: relative;
-margin-bottom: 280px;
 
-.title{
-  position: absolute;
-  top: 50px;
-  left: 34px;
-  color: #000;
-  font-weight: 600;
-  font-size:15px ;
-}
-.money{
-  font-size: 30px;
-  color: #E85F5F;
+.box1 {
+  height: 170px;
   position: relative;
-  font-weight: 600;
-  top: 80px;
-  left: 34px;
-  display: flex;
-  .yuan1{
-    font-size: 15px;
-    line-height: 30px;
-  }
-
-}
-.box2{
-width: 360px;
-height: 250px;
-background-color: #fff;
-position: absolute;
-padding: 16px 20px 16px 20px;
-top: 145px;
-border-radius: 6px;
-left: 14px;
-
-.b1{
-    height: 40px;
-    line-height: 40px;
-    font-size: 16px;
+  margin-bottom: 280px;
+  width: 428px;
+  .title {
+    position: absolute;
+    top: 50px;
+    left: 34px;
+    color: #000;
     font-weight: 600;
-    color: #000;
-    margin-bottom: 10px;
-    
-}
-.b2{
-display: flex;
-align-content: center;
-justify-content: space-around;
-margin-bottom: 10px;
-margin-left: 10px;
-.yuan2{
-  font-size: 35px;
-  color: #000;
-}
-.in{
-    height: 100%;
-    color: #000;
-    font-size: 20px;
-    margin-left: 30px;
+    font-size: 15px;
+  }
+
+  .money {
+    font-size: 30px;
+    color: #E85F5F;
+    position: relative;
+    font-weight: 600;
+    top: 80px;
+    left: 34px;
+    display: flex;
     width: 200px;
+
+    .yuan1 {
+      font-size: 15px;
+      line-height: 30px;
+    }
+
+  }
+
+  .box2 {
+    width: 360px;
+    height: 250px;
+    background-color: #fff;
+    position: absolute;
+    padding: 16px 20px 16px 20px;
+    top: 145px;
+    border-radius: 6px;
+    left: 14px;
+
+    .b1 {
+      height: 40px;
+      line-height: 40px;
+      font-size: 16px;
+      font-weight: 600;
+      color: #000;
+      margin-bottom: 10px;
+
+    }
+
+    .b2 {
+      display: flex;
+      align-content: center;
+      justify-content: space-around;
+      margin-bottom: 10px;
+      margin-left: 10px;
+
+      .yuan2 {
+        font-size: 35px;
+        color: #000;
+      }
+
+      .in {
+        height: 100%;
+        color: #000;
+        font-size: 20px;
+        margin-left: 30px;
+        width: 200px;
+      }
+    }
+
+    .b3 {
+      display: flex;
+      justify-content: space-between;
+      color: #101010;
+      margin-bottom: 30px;
+      margin-left: 10px;
+
+      .b3_right {
+        display: flex;
+      }
+    }
+
+    .b4 {
+      height: 51px;
+      width: 312px;
+      margin: 0 auto;
+
+      color: #fff;
+
+      button {
+        height: 100%;
+        width: 100%;
+        border-radius: 20px;
+        background: linear-gradient(138deg, #FD9448, #FF7A55);
+      }
+    }
   }
 }
 
-.b3{
-display: flex;
-justify-content: space-between;
-color:#101010;
-margin-bottom: 30px;
-margin-left: 10px;
-  .b3_right{
-   display: flex;
-  }
-}
-
-.b4{
-height: 51px;
-width: 312px;
-margin: 0 auto;
-
-color: #fff;
-button{
-  height: 100%;
-  width: 100%;
-  border-radius: 20px;
-  background: linear-gradient(138deg,#FD9448,#FF7A55);
-}
-}
-}}
-.list_status{
+.list_status {
   width: 400px;
   margin: 0 auto;
 
-  .items{
-     width: 380px;
-     padding: 10px;
-     border-radius: 10px;
-     background-color: #fff;
-     margin-bottom: 32px;
-    .head{
-     height: 35px;
-     display: flex;
-     justify-content: space-between;
-     line-height: 35px;
-    }
-    .bottom{
-       height: 90px;
-       background-color: #fff;
-       display: flex;
-       justify-content: space-around;
-    .status{
+  .items {
+    width: 380px;
+    padding: 10px;
+    border-radius: 10px;
+    background-color: #fff;
+    margin-bottom: 32px;
+
+    .head {
+      height: 35px;
       display: flex;
-      align-items: center;
+      justify-content: space-between;
+      line-height: 35px;
     }
-    .statusico{
-      height: 60px;
-      width: 75px;
-    }
-       .left{
-          display: flex;
-          flex-direction: column;
-          align-items: flex-start;
-          justify-content: center;
-       }
+
+    .bottom {
+      height: 90px;
+      background-color: #fff;
+      display: flex;
+      justify-content: space-around;
+
+      .status {
+        display: flex;
+        align-items: center;
+      }
+
+      .statusico {
+        height: 60px;
+        width: 75px;
+      }
+
+      .left {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: center;
+      }
     }
   }
 }

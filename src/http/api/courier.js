@@ -55,10 +55,25 @@ export const turnDelivered = (params) => {
 };
 
 
-export const getCouldWithdraw = (params) => {
+export const getCouldWithdraw = () => {
     return serviceAxios({
         method: 'get',
-        url: '/fanbook/deliverbot/front/withdraw_money/get_could_withdraw',
-        params
-    });
+        url: '/fanbook/deliverbot/front/money/get_could_withdraw'
+    })
 };
+
+
+export const sendrequest = (withdraw_money) => {
+    return serviceAxios({
+        method: 'post',
+        url: '/fanbook/deliverbot/front/money/apply_to_withdraw',
+        data: { withdraw_money }
+    })
+}
+
+export const getwithdrawinfo = (serialNumber) => {
+    return serviceAxios({
+        method: 'get',
+        url: `/fanbook/deliverbot/front/money/get_withdraw_history/${serialNumber}`
+    })
+}
