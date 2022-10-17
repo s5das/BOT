@@ -47,7 +47,7 @@
                 <img class="statusico" src="@/assets/chengong.png">
               </div>
               <div class="status" v-if="item.audit_status===2">
-                <img class="statusico" src="@/assets/chengong.png">
+                <img class="statusico" src="@/assets/reject.png">
               </div>
             </div>
           </div>

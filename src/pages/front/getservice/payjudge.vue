@@ -25,7 +25,6 @@ export default {
                 (res) => {
                     console.log(res);
                     // 设置支付状态
-
                     // // 成功延时跳转到payfinish界面
                     // if(status){
                     //     this.isloading = false
@@ -47,7 +46,7 @@ export default {
                     //     })},3000)
                     // }                    
                 },
-                (err) => { err.message })
+                (err) => { console.log(err.message); })
             n++
             if (n >= 3) {
                 clearInterval(timmer)

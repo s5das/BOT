@@ -76,7 +76,7 @@
 <script>
 import fmt from '@/utils/format'
 import { Toast } from 'vant'
-// import {wxpay} from '@/http/api/wx/wxpay'
+import {wxpay} from '@/http/api/wx/wxpay'
 import serviceAxios from '@/http'
 export default {
 
@@ -210,13 +210,14 @@ export default {
           }
         ).then(
           () => {
-            // wxpay(this.jine,this.orderId)
-            this.$router.replace({
-              path: '/front/payfinish',
-              query: {
-                orderId: this.orderId
-              }
-            })
+            // 图片上传成功进行支付
+            wxpay(this.jine,this.orderId)
+            // this.$router.replace({
+            //   path: '/front/payfinish',
+            //   query: {
+            //     orderId: this.orderId
+            //   }
+            // })
           },
           (err) => {
             this.issubmitting = false
