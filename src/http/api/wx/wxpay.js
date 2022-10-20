@@ -19,7 +19,7 @@ export  function wxpay(jine, orderid) {
 
 export function paycheck(orderid){
     const outTradeNo = 'order_id-' + orderid
-    serviceAxios({
+    return serviceAxios({
         url:'/fanbook/deliverbot/wxPay/queryOrder',
         method:'get',
         params:{
