@@ -1,13 +1,2 @@
-data = {
-    picnums:0,
-    a :'sdfa',
-    b:5
-}
-for (var key in data) {
-    if (!data[key]) {
-      console.log(1);
-    }else{
-        console.log(2);
-    }
-    
-  }
+let a ='SIkB5R2CcVoMs2uI1XJvaw%3D%3D'
+console.log();

@@ -32,7 +32,7 @@ export const cancelOrder = (params) => {
 };
 
 export const login = (code) => {
-  const guildId = parseInt(localStorage.getItem('guildid'))
+  const guildId = BigInt(localStorage.getItem('guildid'))
   return serviceAxios({
     methods: "get",
       url: `/fanbook/deliverbot/general/login/front`,
@@ -41,7 +41,7 @@ export const login = (code) => {
 };
 
 export const login_back = (code) => {
-  const guildId = parseInt(localStorage.getItem('guildid'))
+  const guildId = BigInt(localStorage.getItem('guildid'))
   return serviceAxios({
     methods: "get",
       url: `/fanbook/deliverbot/general/login/back`,

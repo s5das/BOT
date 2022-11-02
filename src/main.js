@@ -1,14 +1,15 @@
 import Vue from "vue";
 import App from "./App.vue";
-
-Vue.config.productionTip = false;
-
 import VueRouter from "vue-router";
-Vue.use(VueRouter);
-
-import router from "./router/index.js";
+import router from "./model/router/index.js";
 import "./assets/css/base.css";
-
+import {createPinia,PiniaVuePlugin} from 'pinia'
+import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
+Vue.config.productionTip = false;
+Vue.use(VueRouter);
+Vue.use(PiniaVuePlugin)
+const pinia = createPinia()
+pinia.use(piniaPluginPersistedstate);
 import {
   Loading,
   Button,
@@ -51,6 +52,7 @@ Vue.use(Dialog);
 
 
 new Vue({
+  pinia,
   render: (h) => h(App),
   router: router,
 }).$mount("#app");

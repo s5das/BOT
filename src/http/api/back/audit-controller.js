@@ -1,4 +1,4 @@
-import serviceAxios from "@/http/api/back/httpForBack";
+import serviceAxios from "@/http";
 
 export const getRegisterApplications = (params) => {
     return serviceAxios({

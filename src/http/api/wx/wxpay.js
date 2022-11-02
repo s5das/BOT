@@ -1,3 +1,4 @@
+import { Toast } from "vant";
 import serviceAxios from "../..";
 export  function wxpay(jine, orderid) {
     const orderIdWithPrefix = 'order_id-' + orderid
@@ -11,10 +12,26 @@ export  function wxpay(jine, orderid) {
         }
     }).then(
         (url) => {
-            url = url + '&redirect_url=https%3A%2F%2Fwww.foodmemory.com.cn%2Ffront%2Fpayjudge'
-            console.log(url);
-            window.location.href = url
-        })
+            
+            let plantform = localStorage.getItem('plantform')
+            if(plantform=='Android'){
+                url = url + '&redirect_url='+'https%3A%2F%2Fwww.gzxunyustf.top%2Ffront%2Fpayjudge'
+                var gotoLink = document.createElement('a');
+                gotoLink.href = url;
+                document.body.appendChild(gotoLink);
+                gotoLink.click();
+            }else{
+                var gotoLink = document.createElement('a');
+                gotoLink.href = url;
+                document.body.appendChild(gotoLink);
+                gotoLink.click();
+            }
+            
+        },
+        ()=>{
+            Toast.fail('请在fanbook内访问')
+        }
+        )
 }
 
 export function paycheck(orderid){

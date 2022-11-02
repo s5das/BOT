@@ -1,24 +1,24 @@
 <template>
-    <div class="box" :style="{height:h +'px'}">
-        <router-view></router-view>
-    </div>
+  <div class="box" :style="{ height: h + 'px' }">
+    <router-view></router-view>
+  </div>
 </template>
 
 <script>
-    export default {
-      data() {
-        return {
-            h: 0
-        }
-      },
-      mounted() {
-        this.h = document.body.clientHeight
-      }
-    }
+export default {
+  data() {
+    return {
+      h: 0,
+    };
+  },
+  mounted() {
+    this.h = document.body.clientHeight;
+  },
+};
 </script>
 
 <style lang="less" scoped>
-.box{
+.box {
   user-select: none;
   background: #fcf6f4;
 }

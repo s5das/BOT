@@ -13,6 +13,17 @@
             "navigationBarTitleText": "快递代拿"
 
         },
+        "/front/courier/grabOrder": {
+
+            "showNavigationBar": true,
+
+            "navigationBarBackgroundColor": "#ffffff",
+
+            "navigationBarTextColor": "#000000",
+
+            "navigationBarTitleText": "抢单列表"
+
+        },
         "/front/order/**": {
 
             "showNavigationBar": true,

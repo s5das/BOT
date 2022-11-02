@@ -4,24 +4,30 @@
     <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
 
       <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
-        <div class="item" v-for="(item,index) in id" :key="item">
+        <div class="item" v-for="(item) in records" :key="item.application_id">
+          <div class="righttop">
+            <img :src="ico_src[item.audit_status]" class="ico">
+          </div>
           <div class="top">
             <div class="left">
               <img src="@/assets/back9.png">
             </div>
             <div class="right">
-              <div class="name">{{real_name[index]}}</div>
-              <div>{{phone[index]}}</div>
-              <div>fanbook昵称：{{nick_name[index]}}</div>
-              <div>备注：{{remarks[index]}}</div>
+              <div class="name">{{item.real_name}}</div>
+              <div>{{item.phone_number}}</div>
+              <div>fanbook昵称：{{item.fanbook_nick_name}}</div>
+              <div>备注：{{item.remarks||'暂无'}}</div>
               <div>
-                {{time[index]}}
+                {{item.apply_date_time}}
               </div>
             </div>
           </div>
-          <div class="bottom">
-            <button class="btn1" @click="pass(id[index])">通过</button>
-            <button class="btn2" @click="reject(id[index])">拒绝</button>
+          <div class="bottom" v-if="item.audit_status==0">
+            <button class="btn1" @click="pass(item.application_id)">通过</button>
+            <button class="btn2" @click="reject(item.application_id)">拒绝</button>
+          </div>
+          <div style="width: 200px;word-wrap: break-word;" v-if="item.audit_status==2">
+            拒绝理由：{{item.reason_for_rejection}}
           </div>
         </div>
       </van-list>
@@ -29,14 +35,14 @@
     <van-dialog v-model="show" show-cancel-button :before-close="beforeClose">
       <div class="dialog_content">
         <div class="title">拒绝理由</div>
-        <div class="in1"><input type="text" placeholder="请输入拒绝理由" v-model="reject_reason"></div>
+        <div class="in1"><input type="text" placeholder="请输入拒绝理由" v-model="reject_reason" maxlength="250"></div>
       </div>
     </van-dialog>
   </div>
 </template>
 
 <script>
-import serviceAxios from '@/http/api/back/httpForBack';
+import serviceAxios from '@/http';
 import { Toast } from 'vant'
 import { Dialog } from 'vant';
 export default {
@@ -44,23 +50,37 @@ export default {
   name: 'set-down',
   data() {
     return {
+      ico_src: [require('@/assets/back12.png'), require('@/assets/back11.png'), require('@/assets/back13.png')],
       show: false,
       loading: false,
       refreshing: false,
       finished: false,
       serialnumber: 1,
-      id: [],
-      time: [],
-      nick_name: [],
-      phone: [],
-      real_name: [],
-      remarks: [],
+      records:[],
       reject_reason: '',
       reject_id: '',
       h: document.body.clientHeight
     }
   },
+  mounted() {
+    if ('WebSocket' in window) {
+      //后边是订阅的topic名称
+      this.websocket = new WebSocket(`wss://www.gzxunyustf.top/fanbook/deliverbot/refreshList/${localStorage.getItem('guildid')}/${3}`);
+  
+    } else {
+      Toast.fail('不支持websocket')
+    }
+    this.websocket.onmessage = (event) => {
+      const receiveid = event.data.split(':')[0]
+      if (receiveid == localStorage.getItem('guildid')) {
+        this.onRefresh()
+      }
 
+    }
+  },
+  beforeDestroy() {
+    this.websocket.close()
+  },
   methods: {
 
     onRefresh() {
@@ -74,12 +94,7 @@ export default {
       setTimeout(() => {
 
         if (this.refreshing) {
-          this.id = []
-          this.time = []
-          this.nick_name = []
-          this.phone = []
-          this.real_name = []
-          this.remarks = []
+          this.records = []
           this.refreshing = false;
         }
 
@@ -89,15 +104,7 @@ export default {
           url: `/fanbook/deliverbot/back/admin/audit/get_register_applications/${this.serialnumber}`
         }).then((res) => {
           // 加入数据
-          for (var i = 0; i < res.length; i++) {
-            let temp = res[i]
-            this.id.push(temp.application_id)
-            this.time.push(temp.apply_date_time)
-            this.nick_name.push(temp.fanbook_nick_name)
-            this.phone.push(temp.phone_number)
-            this.real_name.push(temp.real_name)
-            this.remarks.push(temp.remarks)
-          }
+          this.records = this.records.concat(res)
           // 数据小于10条证明已经请求完成
           if (res.length < 10) {
             this.finished = true
@@ -107,7 +114,6 @@ export default {
         },
           // 请求失败
           () => {
-            Toast.fail('请求失败')
             this.finished = true
             this.loading = false
           }
@@ -126,7 +132,12 @@ export default {
           serviceAxios({
             method: 'get',
             url: `/fanbook/deliverbot/back/admin/audit/pass_register_application/${id}`
-          }).then(() => { Toast.success('操作成功'); this.refreshing = true ; this.onRefresh() }, () => { Toast.fail('操作失败') })
+          }).then(
+            () => {
+              Toast.success('操作成功');
+              this.refreshing = true;
+              this.websocket.send(`${localStorage.getItem('guildid')}:${3}`)
+            }, () => { Toast.fail('操作失败') })
         })
 
     },
@@ -152,13 +163,14 @@ export default {
             this.reject_reason = '';
             this.reject_id = '';
             this.refreshing = true;
-            this.onRefresh();
+            this.websocket.send(`${localStorage.getItem('guildid')}:${3}`)
             done()
 
           },
             () => { done(false) }
           )
         } else {
+          Toast.fail('拒绝理由不能为空')
           done(false)
         }
       } else {
@@ -178,15 +190,25 @@ export default {
   box-sizing: border-box;
   background: url('@/assets/bg1.png');
   overflow: scroll;
+  .righttop {
+      position: absolute;
+      top: 0;
+      right: 0px;
+      height: 60px;
+      width: 60px;
 
+      .ico {
+        width: 100%;
+        height: 100%;
+      }
+    }
   .item {
-    height: 214px;
     width: 370px;
     margin: 0 auto;
     margin-bottom: 20px;
     background-color: #fff;
     padding: 20px;
-
+    position: relative;
     .top {
       height: 164px;
       display: flex;

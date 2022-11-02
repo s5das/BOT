@@ -11,7 +11,7 @@
           >
           <div :class="{circle2:selected.indexOf(item)!=-1,circle1:selected.indexOf(item)==-1}" v-if="status==1"></div>
           </transition>
-          <div style="margin-left:28px">{{item}}</div>
+          <div style="margin-left:28px;width: 150px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;">{{item}}</div>
         </div> 
         <div v-if="status==1" class="more"><img src="@/assets/back14.png" class="more_ico"></div>
           <div class="detail">
@@ -20,17 +20,17 @@
           </div>
       </div></div>
       <div class="bottom">
-          <div class="left" @click="handle1">{{box_text[status][0]}}</div>
-          <div class="right" @click="handle2">{{box_text[status][1]}}</div>
+          <div class="left" @click="handle1">{{box1_msg}}</div>
+          <div class="right" @click="handle2">{{box2_msg}}</div>
       </div>
-      <div class="delete-prompt">
+      <div class="delete-prompt" v-if="status==1">
         点击左侧圆圈, 选择要删除的项目
       </div>
     </div>
   </template>
   
   <script>
-import serviceAxios from '@/http/api/back/httpForBack';
+import serviceAxios from '@/http';
 import Sortable from 'sortablejs';
   import 'animate.css'
 import { Toast } from 'vant';
@@ -46,7 +46,6 @@ import { Toast } from 'vant';
               
               location_name: '',
               status: 0,
-              box_text: [['新建', '管理'], ['返回', '删除']],
               selected: [],
               arr_aftermove: [],
               sortable:''           
@@ -137,6 +136,26 @@ import { Toast } from 'vant';
               console.log(this.selected);
           }
           },
+          computed: {
+    box1_msg() {
+      if (this.status == 0) {
+        return "新建";
+      } else {
+        return "返回";
+      }
+    },
+    box2_msg(){
+      if (this.status == 0) {
+        return "管理";
+      } 
+      else if(this.selected.length==0) {
+        return "完成";
+      }
+      else{
+        return '删除'
+      }
+    }
+  },
     mounted() {
         
             this.getInfo()

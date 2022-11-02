@@ -2,7 +2,7 @@
     <div class="order" @click="gotoOrderDetial(orderInfo.order_id)">
         <div class="up">
             <div class="item">
-                <div class="item-name">收获地址: </div>
+                <div class="item-name">收货地址: </div>
                 <div class="item-value">{{orderInfo.recipient_address}}</div>
                 <div class="price">￥{{orderInfo.reward}}</div>
             </div>
@@ -22,7 +22,10 @@
             </div>
             <div class="item">
                 <div class="item-name">快递备注:</div>
-                <div class="item-value">{{orderInfo.remarks}}</div>
+                <div class="item-value">{{orderInfo.remarks||'暂无'}}</div>
+            </div>
+            <div class="getorder">
+                <van-button plain type="primary" round @click.stop="getorder" size="mini">点击抢单</van-button>
             </div>
         </div>
     </div>
@@ -41,12 +44,20 @@
                         id: id
                     }
                 });
+            },
+            getorder(){
+                this.$emit('getorder',this.orderInfo.order_id)
             }
         }
     }
 </script>
 
 <style lang="less" scoped>
+    .getorder{
+        margin-left: 10px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
     .order {
         display: flex;
         flex-direction: column;

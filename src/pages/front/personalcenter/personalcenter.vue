@@ -107,7 +107,7 @@ export default {
           this.$router.replace({ path: "/front/order?condition=2" });
           break;
         case 3:
-          this.$router.replace({ path: "/front/order?condition=3" });
+          this.$router.replace({ path: "/front/order?condition=4" });
           break;
       }
     }

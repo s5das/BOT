@@ -282,6 +282,7 @@ import { Toast } from 'vant';
             }).then(() => {
                 Toast('修改成功')
                 this.isEditing = false
+                this.onRefresh()
             })
         },
         confirmChosenStatus(status) {

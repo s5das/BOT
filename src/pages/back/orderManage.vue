@@ -98,7 +98,7 @@
                         </div>
                         <div class="item">
                             <div class="item-name">快递备注:</div>
-                            <div class="item-value">{{order.remarks}}</div>
+                            <div class="item-value">{{order.remarks||'暂无'}}</div>
                         </div>
                         <div class="item highlight">
                             <div class="item-name">付款金额:</div>
@@ -130,12 +130,16 @@ import { Toast } from 'vant'
                 this.nums[1].num = res.total_order_nums
             })
 
+
+            
+            var dayNums = {}
+            var now = new Date()
+            let timeChoicesL0 = new Array(now.getFullYear() + 1 - 2022)
+            for(let i = 2022; i < now.getFullYear() +1; ++i) {
             // 获取时间选项
-            let now = new Date()
-            let theYear = now.getFullYear()
-            let dayNums = {
+            dayNums = {
                     1: 31,
-                    2: (theYear%400===0||theYear%100!==0&&theYear%4===0)?29:28,
+                    2: (i%400===0||i%100!==0&&i%4===0)?29:28,
                     3: 31,
                     4: 30,
                     5: 31,
@@ -147,34 +151,40 @@ import { Toast } from 'vant'
                     11: 31,
                     12: 30
                 }
-            
-            let timeChoicesL1 = new Array(12)
-            let timeChoicesL3 = new Array(24)
-            for(let i = 0; i < 23; ++i) {
-                timeChoicesL3[i] = {
-                    text: i >= 10 ? i + '时' : `0${i}时`
-                }
-            }
-            for(let i = 1; i <= 12; ++i) {
-                let numOfday = dayNums[i]
-                let days = Array(numOfday)
-                for(let j = 1; j <= numOfday; ++j) {
-                    days[j-1] = {
-                        text: j >= 10 ? j + '日' : `0${j}日`,
-                        children: timeChoicesL3,
-                        defaultIndex: now.getHours()
+                let timeChoicesL1 = new Array(12)
+                let timeChoicesL3 = new Array(24)
+                for(let i = 0; i < 24; ++i) {
+                    timeChoicesL3[i] = {
+                        text: i >= 10 ? i + '时' : `0${i}时`
                     }
                 }
-                let timeChoicesL2 = {
-                    text: i >= 10 ? i + '月' : `0${i}月`,
-                    children: days,
-                    defaultIndex: now.getDate()-1
+                for(let i = 1; i <= 12; ++i) {
+                    let numOfday = dayNums[i]
+                    let days = Array(numOfday)
+                    for(let j = 1; j <= numOfday; ++j) {
+                        days[j-1] = {
+                            text: j >= 10 ? j + '日' : `0${j}日`,
+                            children: timeChoicesL3,
+                            defaultIndex: now.getHours()
+                        }
+                    }
+                    let timeChoicesL2 = {
+                        text: i >= 10 ? i + '月' : `0${i}月`,
+                        children: days,
+                        defaultIndex: now.getDate()-1
+                    }
+                    timeChoicesL1[i-1] = timeChoicesL2
                 }
-                timeChoicesL1[i-1] = timeChoicesL2
-            }
 
-            this.conditions[0].choices = timeChoicesL1
-            this.conditions[1].choices = timeChoicesL1
+                timeChoicesL0[i-2022] = {
+                    text: `${i}年`,
+                    children: timeChoicesL1,
+                    defaultIndex: now.getMonth()
+                }
+            }
+            console.log(timeChoicesL0)
+            this.conditions[0].choices = timeChoicesL0
+            this.conditions[1].choices = timeChoicesL0
         },
         data() {
             return {
@@ -192,7 +202,7 @@ import { Toast } from 'vant'
                         id: '起始时间',
                         title: '起始时间',
                         isChoosing: false,
-                        defaultIndex: new Date().getMonth(),
+                        defaultIndex: new Date().getFullYear() - 2022,
                         // mouted中获取子选项
                         choices: []
                     },
@@ -200,7 +210,7 @@ import { Toast } from 'vant'
                         id: '终止时间',
                         title: '终止时间',
                         isChoosing: false,
-                        defaultIndex: new Date().getMonth(),
+                        defaultIndex: new Date().getFullYear() - 2022,
                         // mouted中获取子选项
                         choices: []
                     },
@@ -391,10 +401,11 @@ import { Toast } from 'vant'
                     item.title = data.join('')
 
                     let date = new Date()
-                    // console.log(date)
-                    date.setMonth(data[0].slice(0, 2) - 1)
-                    date.setDate(data[1].slice(0, 2) - 0)
-                    date.setHours(data[2].slice(0, 2) - 0)
+                    // console.log(data)
+                    date.setFullYear(data[0].slice(0, 4))
+                    date.setMonth(data[1].slice(0, 2) - 1)
+                    date.setDate(data[2].slice(0, 2) - 0)
+                    date.setHours(data[3].slice(0, 2) - 0)
                     date.setMinutes(0)
                     date.setMilliseconds(0)
                     let dateStr = format(date)

@@ -16,7 +16,7 @@
         <div class="b3">
           <div class="b3_left"></div>
           <div class="b3_right">
-            <div><img style='margin-right: 5px;' src="@/assets/wechat.png"></div>
+            <div><img style="margin-right: 5px;" src="@/assets/wechat.png"></div>
             <div>线下提现</div>
           </div>
         </div>
@@ -49,6 +49,11 @@
               <div class="status" v-if="item.audit_status===2">
                 <img class="statusico" src="@/assets/reject.png">
               </div>
+            </div>
+            
+            <div v-if="item.audit_status===2">
+              <hr/>
+                <div style="width: 200px;word-wrap: break-word;">拒绝原因：{{item.reason_for_rejection}}</div>
             </div>
           </div>
         </van-list>
@@ -84,6 +89,7 @@ export default {
       getCouldWithdraw().then((res) => { this.max_num = res.money_could_withdraw })
     },
     isNum(num) {
+      num = num.toString()
       if (num.match(/^\d+\b/) == null) {
         return false;
       } else {

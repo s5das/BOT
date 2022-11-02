@@ -6,7 +6,7 @@
      </div>
      <div class="box1">
         <div class="title">规格名</div>
-        <div class="in1"><input type="text" placeholder="输入规格大小" v-model="specification_name"></div>
+        <div class="in1"><input type="text" placeholder="输入规格大小" v-model="specification_name" maxlength="50"></div>
      </div>
      <div class="box2">
          <div class="left">
@@ -23,7 +23,7 @@
 
 <script>
 import { Toast } from 'vant'
-import serviceAxios from '@/http/api/back/httpForBack';
+import serviceAxios from '@/http';
 export default {
     name: 'gen-newlocation',
 
@@ -34,7 +34,7 @@ export default {
         })
         },
         finish() {
-            if (this.specification_name && Number(this.royalty_rate) && Number(this.reward_per_package)) {
+            if (this.specification_name &&this.royalty_rate&&this.reward_per_package&& Number(this.royalty_rate)>=0 && Number(this.reward_per_package) ) {
                 serviceAxios({
                     method: 'post',
                     url:'/fanbook/deliverbot/back/admin/specs/add',
@@ -44,7 +44,7 @@ export default {
                         specification_name:this.specification_name
                     }
                 }).then(() => { Toast.success('添加成功'); this.cancle() },
-                        (err) => {Toast.fail(err.message)}
+                        (err) => {Toast(err.message.replace(/[a-zA-Z]/g, ""))}
                 )
             } else {
                 Toast.fail('请正确输入信息');

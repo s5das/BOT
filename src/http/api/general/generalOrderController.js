@@ -13,3 +13,10 @@ export const getPrivateChannelName = (params) => {
         url: `/fanbook/deliverbot/general/order/get_private_channel_name/${params.orderId}`
     });
 };
+
+export const channelInit = (orderId) => {
+    return serviceAxios({
+        method: 'GET',
+        url: `/fanbook/deliverbot/general/order/create_private_channel/${orderId}`
+    });
+};

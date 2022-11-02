@@ -12,6 +12,7 @@
                         class="inputArea"
                         v-model="trueName"
                         placeholder="请输入真实姓名"
+                        maxlength="100"
                     />
                 </div>
                 <div class="item">
@@ -32,6 +33,7 @@
                         class="inputArea"
                         v-model="remarks"
                         placeholder="请输入备注"
+                        maxlength="100"
                     />
                 </div>
                 <div class="submit" @click="submit">提交审核</div>

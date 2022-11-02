@@ -23,7 +23,7 @@
             </div>
             <div class="item">
                 <div class="item-name">备注:</div>
-                <div class="item-value">{{orderInfo.remarks}}</div>
+                <div class="item-value">{{orderInfo.remarks||'暂无'}}</div>
             </div>
             <div class="item">
                 <div class="item-name">付款金额:</div>

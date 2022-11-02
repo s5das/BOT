@@ -2,7 +2,7 @@
     <div class="order" @click="gotoOrderDetial(orderInfo.id)">
         <div class="up">
             <div class="item">
-                <div class="item-name">收获地址: </div>
+                <div class="item-name">收货地址: </div>
                 <div class="item-value">{{orderInfo.receiveAddress}}</div>
                 <div :class="['status', orderInfo.status === '已完成' ? 'finish' : '']">{{orderInfo.status}}</div>
                 <div class="price">￥{{orderInfo.price}}</div>
@@ -23,7 +23,7 @@
             </div>
             <div class="item">
                 <div class="item-name">快递备注:</div>
-                <div class="item-value">{{orderInfo.remarks}}</div>
+                <div class="item-value">{{orderInfo.remarks||'暂无'}}</div>
             </div>
             <div class="item">
                 <div class="item-name">收件人:</div>
@@ -38,6 +38,7 @@
 </template>
 
 <script>
+
     export default {
         props: {
             orderInfo: Object,

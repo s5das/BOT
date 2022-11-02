@@ -4,22 +4,26 @@
     <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
 
       <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
-        <div class="item" v-for="(item,index) in id" :key="item">
+        <div class="item" v-for="(item) in records" :key="item.application_id">
           <div class="righttop">
-            <img :src="ico_src[status[index]]" class="ico">
+            <img :src="ico_src[item.audit_status]" class="ico">
           </div>
           <div class="top">
-            订单时间：{{time[index]}}
+            订单时间：{{item.apply_create_time}}
           </div>
           <div class="middle">
-            <div>申请金额：{{money[index]}}元</div>
-            <div>名称：{{real_name[index]}}</div>
-            <div>手机号：{{phone[index]}}</div>
-            <div>fanbook昵称：{{nick_name[index]}}</div>
+            <div>申请金额：{{item.money_to_withdraw}}元</div>
+            <div>名称：{{item.courier_real_name}}</div>
+            <div>手机号：{{item.courier_phone_number}}</div>
+            <div>fanbook昵称：{{item.courier_fanbook_nick_name}}</div>
+            <div v-if="item.audit_status == 0 || item.audit_status == 1">提现方式：线下提现</div>
           </div>
-          <div class="bottom" v-if="audit[index] === 0">
-            <button class="btn1" @click="pass(id[index])">通过</button>
-            <button class="btn2" @click="reject(id[index])">拒绝</button>
+          <div class="bottom" v-if="item.audit_status == 0">
+            <button class="btn1" @click="pass(item.application_id)">通过</button>
+            <button class="btn2" @click="reject(item.application_id)">拒绝</button>
+          </div>
+          <div class="reason_show" v-if="item.audit_status == 2">
+            拒绝原因：{{item.reason_for_rejection}}
           </div>
         </div>
       </van-list>
@@ -34,7 +38,7 @@
 </template>
 
 <script>
-import serviceAxios from '@/http/api/back/httpForBack';
+import serviceAxios from '@/http';
 import { Toast } from 'vant'
 import { Dialog } from 'vant';
 export default {
@@ -48,14 +52,8 @@ export default {
       refreshing: false,
       finished: false,
       serialnumber: 1,
-      id: [],
-      time: [],
-      status: [],
-      nick_name: [],
-      phone: [],
-      real_name: [],
-      money: [],
-      audit: [],
+      records:[],
+
       reject_reason: '',
       reject_id: '',
       h: document.body.clientHeight
@@ -76,14 +74,7 @@ export default {
 
       setTimeout(() => {
         if (this.refreshing) {
-          this.id = []
-          this.time = []
-          this.status = []
-          this.nick_name = []
-          this.phone = []
-          this.real_name = []
-          this.money = []
-          this.audit = []
+          this.records = []
           this.refreshing = false
         }
 
@@ -91,18 +82,7 @@ export default {
           method: 'get',
           url: `/fanbook/deliverbot/back/admin/audit/get_withdraw_money_applications/${this.serialnumber}`
         }).then((res) => {
-          for (var i = 0; i < res.length; i++) {
-            let temp = res[i]
-            this.id.push(temp.application_id)
-            this.time.push(temp.apply_create_time)
-            this.status.push(temp.audit_status)
-            this.nick_name.push(temp.courier_fanbook_nick_name)
-            this.phone.push(temp.courier_phone_number)
-            this.real_name.push(temp.courier_real_name)
-            this.money.push(temp.money_to_withdraw)
-            this.audit.push(temp.audit_status)
-          }
-
+          this.records = this.records.concat(res)
           if (res.length < 10) {
             this.finished = true
           }
@@ -129,7 +109,13 @@ export default {
           serviceAxios({
             method: 'get',
             url: `/fanbook/deliverbot/back/admin/audit/pass_withdraw_money_application/${id}`
-          }).then(() => { Toast.success('操作成功'); this.refreshing=true;this.onRefresh() }, () => {  })
+          }).then(
+            () => {
+              Toast.success('操作成功');
+              this.refreshing = true;
+              this.websocket.send(`${localStorage.getItem('guildid')}:${2}`)
+            },
+            () => { })
         }
       )
 
@@ -146,8 +132,18 @@ export default {
             method: 'post',
             url: '/fanbook/deliverbot/back/admin/audit/reject_withdraw_money_application',
             data: { application_id: this.reject_id, reject_reason: this.reject_reason }
-          }).then(() => { this.reject_reason = ''; this.reject_id = ''; this.refreshing = true; this.onRefresh(); done() }, () => { done(false) })
+          }).then(
+            () => {
+              this.reject_reason = '';
+              this.reject_id = '';
+              this.refreshing = true;
+              this.onRefresh();
+              this.websocket.send(`${localStorage.getItem('guildid')}:${2}`)
+              done();
+
+            }, () => { done(false) })
         } else {
+          Toast.fail('拒绝理由不能为空')
           done(false)
         }
       } else {
@@ -156,6 +152,25 @@ export default {
         done()
       }
     },
+  },
+  mounted() {
+    if ('WebSocket' in window) {
+      //后边是订阅的topic名称
+      this.websocket = new WebSocket(`wss://www.gzxunyustf.top/fanbook/deliverbot/refreshList/${localStorage.getItem('guildid')}/${2}`);
+
+    } else {
+      Toast.fail('不支持websocket')
+    }
+    this.websocket.onmessage = (event) => {
+      const receiveid = event.data.split(':')[0]
+      if (receiveid == localStorage.getItem('guildid')) {
+        this.onRefresh()
+      }
+
+    }
+  },
+  beforeDestroy() {
+    this.websocket.close()
   }
 }
 </script>
@@ -168,14 +183,13 @@ export default {
   overflow: scroll;
 
   .item {
-    height: 267px;
     width: 370px;
     margin: 0 auto;
     margin-bottom: 20px;
     background-color: #fff;
     padding: 20px;
     position: relative;
-
+    border-radius: 15px;
     .righttop {
       position: absolute;
       top: 0;
@@ -209,7 +223,7 @@ export default {
       color: #000;
       border-bottom: #bbb solid 1px;
     }
-
+    
     .bottom {
       margin-top: 12px;
       height: 40px;
@@ -233,6 +247,14 @@ export default {
         border: 1px solid #fab855;
         color: #fab855;
       }
+    }
+    .reason_show{
+      margin-top: 3px;
+      word-wrap: break-word;
+      color: red;
+      font-size: 15px;
+      width: 200px;
+
     }
   }
 

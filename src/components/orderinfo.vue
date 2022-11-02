@@ -26,16 +26,28 @@
     <div class="title">送达时间</div>
     <div class="content">{{orderinfo.deliver_time_period_string}}</div>
   </div>
+  <div class="arrivetime"> 
+    <div class="title">订单时间</div>
+    <div class="content">{{orderinfo.create_time_string}}</div>
+  </div>
   <div class="beizhu">
     <div class="title">备注</div>
     <div class="content">{{orderinfo.remarks}}</div>
   </div>
   <div class="status" v-if="orderinfo.order_status=='待接单'">
-    <img src="@/assets/daijiedan.png" alt="">
+    <img src="@/assets/orderStatus/待接单.png" alt="">
   </div>
   <div class="status" v-if="orderinfo.order_status=='派送中'">
-    <img src="@/assets/paisongzhong.png" alt="">
-
+    <img src="@/assets/orderStatus/派送中.png" alt="">
+  </div>
+  <div class="status" v-if="orderinfo.order_status=='已完成'">
+    <img src="@/assets/orderStatus/已完成.png" alt="">
+  </div>
+  <div class="status" v-if="orderinfo.order_status=='已取消'">
+    <img src="@/assets/orderStatus/已取消.png" alt="">
+  </div>
+  <div class="status" v-if="orderinfo.order_status=='已送达'">
+    <img src="@/assets/orderStatus/已送达.png" alt="">
   </div>
   </div>
 </template>

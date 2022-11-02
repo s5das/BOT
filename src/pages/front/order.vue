@@ -16,25 +16,25 @@
 
 
     <!-- 弹出层 - 日历 -->
-    <van-calendar type="range" v-model="isChoosingTime"  @confirm="chooseTimeConfirm"/>
+    <van-calendar type="range" v-model="isChoosingTime" @confirm="chooseTimeConfirm" />
 
     <!-- 弹出层 - 取消订单 -->
     <van-popup v-model="isConfirmingCancel">
-            <div class="confirm-box">
-                <div class="top">
-                    <img :src="require('@/assets/alert.png')"/>
-                    <div class="title">确认取消</div>
-                </div>
-                <div class="prompt">
-                    <div class="line">若确认取消订单, 请点击确定</div>
-                </div>
-                <div class="buttons-box">
-                    <div @click="cancelOrder" class="button highlight">确定</div>
-                    <div @click="isConfirmingCancel = false" class="button">再考虑考虑</div>
-                </div>
-            </div>
-        </van-popup>
-  
+      <div class="confirm-box">
+        <div class="top">
+          <img :src="require('@/assets/alert.png')" />
+          <div class="title">确认取消</div>
+        </div>
+        <div class="prompt">
+          <div class="line">若确认取消订单, 请点击确定</div>
+        </div>
+        <div class="buttons-box">
+          <div @click="cancelOrder" class="button highlight">确定</div>
+          <div @click="isConfirmingCancel = false" class="button">再考虑考虑</div>
+        </div>
+      </div>
+    </van-popup>
+
 
     <!-- 订单 -->
     <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
@@ -47,38 +47,43 @@
           <!-- 关键词搜索 -->
           <BlurSearch class="search-area" @confirmKey="confirmKey" @clearKey="clearKey"></BlurSearch>
         </div>
-          <div class="order" v-for="order in orderList" :key="order.order_id">
-                <div class="status-label">
-                    <img :src="require(`@/assets/orderStatus/${order.order_status}.png`)"/>
-                </div>
-                <div class="up">{{order.create_time_string}}</div>
-                <div class="middle">
-                    <div class="item">
-                        <div class="item-name">快递点:</div>
-                        <div class="item-value">{{order.pickup_address}}</div>
-                    </div>
-                    <div class="item">
-                        <div class="item-name">快递件数:</div>
-                        <div class="item-value">{{order.num_of_packages}}</div>
-                    </div>
-                    <div class="item">
-                        <div class="item-name">送达时间</div>
-                        <div class="item-value">{{order.deliver_time_period_string}}</div>
-                    </div>
-                    <div class="item">
-                        <div class="item-name">快递备注:</div>
-                        <div class="item-value">{{order.remarks}}</div>
-                    </div>
-                    <div class="item highlight">
-                        <div class="item-name">付款金额:</div>
-                        <div class="item-value">¥{{order.reward}}</div>
-                    </div>
-                </div>
-                <div class="down">
-                    <div @click="confirmingCancel(order.order_id)" class="button" v-if="order.order_status in {'待接单': 0, '派送中': 1} && modes[idOfModeActivated].name === '我发布的'">取消订单</div>
-                    <!-- <div @click="changeCourier(order)" class="button" v-if="order.order_status in {'待接单': 0, '派送中': 1}">{{order.order_status === '待接单' ? '选派送员' : '换派送员' }}</div> -->
-                    <div @click="checkDetail(order)" class="button">查看详情</div>
-                </div>            
+        <div class="order" v-for="order in orderList" :key="order.order_id">
+          <div class="status-label">
+            <img :src="require(`@/assets/orderStatus/${order.order_status}.png`)" />
+          </div>
+          <div class="up">{{order.create_time_string}}</div>
+          <div class="middle"  @click="checkDetail(order)">
+            <div class="item">
+              <div class="item-name">快递点:</div>
+              <div class="item-value">{{order.pickup_address}}</div>
+            </div>
+            <div class="item">
+              <div class="item-name">快递件数:</div>
+              <div class="item-value">{{order.num_of_packages}}</div>
+            </div>
+            <div class="item">
+              <div class="item-name">送达时间</div>
+              <div class="item-value">{{order.deliver_time_period_string}}</div>
+            </div>
+            <div class="item">
+              <div class="item-name">快递备注:</div>
+              <div class="item-value">{{order.remarks||'暂无'}}</div>
+            </div>
+            <div class="item highlight">
+              <div class="item-name">付款金额:</div>
+              <div class="item-value">¥{{order.reward}}</div>
+            </div>
+          </div>
+          <div style="width:300px;text-overflow: ellipsis;overflow: hidden;" v-if="order.order_status=='派送中'&&idOfModeActivated==0">
+              {{order.courier_name}}正在为您派送
+          </div>
+          <div class="down">
+            <div @click="confirmingCancel(order.order_id)" class="button"
+              v-if="order.order_status in {'待接单': 0} && modes[idOfModeActivated].name === '我发布的'">取消订单</div>
+            <!-- <div @click="changeCourier(order)" class="button" v-if="order.order_status in {'待接单': 0, '派送中': 1}">{{order.order_status === '待接单' ? '选派送员' : '换派送员' }}</div> -->
+            <div @click="checkDetail(order)" class="button">查看详情</div>
+          </div>
+
         </div>
       </van-list>
     </van-pull-refresh>
@@ -183,6 +188,23 @@ export default {
     if (this.condition !== undefined) {
       this.changeCondition(this.condition);
     }
+    if ('WebSocket' in window) {
+      //后边是订阅的topic名称
+      this.websocket = new WebSocket(`wss://www.gzxunyustf.top/fanbook/deliverbot/refreshList/${localStorage.getItem('guildid')}/${1}`);
+
+    } else {
+      Toast.fail('不支持websocket')
+    }
+    this.websocket.onmessage = (event) => {
+      const receiveid = event.data.split(':')[0]
+      if (receiveid == localStorage.getItem('guildid')) {
+        this.onRefresh()
+      }
+
+    }
+  },
+  beforeDestroy() {
+    this.websocket.close()
   },
   methods: {
     changeMode(i) {
@@ -294,20 +316,21 @@ export default {
       cancelOrder({
         orderId: this.cancelingOrderId
       }).then(() => {
-        this.onRefresh()
         this.isConfirmingCancel = false
+        this.websocket.send(`${localStorage.getItem('guildid')}:${1}`)
         Toast('成功取消订单')
       })
     },
     checkDetail(order) {
 
-        this.$router.push({
-          name: "orderDetail",
-          params: {
-            id: order.order_id
-          }
-        });
-      }
+      this.$router.push({
+        name: "orderDetail",
+        params: {
+          id: order.order_id,
+          mode:this.idOfModeActivated
+        }
+      });
+    }
   },
   components: { BlurSearch },
 }
@@ -546,52 +569,60 @@ export default {
 
 
 .confirm-box {
-    box-sizing: border-box;
-    width: 380px;
-    height: auto;
-    .top {
-        display: flex;
-        align-items: center;
-        margin-top: 10px;
-        margin-left: 10px;
-        img {
-            width: 25px;
-            height: 25px;
-        }
-        .title {
-            margin-left: 1px;
-            color: rgba(88,74,72,1);
-            font-size: 20px;
-        }
+  box-sizing: border-box;
+  width: 380px;
+  height: auto;
+
+  .top {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+    margin-left: 10px;
+
+    img {
+      width: 25px;
+      height: 25px;
     }
-    .prompt {
+
+    .title {
+      margin-left: 1px;
+      color: rgba(88, 74, 72, 1);
+      font-size: 20px;
+    }
+  }
+
+  .prompt {
+    text-align: center;
+    margin: 0 46px;
+    margin-top: 22px;
+    margin-bottom: 30px;
+
+    .line {
+      font-size: 18px;
+      color: rgba(88, 74, 72, 1);
+    }
+  }
+
+  .buttons-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid rgba(118, 118, 118, 1);
+
+    .button {
+      width: 50%;
+      height: 49px;
+      line-height: 49px;
+      color: rgba(125, 124, 123, 1);
+      font-size: 20px;
+      font-weight: bold;
       text-align: center;
-        margin: 0 46px;
-        margin-top: 22px;
-        margin-bottom: 30px;
-        .line {
-            font-size: 18px;
-            color: rgba(88,74,72,1);
-        }
     }
-    .buttons-box {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        border-top: 1px solid rgba(118,118,118,1);
-        .button {
-            width: 50%;
-            height: 49px;
-            line-height: 49px;
-            color: rgba(125,124,123,1);
-            font-size: 20px;
-            font-weight: bold;
-            text-align: center;
-        }
-        .highlight {
-            color: rgba(239,124,38,1);
-            border-right: 1px solid rgba(118,118,118,1);
-        }
+
+    .highlight {
+      color: rgba(239, 124, 38, 1);
+      border-right: 1px solid rgba(118, 118, 118, 1);
     }
+  }
 }
 </style>

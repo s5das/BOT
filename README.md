@@ -1,24 +1,34 @@
 # Bot
 
-## Project setup
+## 项目启动
 ```
 npm install
 ```
 
-### Compiles and hot-reloads for development
+### 调试环境运行
 ```
 npm run serve
 ```
 
-### Compiles and minifies for production
+### 生产环境运行
 ```
 npm run build
 ```
 
-### Lints and fixes files
+### 组件库
 ```
-npm run lint
+vantui
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+### 适配
+```
+fanbook平台（仅限）
+```
+
+### 支付逻辑
+
+```
+app内嵌h5支付
+采用pinia管理支付状态，status为0，1控制支付流程
+```
+

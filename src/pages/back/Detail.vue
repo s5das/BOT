@@ -1,80 +1,7 @@
 <!-- 抢单详情页 -->
 <template>
-  <div>
+  <div class="margin-bottom-12px">
     <div v-if="iscurisior">
-      <van-popup v-model="isConfirmingSent">
-        <div class="confirm-box">
-          <div class="top">
-            <img :src="require('@/assets/alert.png')" />
-            <div class="title">确认送达</div>
-          </div>
-          <div class="prompt">
-            <div class="line">若该订单已送达, 请点击确定</div>
-          </div>
-          <div class="buttons-box">
-            <div @click="confirmSent" class="button highlight">确定</div>
-            <div @click="isConfirmingSent = false" class="button">取消</div>
-          </div>
-        </div>
-      </van-popup>
-
-      <van-popup v-model="isConfirmingReceived">
-        <div class="confirm-box">
-          <div class="top">
-            <img :src="require('@/assets/alert.png')" />
-            <div class="title">确认收货</div>
-          </div>
-          <div class="prompt">
-            <div class="line">若已成功收货, 请点击确定</div>
-          </div>
-          <div class="buttons-box">
-            <div @click="confirmReceived" class="button highlight">确定</div>
-            <div @click="isConfirmingReceived = false" class="button">取消</div>
-          </div>
-        </div>
-      </van-popup>
-
-      <van-popup v-model="isConfirmingContact">
-        <div class="confirm-box">
-          <div class="top">
-            <img :src="require('@/assets/alert.png')" />
-            <div class="title">提示</div>
-          </div>
-          <div class="prompt">
-            <div class="line">将为您创建私密频道</div>
-          </div>
-          <div class="buttons-box">
-            <div
-              @click="
-                contact();
-                isConfirmingExit = true;
-              "
-              class="button highlight"
-            >
-              确定
-            </div>
-            <div @click="isConfirmingContact = false" class="button">取消</div>
-          </div>
-        </div>
-      </van-popup>
-
-      <van-popup v-model="isConfirmingExit">
-        <div class="confirm-box">
-          <div class="top">
-            <img :src="require('@/assets/alert.png')" />
-            <div class="title">提示</div>
-          </div>
-          <div class="prompt">
-            <div class="line">成功创建私密频道:{{ private_channel_name }}</div>
-            <div class="line">需退出后从首页频道进入与对方进行沟通</div>
-          </div>
-          <div class="buttons-box">
-            <div @click="exit" class="button highlight">退出</div>
-            <div @click="isConfirmingExit = false" class="button">取消</div>
-          </div>
-        </div>
-      </van-popup>
-
       <!-- 1 待接单 -->
       <div v-if="orderInfo.order_status === '待接单'">
         <Orderinfo class="margin-bottom-12px" :orderinfo="orderInfo" />
@@ -82,12 +9,6 @@
           v-if="user_id != undefined && user_id == orderInfo.recipient_id"
           :orderinfo="orderInfo"
         />
-        <div
-          class="buttons"
-          v-if="user_id != undefined && user_id != orderInfo.recipient_id"
-        >
-          <div @click="grab" class="button">我要抢单</div>
-        </div>
       </div>
 
       <!-- 2 派送中 -->
@@ -102,16 +23,7 @@
         <Orderinfo class="margin-bottom-12px" :orderinfo="orderInfo" />
         <Userinfo class="margin-bottom-12px" :orderinfo="orderInfo" />
         <CourierInfo :order="orderInfo"></CourierInfo>
-        <div class="buttons">
-          <div @click="isConfirmingContact = true" class="button">联系Ta</div>
-          <div
-            v-if="user_id != undefined && user_id != orderInfo.recipient_id"
-            @click="isConfirmingSent = true"
-            class="button highlight"
-          >
-            确认送达
-          </div>
-        </div>
+
       </div>
 
       <!-- 3 已送达 -->
@@ -125,16 +37,6 @@
         <Orderinfo class="margin-bottom-12px" :orderinfo="orderInfo" />
         <Userinfo :orderinfo="orderInfo" />
         <CourierInfo :order="orderInfo"></CourierInfo>
-        <div class="buttons">
-          <div @click="isConfirmingContact = true" class="button">联系Ta</div>
-          <div
-            v-if="user_id != undefined && user_id == orderInfo.recipient_id"
-            @click="isConfirmingReceived = true"
-            class="button highlight"
-          >
-            确认收货
-          </div>
-        </div>
       </div>
 
       <!-- 4 已完成 -->
@@ -145,9 +47,7 @@
         <Orderinfo class="margin-bottom-12px" :orderinfo="orderInfo" />
         <Userinfo :orderinfo="orderInfo" />
         <CourierInfo :order="orderInfo"></CourierInfo>
-        <div class="buttons">
-          <div @click="isConfirmingContact = true" class="button">联系Ta</div>
-        </div>
+
       </div>
 
       <!-- 5 已取消 -->
@@ -167,38 +67,18 @@ import { takeOrder, turnDelivered } from "@/http/api/courier";
 import { completeOrder } from "@/http/api/user";
 import { getDetails } from "@/http/api/general/generalOrderController";
 import { Toast } from "vant";
-import CourierInfo from "../../../components/courierInfo.vue";
-import {
-  getPrivateChannelName,
-  channelInit,
-} from "@/http/api/general/generalOrderController";
+import CourierInfo from "@/components/courierInfo.vue";
+import { getPrivateChannelName } from "@/http/api/general/generalOrderController";
 import { getUserType } from "@/http/api/common";
 import { TYPE } from "@/http/const/const";
 export default {
+
   // mode: 0:我的发布进入
   // mode: 1:我的订单进入
   // mode: 2:去抢单进入
   beforeMount() {
-    let mode = this.$route.params.mode;
-    // 模式校验
-    if (mode == 0) {
-      this.showhead = false;
-    } else if (mode == 1) {
-      this.showhead = false;
-    } else if (mode == 2) {
-      // 外部跳入
-      getUserType().then((data) => {
-        if (TYPE.IDENTIFIED_COURIER !== data.user_type) {
-          // 未入驻
-          this.iscurisior = false;
-          Toast.fail("未登录或权限不足无法查看抢单信息");
-          setTimeout(() => {
-            window.fb.closeWindow();
-          }, 3000);
-        }
-      });
-    }
-  },
+        this.showhead = false
+    },
   mounted() {
     this.orderId = this.$route.params.id;
     this.status = this.$route.params.status;
@@ -274,20 +154,13 @@ export default {
       });
     },
     contact() {
-      channelInit(this.orderId)
-        .then(() => {
-          return getPrivateChannelName({
-            orderId: this.orderId,
-          });
-        })
-        .then((data) => {
-          this.isConfirmingContact = false;
-          this.private_channel_name = data.private_channel_name;
-          this.isConfirmingExit = true;
-        })
-        .catch(()=>{
-          Toast.fail('创建频道失败')
-        })
+      getPrivateChannelName({
+        orderId: this.orderId,
+      }).then((data) => {
+        this.isConfirmingContact = false;
+        this.private_channel_name = data.private_channel_name;
+        this.isConfirmingExit = true;
+      });
     },
     exit() {
       window.fb.closeWindow();
@@ -320,35 +193,6 @@ export default {
 <style lang="less" scoped>
 .margin-bottom-12px {
   margin-bottom: 12px;
-}
-.buttons {
-  background-color: rgba(255, 255, 255, 0.8);
-  width: 418px;
-  margin: 0 auto;
-  min-height: 140px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  // margin-bottom: 50px;
-  // transform: translateY(-50px);
-  .button {
-    width: 108px;
-    height: 32px;
-    margin: 18px 0;
-    margin-bottom: 5px;
-    line-height: 32px;
-    text-align: center;
-    color: #fff;
-    // border: 1px solid rgba(233, 157, 66, 100);
-    border-radius: 20px;
-    background-color: rgba(233, 157, 66, 100);
-    box-shadow: 0px 1px 1px 0px rgba(0, 0, 0, 0.25) inset;
-    // &.highlight {
-    //     color: #FFF;
-    //     background-color: rgba(233, 157, 66, 100);
-    // }
-  }
 }
 
 .confirm-box {
@@ -437,11 +281,11 @@ export default {
     }
   }
   .prompt {
-    margin: 0 10px;
+    margin: 0 46px;
     margin-top: 22px;
     margin-bottom: 36px;
     .line {
-      font-size: 15px;
+      font-size: 18px;
       color: rgba(88, 74, 72, 1);
     }
   }

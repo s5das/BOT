@@ -1,11 +1,12 @@
 import axios from "axios";
 import { Toast } from "vant";
 import serverConfig from "./config";
+import router from "@/model/router";
 
 // 创建axios实例
 const serviceAxios = axios.create({
     baseURL: serverConfig.baseURL,
-    timeout: 3000,
+    timeout: serverConfig.timeout,
 });
 
 
@@ -32,8 +33,39 @@ serviceAxios.interceptors.response.use(
         let data = res.data;
         // 处理自己的业务逻辑，比如判断 token 是否过期等等
         // 代码块
+        if(res.data.code==1016){
+          try{
+            if(window.location.href.indexOf('front')!==-1){
+              localStorage.clear()
+              router.replace({
+                path:'/',
+                query:{
+                  state:0
+                }
+              })
+            }else{
+              localStorage.clear()
+              router.replace({
+                path:'/',
+                query:{
+                  state:1
+                }
+              })
+            }
+          }
+          catch{
+            localStorage.clear()
+            router.replace({
+              path:'/',
+              query:{
+                state:0
+              }
+            })
+          }
 
-        if (res.data.code !== 0) {
+          
+        }
+        else if (res.data.code !== 0) {
           Toast(data.data)
           return Promise.reject(new Error(data.data))
         }
