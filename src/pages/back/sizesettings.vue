@@ -118,7 +118,7 @@ import { Toast } from 'vant';
                           data: {
                             new_spec_list
                           }
-                      }).then(() => { this.status = 0; this.sortable.option('disabled', false); this.getInfo() })
+                      }).then(() => { this.status = 0; this.sortable.option('disabled', true); this.getInfo() })
                   
               }
   
